@@ -52,7 +52,8 @@ class _MetroScreenState extends State<MetroScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xff2A2D2E),
+      backgroundColor: Color.fromARGB(255, 111, 117, 118),
+      //0xff2A2D2E,, Color.fromARGB(150, 0, 63, 171),
       /* appBar: AppBar(
           title: Text(
             'Metro',
@@ -64,26 +65,8 @@ class _MetroScreenState extends State<MetroScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Container(
-                width: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: const Color.fromARGB(255, 45, 74, 99),
-                ),
-                child: Column(children: const [
-                  Icon(
-                    Icons.subway,
-                    size: 100,
-                    color: Colors.white,
-                  ),
-                  Text(
-                    'Metro',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  )
-                ]),
+              Image(
+                image: AssetImage("assets/images/Cairo_metro_150.png"),
               ),
               ////////////////////////////////////////////////////////////////////////////
               const SizedBox(height: 40),
@@ -121,7 +104,7 @@ class _MetroScreenState extends State<MetroScreen> {
               ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                    const Color.fromARGB(255, 14, 72, 171),
+                    Color(0xffC01414),
                   ),
                 ),
                 onPressed: () {
@@ -245,12 +228,21 @@ class _MetroScreenState extends State<MetroScreen> {
               if (selectedValue1 != '' && selectedValue2 != '')
                 Container(
                   decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.4),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 5),
+                        )
+                      ],
                       borderRadius: BorderRadius.circular(10.0),
                       color: Color.fromARGB(255, 14, 72, 171)),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,
-                      elevation: 0,
+                      elevation: 13,
+                      //shadowColor: Color.fromARGB(255, 14, 72, 171),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -293,31 +285,49 @@ class _MetroScreenState extends State<MetroScreen> {
               Expanded(
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.location_on_rounded,
-                          size: 30,
-                          color: Color.fromARGB(255, 14, 72, 171),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            const Color.fromARGB(255, 14, 72, 171),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 30),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.location_on_rounded,
+                            size: 30,
+                            color: Color.fromARGB(255, 14, 72, 171),
                           ),
                         ),
-                        onPressed: () {},
-                        child: const Text(
-                          'Nearest Station?',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        const SizedBox(width: 10),
+                        Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.4),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: Offset(0, 5),
+                              )
+                            ],
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Color.fromARGB(255, 14, 72, 171),
+                          ),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 13,
+                              backgroundColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                            onPressed: () {},
+                            child: const Text(
+                              'Nearest Station?',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -11,22 +11,31 @@ class TripDetails extends StatefulWidget {
 }
 
 class _TripDetailsState extends State<TripDetails> {
+  // backgroundColor: Color.fromARGB(255, 164, 53, 53)
+  // Color cardColor = Color.fromARGB(255, 188, 143, 143);
+  Color cardColor = Colors.white;
+  Color textColor = Colors.black;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 111, 117, 118),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          title: Row(
-            children: [
-              Text(widget.route.routeStations.first,
-                  style: TextStyle(color: Colors.white, fontSize: 20)),
-              Text('  To  ',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      fontWeight: FontWeight.bold)),
-              Text(widget.route.routeStations.last,
-                  style: TextStyle(color: Colors.white, fontSize: 20)),
-            ],
+          title: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Text(widget.route.routeStations.first,
+                    style: const TextStyle(color: Colors.white, fontSize: 20)),
+                const Text('  To  ',
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        fontWeight: FontWeight.bold)),
+                Text(widget.route.routeStations.last,
+                    style: const TextStyle(color: Colors.white, fontSize: 20)),
+              ],
+            ),
           ),
           backgroundColor: const Color.fromARGB(255, 14, 72, 171)),
       body: Stack(
@@ -39,118 +48,120 @@ class _TripDetailsState extends State<TripDetails> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Color(0xff0048AB),
-                        width: 5,
-                      )),
                   child: TripDescription(widget.route.line,
                       widget.route.direction, widget.route.transit),
                 ),
               ),
-              Row(
-                children: [
-                  /////////////////////////////////////////////////////////////////////////
-                  Spacer(
-                    flex: 1,
-                  ),
-                  ///////////////////////////////////////////////////////////////////////
-
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Color(0xff0048AB),
-                          width: 5,
-                        )),
-                    padding: EdgeInsets.all(8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.subway_outlined,
-                          size: 50,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 5),
+                            )
+                          ],
+                          color: cardColor,
                         ),
-                        const Text(
-                          'Stations',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),
-                        ),
-                        Container(
-                          width: 60,
-                          height: 30,
-                          color: Colors.grey[300],
-                          child: Center(
-                            child: Text(
-                              widget.route.routeStations.length.toString(),
-                              style: const TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.subway_outlined,
+                              size: 50,
+                              color: Color(0xff0048AB),
+                            ),
+                            const Text(
+                              'Stations',
+                              style: TextStyle(
+                                color: Color(0xff0048AB),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  /////////////////////////////////////////////////////////////////////////
-                  const Spacer(
-                    flex: 1,
-                  ),
-                  ///////////////////////////////////////////////////////////////////////
-                  const VerticalDivider(
-                    thickness: 1,
-                    width: 20,
-                    color: Colors.black,
-                    endIndent: 10,
-                    indent: 10,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Color(0xff0048AB),
-                          width: 5,
-                        )),
-                    padding: EdgeInsets.all(8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.transit_enterexit_outlined,
-                          size: 50,
-                        ),
-                        const Text(
-                          'Interchange Station',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),
-                        ),
-                        Container(
-                          color: Colors.grey[300],
-                          child: Center(
-                            child: Text(
-                              widget.route.transit,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
+                            Container(
+                              width: 60,
+                              height: 30,
+                              child: Center(
+                                child: Text(
+                                  widget.route.routeStations.length.toString(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: textColor,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  /////////////////////////////////////////////////////////////////////////
-                  const Spacer(
-                    flex: 1,
-                  ),
-                  ///////////////////////////////////////////////////////////////////////
-                ],
+                    /////////////////////////////////////////////////////////////////////
+                    if (widget.route.transit != '')
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ///////////////////////////////////////////////////
+                    if (widget.route.transit != '')
+                      Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 5),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(8),
+                          color: cardColor,
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              color: Color(0xff0048AB),
+                              Icons.transit_enterexit_outlined,
+                              size: 50,
+                            ),
+                            const Text(
+                              'Interchange Station',
+                              style: TextStyle(
+                                color: Color(0xff0048AB),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
+                              ),
+                            ),
+                            Container(
+                              //color: Colors.grey[300],
+                              child: Center(
+                                child: Text(
+                                  widget.route.transit,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: textColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
               ),
               const Divider(
                 color: Colors.black,
@@ -214,14 +225,15 @@ class _TripDetailsState extends State<TripDetails> {
             ),
           ),
  */
+
           DraggableScrollableSheet(
-            initialChildSize: 0.54,
-            minChildSize: 0.54,
+            initialChildSize: Draggablenumber(),
+            minChildSize: Draggablenumber(),
             builder: (context, scrollController) {
               return Container(
-                decoration: BoxDecoration(color: Colors.grey),
+                decoration: const BoxDecoration(color: Color(0xff0048AB)),
                 child: ListView.builder(
-                  physics: ClampingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   controller: scrollController,
                   shrinkWrap: true,
                   itemCount: widget.route.routeStations.length,
@@ -229,26 +241,26 @@ class _TripDetailsState extends State<TripDetails> {
                     if (index == 0) {
                       return Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 50,
                             child: Divider(
                               thickness: 5,
                             ),
                           ),
-                          Text(
+                          const Text(
                             'Stations',
                             style: TextStyle(
-                                color: Colors.black,
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30),
                           ),
                           Card(
                               child: Row(
                             children: [
-                              Icon(Icons.circle, color: Colors.red),
+                              const Icon(Icons.circle, color: Colors.red),
                               Text(
                                 widget.route.routeStations[0],
-                                style: TextStyle(fontSize: 20),
+                                style: const TextStyle(fontSize: 20),
                               ),
                             ],
                           )),
@@ -263,7 +275,7 @@ class _TripDetailsState extends State<TripDetails> {
                                   widget.route.transit ||
                               index == 0 ||
                               index == (widget.route.routeStations.length - 1))
-                            Icon(Icons.circle, color: Colors.red),
+                            const Icon(Icons.circle, color: Colors.red),
                           //SizedBox(height: 40),
                           if (widget.route.routeStations[index] ==
                                   widget.route.transit ||
@@ -271,14 +283,15 @@ class _TripDetailsState extends State<TripDetails> {
                               index == (widget.route.routeStations.length - 1))
                             Text(
                               widget.route.routeStations[index],
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                           if (widget.route.routeStations[index] !=
                                   widget.route.transit &&
                               index != 0 &&
                               index != (widget.route.routeStations.length - 1))
-                            Icon(Icons.circle_outlined, color: Colors.red),
+                            const Icon(Icons.circle_outlined,
+                                color: Colors.red),
                           //SizedBox(height: 40),
                           if (widget.route.routeStations[index] !=
                                   widget.route.transit &&
@@ -286,7 +299,7 @@ class _TripDetailsState extends State<TripDetails> {
                               index != (widget.route.routeStations.length - 1))
                             Text(
                               widget.route.routeStations[index],
-                              style: TextStyle(fontSize: 20),
+                              style: const TextStyle(fontSize: 20),
                             ),
                         ],
                       ),
@@ -301,11 +314,41 @@ class _TripDetailsState extends State<TripDetails> {
     );
   }
 
+  double Draggablenumber() {
+    double extra = 0;
+    if (widget.route.direction[0] == 'Shoubra El-Kheima Direction' ||
+        widget.route.direction[1] == 'Shoubra El-Kheima Direction' ||
+        widget.route.direction[1] == 'Kit-Kat Direction' ||
+        widget.route.direction[0] == 'Kit-Kat Direction' ||
+        widget.route.direction[1] == 'Adli Mansour Direction' ||
+        widget.route.direction[0] == 'Adli Mansour Direction' ||
+        widget.route.transit == 'Al-Shohada') {
+      extra = 0.04;
+    }
+    if (widget.route.transit == '') {
+      return 0.67 - extra;
+    } else {
+      return 0.6 - extra;
+    }
+  }
+
   Widget TripDescription(
       List<int> line, List<String> dircetion, String transit) {
     return Column(
       children: [
         Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 5),
+              )
+            ],
+            borderRadius: BorderRadius.circular(8),
+            color: cardColor,
+          ),
           width: 370,
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -313,7 +356,10 @@ class _TripDetailsState extends State<TripDetails> {
             children: [
               const Text(
                 'Trip Desription:',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Color(0xff0048AB),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
               ),
               if (transit != '')
                 // ignore: prefer_interpolation_to_compose_strings
@@ -331,7 +377,10 @@ class _TripDetailsState extends State<TripDetails> {
                         line[1].toString() +
                         " in " +
                         dircetion[1],
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: textColor,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               if (transit == '')
@@ -344,7 +393,10 @@ class _TripDetailsState extends State<TripDetails> {
                         line[0].toString() +
                         " in " +
                         dircetion[0],
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: textColor,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
             ],
