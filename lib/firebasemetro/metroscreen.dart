@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:tareeqy_metro/components/searchbar.dart';
 import 'package:tareeqy_metro/firebasemetro/Route.dart';
 import 'package:tareeqy_metro/firebasemetro/tripdetailsScreen.dart';
+import 'package:tareeqy_metro/maps/track_location.dart';
 
 class MetroScreen extends StatefulWidget {
   const MetroScreen({super.key});
@@ -248,21 +249,6 @@ class _MetroScreenState extends State<MetroScreen> {
                       ),
                     ),
                     onPressed: () {
-                      MetroRoute route =
-                          GetRoute(selectedValue1, selectedValue2);
-                      print(
-                          '==================================================');
-                      halop(route.routeStations);
-                      print(
-                          '==================================================');
-                      halop(route.direction);
-                      print(
-                          '==================================================');
-                      print("line: " + route.line[0].toString());
-                      print("line: " + route.line[1].toString());
-                      print(
-                          '==================================================');
-                      print("transit: " + route.transit);
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
@@ -318,7 +304,13 @@ class _MetroScreenState extends State<MetroScreen> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TrackLocation()),
+                              );
+                            },
                             child: const Text(
                               'Nearest Station?',
                               style:
@@ -342,11 +334,11 @@ class _MetroScreenState extends State<MetroScreen> {
   }
 
   List<String> getStations() {
-    List<String> station_name = [];
+    List<String> stationName = [];
     for (int i = 0; i < stations.length; i++) {
-      station_name.add(stations[i]['name']);
+      stationName.add(stations[i]['name']);
     }
-    return station_name;
+    return stationName;
   }
 
   String metroPrice(String from, String to) {
@@ -399,10 +391,10 @@ class _MetroScreenState extends State<MetroScreen> {
             to == transitStation13 ||
             to == transitStation23 ||
             to == 'Mohamed Naguib')) {
-      fromCollection = TeansitIndx(from, to)[0];
-      toCollection = TeansitIndx(from, to)[0];
-      fromIndx = TeansitIndx(from, to)[1];
-      toIndx = TeansitIndx(from, to)[2];
+      fromCollection = TransitIndx(from, to)[0];
+      toCollection = TransitIndx(from, to)[0];
+      fromIndx = TransitIndx(from, to)[1];
+      toIndx = TransitIndx(from, to)[2];
     }
 
     if (fromCollection == toCollection) {
@@ -446,8 +438,6 @@ class _MetroScreenState extends State<MetroScreen> {
         route.direction
             .add(getDirection(naser[1], toIndx, getCollection(toIndx)));
         route.line.add(getCollection(toIndx));
-        print(stations[toIndx]['name']);
-        print('==========================');
       }
       ////////////////////////////////////////////////////////////////////////////////////////////////
       else if ((fromCollection == 2 && toCollection == 3) ||
@@ -524,7 +514,6 @@ class _MetroScreenState extends State<MetroScreen> {
           for (int i = sadat[1] + inc;
               sadat[1] < toIndx ? (i <= toIndx) : (i >= toIndx);
               sadat[1] < toIndx ? i++ : i--) {
-            print('inside the second loop');
             route.routeStations.add(stations[i]['name']);
           }
           route.direction
@@ -595,7 +584,6 @@ class _MetroScreenState extends State<MetroScreen> {
             route.line.add(getCollection(21));
             route.routeStations.add(stations[21]['name']);
             route.transit = stations[21]['name'];
-            print(stations[21]['name']);
             int inc1 = 47 < toIndx ? 1 : -1;
             for (int i = 47 + inc1;
                 47 < toIndx ? (i <= toIndx) : (i >= toIndx);
@@ -621,7 +609,6 @@ class _MetroScreenState extends State<MetroScreen> {
             route.line.add(getCollection(44));
             route.routeStations.add(stations[44]['name']);
             route.transit = stations[44]['name'];
-            print(stations[44]['name']);
             int inc = 18 < toIndx ? 1 : -1;
             for (int i = 18 + inc;
                 18 < toIndx ? (i <= toIndx) : (i >= toIndx);
@@ -644,7 +631,6 @@ class _MetroScreenState extends State<MetroScreen> {
             route.line.add(getCollection(47));
             route.routeStations.add(stations[47]['name']);
             route.transit = stations[47]['name'];
-            print(stations[47]['name']);
             int inc1 = 21 < toIndx ? 1 : -1;
             for (int i = 21 + inc1;
                 21 < toIndx ? (i <= toIndx) : (i >= toIndx);
@@ -708,7 +694,7 @@ class _MetroScreenState extends State<MetroScreen> {
     return route;
   }
 
-  void halop(List<String> route) {
+/*   void halop(List<String> route) {
     for (int i = 0; i < route.length; i++) {
       print(route[i]);
     }
@@ -718,9 +704,9 @@ class _MetroScreenState extends State<MetroScreen> {
     for (int i = 0; i < stations.length; i++) {
       print(i.toString() + ": " + stations[i]['name']);
     }
-  }
+  } */
 
-  List<int> TeansitIndx(String from, String to) {
+  List<int> TransitIndx(String from, String to) {
     if ((from == transitStation23 || from == transitStation13) &&
         (to == transitStation23 || to == transitStation13)) {
       if (from == transitStation23) {
