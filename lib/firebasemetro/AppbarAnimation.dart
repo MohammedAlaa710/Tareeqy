@@ -22,7 +22,7 @@ class _AnimatedAppBarState extends State<AnimatedAppBar> {
         right: widget.isOverflowed ? -50 : 0,
         top: 0,
         child: AppBar(
-          title: Row(
+          title: const Row(
             children: [
               Text(
                 'Long Text That Might Overflow',

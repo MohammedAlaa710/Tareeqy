@@ -1,36 +1,130 @@
 import 'package:flutter/material.dart';
-import 'package:tareeqy_metro/firebasemetro/metro_Screen.dart';
+import 'package:tareeqy_metro/firebasebus/BusScreen.dart';
 import 'package:tareeqy_metro/firebasemetro/metroscreen.dart';
-import 'package:tareeqy_metro/test.dart';
 
-class HomePage extends StatelessWidget {
+//habtdi ta3del
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return const MetroScreen();
-              },
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            Container(
+                padding: EdgeInsets.fromLTRB(50, 100, 50, 50),
+                child: Image.asset(
+                  "assets/images/tareeqy.jpeg",
+                  width: 300,
+                  height: 170,
+                )),
+            Container(
+              alignment: Alignment.center,
+              child: const Text(
+                ' Select Your Transportation',
+                style: TextStyle(
+                  fontSize: 35,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
-          );
-        },
-        backgroundColor: const Color(0xff1C88D9),
-        shape:
-            const BeveledRectangleBorder(side: BorderSide(color: Colors.black)),
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
-      backgroundColor: const Color(0xff1F1F1F),
-      appBar: AppBar(
-        title: const Text(
-          'Firebase',
-          style: TextStyle(color: Colors.white),
+            const SizedBox(height: 60),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 148, 189, 223),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        width: 4,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5), // Shadow color
+                          spreadRadius: 2, // Spread radius
+                          blurRadius: 5, // Blur radius
+                          offset: Offset(0, 3), // Offset
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    child: IconButton(
+                      /*style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(10),
+                        backgroundColor: MaterialStateProperty.all(
+                            Color.fromARGB(255, 158, 190, 235)),
+                      ),*/
+
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BusScreen()));
+                      },
+                      icon: Image.asset(
+                        "assets/images/BusIcon.png",
+                        width: 200,
+                        height: 130,
+                      ),
+                      color: Colors.black,
+                      //iconSize: 1,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 148, 189, 223),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        width: 4,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5), // Shadow color
+                          spreadRadius: 2, // Spread radius
+                          blurRadius: 5, // Blur radius
+                          offset: Offset(0, 3), // Offset
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(10),
+                    child: IconButton(
+                      /*style: const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(
+                            Color.fromARGB(255, 158, 190, 235)),
+                      ),*/
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MetroScreen()));
+                      },
+                      icon: Image.asset(
+                        "assets/images/MetroIcon.png",
+                        width: 200,
+                        height: 130,
+                      ),
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-        backgroundColor: const Color(0xff1F88D9),
       ),
     );
   }

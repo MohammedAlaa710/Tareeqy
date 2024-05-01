@@ -22,7 +22,6 @@ class _TrackLocationState extends State<TrackLocation> {
   void initState() {
     initialCameraPosition = const CameraPosition(
         zoom: 1, target: LatLng(30.05761362397355, 31.228222800194313));
-
     getMyLocation();
     super.initState();
   }
@@ -51,7 +50,7 @@ class _TrackLocationState extends State<TrackLocation> {
     );
   }
 
-  void getLocationData() async {
+/*  void getLocationData() async {
     location.changeSettings(
       distanceFilter: 2,
     );
@@ -86,7 +85,7 @@ class _TrackLocationState extends State<TrackLocation> {
           controller
               .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
         }
-      } else {
+      } else { //the second case
         var controller = googleMapController;
         if (controller != null) {
           controller.animateCamera(CameraUpdate.newLatLng(
@@ -95,7 +94,47 @@ class _TrackLocationState extends State<TrackLocation> {
       }
       firstRun = false;
     });
+  }*/
+
+////////////////////////////////////////////////////////////////////////////////////////
+  void getLocationData() async {
+    location.changeSettings(
+      distanceFilter: 2,
+    );
+    var markerIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(),
+      'assets/images/placeholder.png',
+    );
+
+    location.onLocationChanged.listen((locationData) {
+      // Marker
+      var myLocationMarker = Marker(
+        icon: markerIcon,
+        markerId: const MarkerId('currentID'),
+        position: LatLng(locationData.latitude!, locationData.longitude!),
+        infoWindow: const InfoWindow(
+          title: 'My Location',
+          snippet:
+              'The location of this icon changes by changing your location',
+        ),
+      );
+      vmarkers.add(myLocationMarker);
+      setState(() {});
+
+      // Camera
+      var cameraPosition = CameraPosition(
+        target: LatLng(locationData.latitude!, locationData.longitude!),
+        zoom: 17,
+      );
+      var controller = googleMapController;
+      if (controller != null) {
+        controller
+            .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+      }
+    });
   }
+
+////////////////////////////////////////////////////////////////////////////////////////
 
   void getMyLocation() async {
     await myLocation.caheckAndRqstLocService();

@@ -19,7 +19,7 @@ class _TripDetailsState extends State<TripDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 111, 117, 118),
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
           title: SingleChildScrollView(
@@ -37,11 +37,10 @@ class _TripDetailsState extends State<TripDetails> {
               ],
             ),
           ),
-          backgroundColor: const Color.fromARGB(255, 14, 72, 171)),
+          backgroundColor: const Color.fromARGB(255, 40, 53, 173)),
       body: Stack(
         //physics: BouncingScrollPhysics(),
         //fit: StackFit.expand,
-
         children: [
           Column(
             children: [
@@ -53,7 +52,7 @@ class _TripDetailsState extends State<TripDetails> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -64,10 +63,10 @@ class _TripDetailsState extends State<TripDetails> {
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withOpacity(0.3),
                               spreadRadius: 5,
                               blurRadius: 7,
-                              offset: Offset(0, 5),
+                              //offset: Offset(0, 5),
                             )
                           ],
                           color: cardColor,
@@ -79,12 +78,12 @@ class _TripDetailsState extends State<TripDetails> {
                             const Icon(
                               Icons.subway_outlined,
                               size: 50,
-                              color: Color(0xff0048AB),
+                              color: Color.fromARGB(255, 40, 53, 173),
                             ),
                             const Text(
                               'Stations',
                               style: TextStyle(
-                                color: Color(0xff0048AB),
+                                color: Color.fromARGB(255, 40, 53, 173),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 17,
                               ),
@@ -118,10 +117,10 @@ class _TripDetailsState extends State<TripDetails> {
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withOpacity(0.3),
                               spreadRadius: 5,
                               blurRadius: 7,
-                              offset: Offset(0, 5),
+                              //offset: Offset(0, 0),
                             )
                           ],
                           borderRadius: BorderRadius.circular(8),
@@ -132,14 +131,14 @@ class _TripDetailsState extends State<TripDetails> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(
-                              color: Color(0xff0048AB),
+                              color: Color.fromARGB(255, 40, 53, 173),
                               Icons.transit_enterexit_outlined,
                               size: 50,
                             ),
                             const Text(
                               'Interchange Station',
                               style: TextStyle(
-                                color: Color(0xff0048AB),
+                                color: Color.fromARGB(255, 40, 53, 173),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 17,
                               ),
@@ -318,8 +317,8 @@ class _TripDetailsState extends State<TripDetails> {
     double extra = 0;
     if (widget.route.direction[0] == 'Shoubra El-Kheima Direction' ||
         widget.route.direction[1] == 'Shoubra El-Kheima Direction' ||
-        widget.route.direction[1] == 'Kit-Kat Direction' ||
-        widget.route.direction[0] == 'Kit-Kat Direction' ||
+        widget.route.direction[1] == 'Rod El Farag Corridor Direction' ||
+        widget.route.direction[0] == 'Rod El Farag Corridor Direction' ||
         widget.route.direction[1] == 'Adli Mansour Direction' ||
         widget.route.direction[0] == 'Adli Mansour Direction' ||
         widget.route.transit == 'Al-Shohada') {
@@ -340,10 +339,10 @@ class _TripDetailsState extends State<TripDetails> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withOpacity(0.3),
                 spreadRadius: 5,
                 blurRadius: 7,
-                offset: Offset(0, 5),
+                //offset: Offset(0, 5),
               )
             ],
             borderRadius: BorderRadius.circular(8),
