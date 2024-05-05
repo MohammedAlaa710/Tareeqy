@@ -128,15 +128,10 @@ class _BusScreenState extends State<BusScreen> {
                     setState(() {
                       //print(getBusRegions("n1", selectedValue1, selectedValue2)
                       //  .length);
-                      testprints(insertionSort(
-                          regionsCoveredList(
-                              getBusNumber(selectedValue1, selectedValue2),
-                              selectedValue1,
-                              selectedValue2),
-                          getBusNumber(selectedValue1, selectedValue2)));
-                      selectedValue1 = '';
-                      selectedValue2 = '';
-                      showBusNumbers = false;
+                      testprints(getTwoBuses(selectedValue1, selectedValue2));
+                      //selectedValue1 = '';
+                      //selectedValue2 = '';
+                      //showBusNumbers = false;
                     });
                   },
                   child: const Text('Clear',
@@ -305,6 +300,20 @@ class _BusScreenState extends State<BusScreen> {
     );
   }
 
+  List<String> busesPassByRegion(String region) {
+    List<String> buses = [];
+    for (int i = 0; i < stationsQuery.length; i++) {
+      if (stationsQuery[i].id == region) {
+        if (stationsQuery[i].get('Bus_Number') != null) {
+          for (String busNumberItem in stationsQuery[i].get('Bus_Number')) {
+            buses.add(busNumberItem);
+          }
+        }
+      }
+    }
+    return buses;
+  }
+
   //hangeb arkam el otobesat mn el firebase
   List<String> getBusNumber(String selectedItem1, String selectedItem2) {
     List<String> busNumber1 = [];
@@ -338,24 +347,78 @@ class _BusScreenState extends State<BusScreen> {
     return busNumber;
   }
 
-  /*List<String> getBusRegions(String busNumber) {
-    //print(busNumber);
-    //testprints(busquerytest);
+  List<List<String>> getTwoBuses(String from, String to) {
+    List<String> fromList = busesPassByRegion(from);
+    List<String> toList = busesPassByRegion(to);
+    print("bus1");
+    testprint(fromList);
+    print("bus2");
+    testprint(toList);
+    List<String> regionsCoveredBy1 = [];
+    List<String> regionsCoveredBy2 = [];
+    List<List<String>> twoBusNumbers = [];
+    //List<List<String>> commonRegionsCovered = [];
+
+    for (int i = 0; i < fromList.length; i++) {
+      regionsCoveredBy1 = getBusRegionsOfBus(fromList[i]);
+      print("bus1 regions");
+
+      testprint(regionsCoveredBy1);
+      for (int j = 0; j < toList.length; j++) {
+        regionsCoveredBy2 = getBusRegionsOfBus(toList[i]);
+        print("bus1 regions");
+        testprint(regionsCoveredBy2);
+
+        if (commonRegions(regionsCoveredBy1, regionsCoveredBy2).isNotEmpty) {
+          //print("returned from common");
+          twoBusNumbers.add([fromList[i], toList[j]]);
+          //commonRegionsCovered.add(commonRegions(regionsCoveredBy1, regionsCoveredBy2));
+          continue;
+        }
+      }
+    }
+    print("the two buses");
+    testprints(twoBusNumbers);
+
+    return twoBusNumbers;
+  }
+
+  List<String> commonRegions<T>(
+      List<String> regionsList1, List<String> regionsList2) {
+    List<String> x = [];
+    for (int i = 0; i < regionsList1.length; i++) {
+      for (int j = 0; j < regionsList2.length; j++) {
+        if (regionsList1[i] == regionsList2[j]) {
+          x.add(regionsList1[i]);
+        }
+      }
+    }
+    print("inside the common");
+    testprint(x);
+    print("ha return");
+    return x;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  List<String> getBusRegionsOfBus(String busNumber) {
     List<String> regions = [];
+
     for (int i = 0; i < busQuery.length; i++) {
       if (busQuery[i].id == busNumber) {
         if (busQuery[i].get('Regions') != null) {
           for (String busNumberItem in busQuery[i].get('Regions')) {
-            regions.add(busNumberItem); // Add each string in the array
+            regions.add(busNumberItem);
           }
           break;
         }
       }
     }
     //testprints(getBusRegions("n1"));
-    return regions;
-  }*/
 
+    return regions;
+  }
+
+  //////////////////////////////////////////////////////////////////////////
   List<String> getBusRegions(String busNumber, String from, String to) {
     List<String> regions = [];
     bool fromFlag = false;
@@ -457,13 +520,13 @@ class _BusScreenState extends State<BusScreen> {
   //list1(getBusNumber) => fyha arkam el busat
   //list2(regionsCoveredList) => fyha 3dd el ma7tat el be3di 3leha kol bus
 
-  void testprint(List<int> x) {
+  void testprint(List<String> x) {
     for (int i = 0; i < x.length; i++) {
-      //print(x[i]);
+      print(x[i]);
     }
   }
 
-  void testprints(List<String> x) {
+  void testprints(List<List<String>> x) {
     for (int i = 0; i < x.length; i++) {
       print(x[i]);
     }
