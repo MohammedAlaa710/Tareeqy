@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class NearestMetroStationScreen extends StatefulWidget {
+  const NearestMetroStationScreen({super.key});
+
   @override
   _NearestMetroStationScreenState createState() =>
       _NearestMetroStationScreenState();
@@ -17,13 +19,13 @@ class _NearestMetroStationScreenState extends State<NearestMetroStationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nearest Metro Station'),
+        title: const Text('Nearest Metro Station'),
       ),
       body: Stack(
         children: <Widget>[
           GoogleMap(
             onMapCreated: (controller) => googleMapController = controller,
-            initialCameraPosition: CameraPosition(
+            initialCameraPosition: const CameraPosition(
               target: LatLng(30.0444, 31.2357), // Cairo coordinates
               zoom: 12.0,
             ),
@@ -37,7 +39,7 @@ class _NearestMetroStationScreenState extends State<NearestMetroStationScreen> {
                 print("hacall el func");
                 _getNearestMetroStation();
               },
-              child: Text('Find Nearest Metro Station'),
+              child: const Text('Find Nearest Metro Station'),
             ),
           ),
         ],
@@ -52,7 +54,7 @@ class _NearestMetroStationScreenState extends State<NearestMetroStationScreen> {
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 
     // Replace with your current location
-    LatLng currentLocation = LatLng(30.080944926478765, 31.24511076711392);
+    LatLng currentLocation = const LatLng(30.080944926478765, 31.24511076711392);
 
     // Make a request to the Places API
     final response = await http.get(

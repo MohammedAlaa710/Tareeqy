@@ -88,7 +88,7 @@ class _TripDetailsState extends State<TripDetails> {
                                 fontSize: 17,
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               width: 60,
                               height: 30,
                               child: Center(

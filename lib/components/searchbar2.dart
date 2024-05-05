@@ -68,7 +68,7 @@ class _CustomSearch2State extends State<CustomSearch2> {
               showSearchBox: true,
               showSelectedItems: true,
               searchFieldProps: TextFieldProps(
-                cursorColor: Color.fromARGB(255, 49, 69, 103),
+                cursorColor: const Color.fromARGB(255, 49, 69, 103),
                 autocorrect: true,
                 decoration: InputDecoration(
                   filled: true,
@@ -139,7 +139,7 @@ class _CustomSearch2State extends State<CustomSearch2> {
               showSearchBox: true,
               showSelectedItems: true,
               searchFieldProps: TextFieldProps(
-                cursorColor: Color.fromARGB(255, 49, 69, 103),
+                cursorColor: const Color.fromARGB(255, 49, 69, 103),
                 autocorrect: true,
                 decoration: InputDecoration(
                   filled: true,
@@ -166,10 +166,10 @@ class _CustomSearch2State extends State<CustomSearch2> {
   }
 
   List<String> getStations() {
-    List<String> station_name = [];
+    List<String> stationName = [];
     for (int i = 0; i < widget.stations.length; i++) {
-      station_name.add(widget.stations[i]['name']);
+      stationName.add(widget.stations[i]['name']);
     }
-    return station_name;
+    return stationName;
   }
 }

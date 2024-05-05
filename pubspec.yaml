@@ -43,10 +43,11 @@ dependencies:
   google_sign_in: ^6.2.1
   dropdown_search: ^5.0.6
   auto_size_text: ^3.0.0
-  google_maps_flutter: ^2.5.3
   location: ^5.0.3
   http: ^1.2.0
-
+  geolocator: ^11.0.0
+  google_maps_flutter: ^2.6.1
+  flutter_google_maps_webservices: ^1.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

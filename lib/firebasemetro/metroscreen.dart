@@ -25,21 +25,21 @@ class _MetroScreenState extends State<MetroScreen> {
   final String transitStation13 = 'Gamal Abd Al-Naser';
 
   GetStations() async {
-    QuerySnapshot metro_line_1 = await FirebaseFirestore.instance
+    QuerySnapshot metroLine1 = await FirebaseFirestore.instance
         .collection('Metro_Line_1')
         .orderBy('number')
         .get();
-    QuerySnapshot metro_line_2 = await FirebaseFirestore.instance
+    QuerySnapshot metroLine2 = await FirebaseFirestore.instance
         .collection('Metro_Line_2')
         .orderBy('number')
         .get();
-    QuerySnapshot metro_line_3 = await FirebaseFirestore.instance
+    QuerySnapshot metroLine3 = await FirebaseFirestore.instance
         .collection('Metro_Line_3')
         .orderBy('number')
         .get();
-    stations.addAll(metro_line_1.docs);
-    stations.addAll(metro_line_2.docs);
-    stations.addAll(metro_line_3.docs);
+    stations.addAll(metroLine1.docs);
+    stations.addAll(metroLine2.docs);
+    stations.addAll(metroLine3.docs);
     setState(() {});
   }
 
@@ -381,8 +381,7 @@ class _MetroScreenState extends State<MetroScreen> {
   }
 
   String metroTime(String from, String to) {
-    return (((GetRoute(from, to).routeStations.length - 1) * 2.5).toString() +
-        " min");
+    return ("${(GetRoute(from, to).routeStations.length - 1) * 2.5} min");
   }
 
   int getStationsIndx(String stationName) {

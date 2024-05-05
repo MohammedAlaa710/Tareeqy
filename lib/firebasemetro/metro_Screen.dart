@@ -119,7 +119,7 @@ class _Metro_ScreenState extends State<Metro_Screen> {
                 ////////////////////////////////////////////////////////////////////////////
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(255, 40, 53, 173),
+                  backgroundColor: Color.fromARGB(255, 40, 53, 173),
                     minimumSize: Size(150, 50),
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                     shape: RoundedRectangleBorder(
@@ -252,7 +252,7 @@ class _Metro_ScreenState extends State<Metro_Screen> {
                     //     color: Color.fromARGB(255, 14, 72, 171)),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Color.fromARGB(255, 40, 53, 173),
+                        backgroundColor: Color.fromARGB(255, 40, 53, 173),
                         minimumSize: Size(150, 50),
                         padding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 12),

@@ -99,7 +99,7 @@ class _BusScreenState extends State<BusScreen> {
         ////////////////////////////////////////////////////////////////////////////
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
+            backgroundColor: WidgetStateProperty.all(
               Color(0xff2B62AD),
             ),
           ),
@@ -116,7 +116,7 @@ class _BusScreenState extends State<BusScreen> {
         ),
         ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(
+            backgroundColor: WidgetStateProperty.all(
               Color(0xff2B62AD),
             ),
           ),

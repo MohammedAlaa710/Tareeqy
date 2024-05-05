@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Container(
-                padding: EdgeInsets.fromLTRB(50, 100, 50, 50),
+                padding: const EdgeInsets.fromLTRB(50, 100, 50, 50),
                 child: Image.asset(
                   "assets/images/tareeqy.jpeg",
                   width: 300,
@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                       color: const Color.fromARGB(255, 148, 189, 223),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Color.fromARGB(255, 0, 0, 0),
+                        color: const Color.fromARGB(255, 0, 0, 0),
                         width: 4,
                       ),
                       boxShadow: [
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.black.withOpacity(0.5), // Shadow color
                           spreadRadius: 2, // Spread radius
                           blurRadius: 5, // Blur radius
-                          offset: Offset(0, 3), // Offset
+                          offset: const Offset(0, 3), // Offset
                         ),
                       ],
                     ),
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                       color: const Color.fromARGB(255, 148, 189, 223),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Color.fromARGB(255, 0, 0, 0),
+                        color: const Color.fromARGB(255, 0, 0, 0),
                         width: 4,
                       ),
                       boxShadow: [
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.black.withOpacity(0.5), // Shadow color
                           spreadRadius: 2, // Spread radius
                           blurRadius: 5, // Blur radius
-                          offset: Offset(0, 3), // Offset
+                          offset: const Offset(0, 3), // Offset
                         ),
                       ],
                     ),
@@ -110,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MetroScreen()));
+                                builder: (context) => const MetroScreen()));
                       },
                       icon: Image.asset(
                         "assets/images/MetroIcon.png",

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustButton extends StatelessWidget {
   final String title;
   final void Function() onPressed;
-  const CustButton({required this.title, required this.onPressed});
+  const CustButton({super.key, required this.title, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

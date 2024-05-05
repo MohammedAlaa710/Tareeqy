@@ -17,7 +17,7 @@ class _AnimatedAppBarState extends State<AnimatedAppBar> {
     return OverflowBox(
       maxWidth: double.infinity,
       child: AnimatedPositioned(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         left: widget.isOverflowed ? -50 : 0,
         right: widget.isOverflowed ? -50 : 0,
         top: 0,
