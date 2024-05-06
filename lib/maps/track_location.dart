@@ -9,8 +9,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
-
 class TrackLocation extends StatefulWidget {
   const TrackLocation({super.key});
 
@@ -19,24 +17,25 @@ class TrackLocation extends StatefulWidget {
 }
 
 class _TrackLocationState extends State<TrackLocation> {
-void showNearestStationInfo(String nearestStationName) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return Center( // Wrap content with Center for vertical centering
-        child: Container(
-          height: 100.0, // Adjust height as needed
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            'Nearest Station to Your Location is: $nearestStationName',
-            style: const TextStyle(fontSize: 18.0),
-            textAlign: TextAlign.center, // Center text vertically
+  void showNearestStationInfo(String nearestStationName) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Center(
+          // Wrap content with Center for vertical centering
+          child: Container(
+            height: 100.0, // Adjust height as needed
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              'Nearest Station to Your Location is: $nearestStationName',
+              style: const TextStyle(fontSize: 18.0),
+              textAlign: TextAlign.center, // Center text vertically
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   late CameraPosition initialCameraPosition;
   GoogleMapController? googleMapController;
@@ -58,121 +57,123 @@ void showNearestStationInfo(String nearestStationName) {
     googleMapController?.dispose();
     super.dispose();
   }
-Set<Polyline> _polylines = {};
+
+  Set<Polyline> _polylines = {};
 
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-    body: Stack(
-      children: [
-        GoogleMap(
-          markers: vmarkers,
-          polylines: _polylines, // Add this line to render polylines on the map
-          onMapCreated: (controller) {
-            googleMapController = controller;
-          },
-          initialCameraPosition: initialCameraPosition,
-        ),
-        
-      ],
-    ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        Navigator.of(context).pop(); // Navigate back to MetroScreen
-      },
-      child: const Icon(Icons.arrow_back),
-    ),
-  );
-}
-
+    return Scaffold(
+      body: Stack(
+        children: [
+          GoogleMap(
+            markers: vmarkers,
+            polylines:
+                _polylines, // Add this line to render polylines on the map
+            onMapCreated: (controller) {
+              googleMapController = controller;
+            },
+            initialCameraPosition: initialCameraPosition,
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pop(); // Navigate back to MetroScreen
+        },
+        child: const Icon(Icons.arrow_back),
+      ),
+    );
+  }
 
 ////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////
-void getLocationData() async {
-   print("inside get location");
-  location.changeSettings(
-    distanceFilter: 2,
-  );
-  var markerIcon = await BitmapDescriptor.fromAssetImage(
-    const ImageConfiguration(),
-    'assets/images/placeholder.png',
-  );
-print("helloooooooooooooooooooooooo000000000000");
-  location.onLocationChanged.listen((locationData) async {
-    if (!firstRun) {
-      return; // Prevents multiple listeners after the first run
-    }
-    firstRun = false;
-
-print("helloooooooooooooooooooooooo11");
-    // Marker for current location
-    var myLocationMarker = Marker(
-      icon: markerIcon,
-      markerId: const MarkerId('currentID'),
-      position: LatLng(locationData.latitude!, locationData.longitude!),
-      infoWindow: const InfoWindow(
-        title: 'My Location',
-        snippet: 'The location of this icon changes by changing your location',
-      ),
+  void getLocationData() async {
+    print("inside get location");
+    location.changeSettings(
+      distanceFilter: 2,
     );
-    vmarkers.add(myLocationMarker);
-
-    // Update camera to current location
-    var cameraPosition = CameraPosition(
-      target: LatLng(locationData.latitude!, locationData.longitude!),
-      zoom: 17,
+    var markerIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(),
+      'assets/images/placeholder.png',  
     );
-    googleMapController?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-print("helloooooooooooooooooooooooo");
-    // Get the nearest station
-    var nearestStation = await getNearestStation(locationData);
-    var data = nearestStation.data() as Map<String, dynamic>;
-    String nearestStationName = data['name'];
-    showNearestStationInfo(nearestStationName);
-    GeoPoint? stationLocation = data['latlng'];
-print("hello" + nearestStation.id);
-    if (stationLocation != null) {
-      // Marker for the nearest station
-      var stationMarker = Marker(
+    print("helloooooooooooooooooooooooo000000000000");
+    location.onLocationChanged.listen((locationData) async {
+      if (!firstRun) {
+        return; // Prevents multiple listeners after the first run
+      }
+      firstRun = false;
+
+      print("helloooooooooooooooooooooooo11");
+      // Marker for current location
+      var myLocationMarker = Marker(
         icon: markerIcon,
-        markerId: const MarkerId('stationID'),
-        position: LatLng(stationLocation.latitude, stationLocation.longitude),
-        infoWindow: InfoWindow(
-          title: data['name'], // Assuming 'name' is a field in the station document
-          snippet: 'Nearest Station',
+        markerId: const MarkerId('currentID'),
+        position: LatLng(locationData.latitude!, locationData.longitude!),
+        infoWindow: const InfoWindow(
+          title: 'My Location',
+          snippet:
+              'The location of this icon changes by changing your location',
         ),
       );
-      vmarkers.add(stationMarker);
-      print("before entering getdirections");
+      vmarkers.add(myLocationMarker);
 
-      // Get directions to the nearest station
-      var directions = await getDirections(
-        LatLng(locationData.latitude!, locationData.longitude!),
-        LatLng(stationLocation.latitude, stationLocation.longitude),
+      // Update camera to current location
+      var cameraPosition = CameraPosition(
+        target: LatLng(locationData.latitude!, locationData.longitude!),
+        zoom: 17,
       );
+      googleMapController
+          ?.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+      print("helloooooooooooooooooooooooo");
+      // Get the nearest station
+      var nearestStation = await getNearestStation(locationData);
+      var data = nearestStation.data() as Map<String, dynamic>;
+      String nearestStationName = data['name'];
+      showNearestStationInfo(nearestStationName);
+      GeoPoint? stationLocation = data['latlng'];
+      print("hello" + nearestStation.id);
+      if (stationLocation != null) {
+        // Marker for the nearest station
+        var stationMarker = Marker(
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          markerId: const MarkerId('stationID'),
+          position: LatLng(stationLocation.latitude, stationLocation.longitude),
+          infoWindow: InfoWindow(
+            title: data[
+                'name'], // Assuming 'name' is a field in the station document
+            snippet: 'Nearest Station',
+          ),
+        );
+        vmarkers.add(stationMarker);
+        print("before entering getdirections");
 
-      // Draw the route on the map
-      var polyline = Polyline(
-        polylineId: const PolylineId('route'),
-        color: Colors.blue,
-        points: directions,
-        width: 5,
-      );
-    _polylines.add(polyline);
-      setState(() {
-        vmarkers = vmarkers; // Update markers
-        _polylines = _polylines; // Update polylines
-      });
-    }
-  });
-}
+        // Get directions to the nearest station
+        var directions = await getDirections(
+          LatLng(locationData.latitude!, locationData.longitude!),
+          LatLng(stationLocation.latitude, stationLocation.longitude),
+        );
+
+        // Draw the route on the map
+        var polyline = Polyline(
+          polylineId: const PolylineId('route'),
+          color: Colors.blue,
+          points: directions,
+          width: 5,
+        );
+        _polylines.add(polyline);
+        setState(() {
+          vmarkers = vmarkers; // Update markers
+          _polylines = _polylines; // Update polylines
+        });
+      }
+    });
+  }
 ////////////////////////////////////////////////////////////////////////////////////////
-
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
   void getMyLocation() async {
-     print("inside get my");
+    print("inside get my");
     await myLocation.caheckAndRqstLocService();
     var permStatus = await myLocation.caheckAndRqstLocPerm();
     if (permStatus) {
@@ -195,43 +196,45 @@ Future<DocumentSnapshot> getNearestStation(LocationData currentLocation) async {
   // Find the nearest station
   DocumentSnapshot? nearestStation;
   double smallestDistance = double.infinity;
-for (var station in allStations) {
-  var data = station.data() as Map<String, dynamic>; // Cast to Map<String, dynamic>
-  GeoPoint? stationLocation = data['latlng'];
+  for (var station in allStations) {
+    var data =
+        station.data() as Map<String, dynamic>; // Cast to Map<String, dynamic>
+    GeoPoint? stationLocation = data['latlng'];
 
-  if (stationLocation != null) {
-    double distance = Geolocator.distanceBetween(
-      currentLocation.latitude!,
-      currentLocation.longitude!,
-      stationLocation.latitude,
-      stationLocation.longitude,
-    );
+    if (stationLocation != null) {
+      double distance = Geolocator.distanceBetween(
+        currentLocation.latitude!,
+        currentLocation.longitude!,
+        stationLocation.latitude,
+        stationLocation.longitude,
+      );
 
-    if (distance < smallestDistance) {
-      smallestDistance = distance;
-      nearestStation = station;
+      if (distance < smallestDistance) {
+        smallestDistance = distance;
+        nearestStation = station;
+      }
     }
   }
-}
-
 
   return nearestStation!;
 }
 
-
-Future<List<LatLng>> getDirections(LatLng startLocation, LatLng endLocation) async {
+Future<List<LatLng>> getDirections(
+    LatLng startLocation, LatLng endLocation) async {
   print("inside get directions");
-  var apiKey = 'AIzaSyCVPrGU9xGHdKiB6SQeGjrx8U2TYbaJDBk'; // Replace with your API key
+  var apiKey =
+      'AIzaSyCVPrGU9xGHdKiB6SQeGjrx8U2TYbaJDBk'; // Replace with your API key
   var urlString = '${startLocation?.latitude},${startLocation?.longitude}';
-var url = Uri.parse('https://maps.googleapis.com/maps/api/directions/json?origin=$urlString&destination=${endLocation?.latitude},${endLocation?.longitude}&key=$apiKey&mode=walking');
+  var url = Uri.parse(
+      'https://maps.googleapis.com/maps/api/directions/json?origin=$urlString&destination=${endLocation?.latitude},${endLocation?.longitude}&key=$apiKey&mode=walking');
 
-print("after apikey" + apiKey.toString());
-print("after start" + startLocation.toString());
-print("after start" + endLocation.toString());
-print("after url" + url.toString());
+  print("after apikey" + apiKey.toString());
+  print("after start" + startLocation.toString());
+  print("after start" + endLocation.toString());
+  print("after url" + url.toString());
   try {
     var response = await http.get(url);
-print("after response" + response.statusCode.toString());
+    print("after response" + response.statusCode.toString());
 
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
@@ -251,8 +254,6 @@ print("after response" + response.statusCode.toString());
     return []; // Or return an empty list to avoid potential errors
   }
 }
-
-
 
 //////////////////////////////////////////////////////////
 List<LatLng> decodePolyline(String encoded) {
@@ -286,6 +287,3 @@ List<LatLng> decodePolyline(String encoded) {
 
   return points;
 }
-
-
-

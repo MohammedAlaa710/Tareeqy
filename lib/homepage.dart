@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BusScreen()));
+                                builder: (context) => BusScreen()));  
                       },
                       icon: Image.asset(
                         "assets/images/BusIcon.png",
