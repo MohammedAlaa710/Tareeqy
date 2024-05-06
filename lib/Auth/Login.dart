@@ -16,6 +16,24 @@ class _LoginState extends State<Login> {
   TextEditingController passwordController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    checkCurrentUser();
+  }
+
+  void checkCurrentUser() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      Future.delayed(Duration.zero, () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -115,7 +133,7 @@ class _LoginState extends State<Login> {
                     );
                     // Navigate to another screen if sign in is successful
                     if (userCredential.user != null) {
-                      Navigator.push(context,
+                      Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) => HomePage()));
                     }
                   } on FirebaseAuthException catch (e) {

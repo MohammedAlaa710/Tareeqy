@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tareeqy_metro/QR-Code/generateQrCode.dart';
 import 'package:tareeqy_metro/components/searchbar.dart';
 import 'package:tareeqy_metro/firebasemetro/Route.dart';
 import 'package:tareeqy_metro/firebasemetro/tripdetailsScreen.dart';
@@ -118,28 +119,57 @@ class _MetroScreenState extends State<MetroScreen> {
               ),
             ),
             ////////////////////////////////////////////////////////////////////////////
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
             ////////////////////////////////////////////////////////////////////////////
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color.fromARGB(255, 40, 53, 173),
-                minimumSize: Size(150, 50),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  // This gives the button squared edges
-                  borderRadius: BorderRadius.circular(5),
+            ///clear/qr
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 40, 53, 173),
+                    minimumSize: Size(150, 50),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      // This gives the button squared edges
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      selectedValue1 = '';
+                      selectedValue2 = '';
+                    });
+                  },
+                  child: const Text(
+                    'Clear',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
                 ),
-              ),
-              onPressed: () {
-                setState(() {
-                  selectedValue1 = '';
-                  selectedValue2 = '';
-                });
-              },
-              child: const Text(
-                'Clear',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
+                Container(width: 20),
+                //=================================================================//
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 40, 53, 173),
+                    minimumSize: Size(150, 50),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      // This gives the button squared edges
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GenerateQrCode()));
+                  },
+                  child: const Text(
+                    'Get a Tticket?',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
+              ],
             ),
 
             ////////////////////////////////////////////////////////////////////////////

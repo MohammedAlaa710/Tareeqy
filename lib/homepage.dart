@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:tareeqy_metro/firebasebus/BusScreen.dart';
 import 'package:tareeqy_metro/firebasemetro/metroscreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tareeqy_metro/Auth/Login.dart';
 
-//habtdi ta3del
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void _logout() async {
+    await _auth.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const Login()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,12 +30,13 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Container(
-                padding: const EdgeInsets.fromLTRB(50, 100, 50, 50),
-                child: Image.asset(
-                  "assets/images/tareeqy.jpeg",
-                  width: 300,
-                  height: 170,
-                )),
+              padding: const EdgeInsets.fromLTRB(50, 100, 50, 50),
+              child: Image.asset(
+                "assets/images/tareeqy.jpeg",
+                width: 300,
+                height: 170,
+              ),
+            ),
             Container(
               alignment: Alignment.center,
               child: const Text(
@@ -51,26 +63,20 @@ class _HomePageState extends State<HomePage> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.5), // Shadow color
-                          spreadRadius: 2, // Spread radius
-                          blurRadius: 5, // Blur radius
-                          offset: const Offset(0, 3), // Offset
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
                     padding: const EdgeInsets.all(10),
                     child: IconButton(
-                      /*style: ButtonStyle(
-                        elevation: MaterialStateProperty.all(10),
-                        backgroundColor: MaterialStateProperty.all(
-                            Color.fromARGB(255, 158, 190, 235)),
-                      ),*/
-
                       onPressed: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BusScreen()));  
+                                builder: (context) => BusScreen()));
                       },
                       icon: Image.asset(
                         "assets/images/BusIcon.png",
@@ -78,7 +84,6 @@ class _HomePageState extends State<HomePage> {
                         height: 130,
                       ),
                       color: Colors.black,
-                      //iconSize: 1,
                     ),
                   ),
                 ),
@@ -93,19 +98,15 @@ class _HomePageState extends State<HomePage> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.5), // Shadow color
-                          spreadRadius: 2, // Spread radius
-                          blurRadius: 5, // Blur radius
-                          offset: const Offset(0, 3), // Offset
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
                     padding: const EdgeInsets.all(10),
                     child: IconButton(
-                      /*style: const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(
-                            Color.fromARGB(255, 158, 190, 235)),
-                      ),*/
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -122,6 +123,18 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: _logout,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+                onPrimary: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: const Text('Logout'),
             ),
           ],
         ),
