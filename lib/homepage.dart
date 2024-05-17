@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tareeqy_metro/Profile/myProfile_Screen.dart';
 import 'package:tareeqy_metro/firebasebus/BusScreen.dart';
+import 'package:tareeqy_metro/firebasemetro/metroService.dart';
 import 'package:tareeqy_metro/firebasemetro/metroscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tareeqy_metro/Auth/Login.dart';
@@ -21,6 +22,11 @@ class _HomePageState extends State<HomePage> {
       context,
       MaterialPageRoute(builder: (context) => const Login()),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -131,8 +137,8 @@ class _HomePageState extends State<HomePage> {
                 ElevatedButton(
                   onPressed: _logout,
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.red,
-                    onPrimary: Colors.white,
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),

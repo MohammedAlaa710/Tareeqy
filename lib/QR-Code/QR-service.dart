@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tareeqy_metro/firebasemetro/metroService.dart';
 
 class QRservices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String dropdownValue = '15 egp'; // Default dropdown value
   TextEditingController controller = TextEditingController();
+  final metroService _metroService = metroService();
 
   Future<void> addQRCodeToUser(BuildContext context, String docId) async {
     try {
@@ -106,12 +108,19 @@ class QRservices {
 
   Future<String> addQRWithSrcandDst(
       BuildContext context, String from, String to) async {
+    print("from " + from);
+    print("to " + to);
+    print("hello");
     try {
       String? userId = _auth.currentUser?.uid;
+      print("before user");
       if (userId != null) {
+        print("inside the user");
+        String price = _metroService.calculatePrice(from, to);
+        print(price);
         DocumentReference docRef = await _firestore.collection('QR').add({
           'fromStation': "none",
-          //'price': price,
+          'price': price,
           'userId': userId,
           'in': false,
           'out': false,

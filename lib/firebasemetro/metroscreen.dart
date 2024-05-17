@@ -17,7 +17,7 @@ class MetroScreen extends StatefulWidget {
 class _MetroScreenState extends State<MetroScreen> {
   String selectedValue1 = '';
   String selectedValue2 = '';
-  bool timePrice = false;
+  bool isDataLoaded = false;
   late final metroService _metroService;
 
   @override
@@ -28,8 +28,10 @@ class _MetroScreenState extends State<MetroScreen> {
   }
 
   Future<void> _loadStations() async {
-    await _metroService.GetStations();
-    setState(() {}); // Update the UI with the loaded stations
+    await _metroService.getStations();
+    setState(() {
+      isDataLoaded = true;
+    }); // Update the UI with the loaded stations
   }
 
   @override
@@ -66,94 +68,103 @@ class _MetroScreenState extends State<MetroScreen> {
             ////////////////////////////////////////////////////////////////////////////
             //const SizedBox(height: 0),
             ////////////////////////////////////////////////////////////////////////////
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: MyDropdownSearch(
-                fromto: 'From',
-                items: _metroService
-                    .getStationNames()
-                    .where((String x) => x != selectedValue2)
-                    .toSet(),
-                selectedValue: selectedValue1,
-                onChanged: (value) {
-                  setState(() {
-                    selectedValue1 = value!;
-                  });
-                },
+            if (!isDataLoaded) CircularProgressIndicator(),
+            if (isDataLoaded)
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: MyDropdownSearch(
+                      fromto: 'From',
+                      items: _metroService
+                          .getStationNames()
+                          .where((String x) => x != selectedValue2)
+                          .toSet(),
+                      selectedValue: selectedValue1,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedValue1 = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  ////////////////////////////////////////////////////////////////////////////
+                  const SizedBox(height: 10),
+                  ////////////////////////////////////////////////////////////////////////////
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: MyDropdownSearch(
+                      fromto: 'To',
+                      items: _metroService
+                          .getStationNames()
+                          .where((String x) => x != selectedValue1)
+                          .toSet(),
+                      selectedValue: selectedValue2,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedValue2 = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
-            ////////////////////////////////////////////////////////////////////////////
-            const SizedBox(height: 10),
-            ////////////////////////////////////////////////////////////////////////////
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: MyDropdownSearch(
-                fromto: 'To',
-                items: _metroService
-                    .getStationNames()
-                    .where((String x) => x != selectedValue1)
-                    .toSet(),
-                selectedValue: selectedValue2,
-                onChanged: (value) {
-                  setState(() {
-                    selectedValue2 = value!;
-                  });
-                },
-              ),
-            ),
             ////////////////////////////////////////////////////////////////////////////
             const SizedBox(height: 15),
             ////////////////////////////////////////////////////////////////////////////
             ///clear/qr
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 40, 53, 173),
-                    minimumSize: Size(150, 50),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      // This gives the button squared edges
-                      borderRadius: BorderRadius.circular(5),
+            if (isDataLoaded) // Show dropdowns only if data is loaded
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 40, 53, 173),
+                      minimumSize: Size(150, 50),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        // This gives the button squared edges
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        selectedValue1 = '';
+                        selectedValue2 = '';
+                      });
+                    },
+                    child: const Text(
+                      'Clear',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      selectedValue1 = '';
-                      selectedValue2 = '';
-                    });
-                  },
-                  child: const Text(
-                    'Clear',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ),
-                Container(width: 20),
-                //=================================================================//
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 40, 53, 173),
-                    minimumSize: Size(150, 50),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      // This gives the button squared edges
-                      borderRadius: BorderRadius.circular(5),
+                  Container(width: 20),
+                  //=================================================================//
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 40, 53, 173),
+                      minimumSize: Size(150, 50),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        // This gives the button squared edges
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GenerateQrCode()));
+                    },
+                    child: const Text(
+                      'Get a Tticket?',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GenerateQrCode()));
-                  },
-                  child: const Text(
-                    'Get a Tticket?',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ),
-              ],
-            ),
+                ],
+              ),
 
             ////////////////////////////////////////////////////////////////////////////
             const SizedBox(height: 10),
@@ -192,7 +203,7 @@ class _MetroScreenState extends State<MetroScreen> {
                             color: Colors.grey[300],
                             child: Center(
                               child: Text(
-                                _metroService.calculateTime(
+                                _metroService.calculatePrice(
                                     selectedValue1, selectedValue2),
                                 style: const TextStyle(
                                   fontSize: 20,

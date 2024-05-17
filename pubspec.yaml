@@ -49,6 +49,7 @@ dependencies:
   google_maps_flutter: 2.5.3  
   flutter_google_maps_webservices: ^1.1.1
   qr_flutter: ^4.1.0
+  intl: ^0.17.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

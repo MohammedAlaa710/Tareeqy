@@ -61,7 +61,7 @@ class _numberOfStaionsQRState extends State<numberOfStaionsQR> {
                         );
                       }
                     },
-              child: Text('Add Document'),
+              child: const Text('Add Document'),
             ),
           ],
         ),

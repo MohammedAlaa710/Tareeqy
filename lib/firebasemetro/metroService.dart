@@ -2,34 +2,46 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tareeqy_metro/firebasemetro/Route.dart';
 
 class metroService {
-  List<QueryDocumentSnapshot> stations = [];
   final List<String> transitStation12 = const ['Sadat', 'Al-Shohada'];
   final String transitStation23 = 'Attaba';
   final String transitStation13 = 'Gamal Abd Al-Naser';
+  static final metroService _instance = metroService._(); // Singleton instance
+  static List<QueryDocumentSnapshot> stations = [];
 
-  Future<void> GetStations() async {
-    try {
-      QuerySnapshot metroLine1 = await FirebaseFirestore.instance
-          .collection('Metro_Line_1')
-          .orderBy('number')
-          .get();
-      QuerySnapshot metroLine2 = await FirebaseFirestore.instance
-          .collection('Metro_Line_2')
-          .orderBy('number')
-          .get();
-      QuerySnapshot metroLine3 = await FirebaseFirestore.instance
-          .collection('Metro_Line_3')
-          .orderBy('number')
-          .get();
-      stations.addAll(metroLine1.docs);
-      stations.addAll(metroLine2.docs);
-      stations.addAll(metroLine3.docs);
-    } catch (e) {
-      print('Error fetching stations: $e');
+  factory metroService() {
+    return _instance;
+  }
+
+  metroService._(); // Private constructor for singleton
+
+  List<QueryDocumentSnapshot> get _stations => stations;
+
+  Future<void> getStations() async {
+    if (stations.isEmpty) {
+      try {
+        QuerySnapshot metroLine1 = await FirebaseFirestore.instance
+            .collection('Metro_Line_1')
+            .orderBy('number')
+            .get();
+        QuerySnapshot metroLine2 = await FirebaseFirestore.instance
+            .collection('Metro_Line_2')
+            .orderBy('number')
+            .get();
+        QuerySnapshot metroLine3 = await FirebaseFirestore.instance
+            .collection('Metro_Line_3')
+            .orderBy('number')
+            .get();
+        stations.addAll(metroLine1.docs);
+        stations.addAll(metroLine2.docs);
+        stations.addAll(metroLine3.docs);
+      } catch (e) {
+        print('Error fetching stations: $e');
+      }
     }
   }
 
-List<String> getStationNames() { //getStations
+  List<String> getStationNames() {
+    //getStations
     return stations.map((station) => station['name'] as String).toList();
   }
 
@@ -37,11 +49,20 @@ List<String> getStationNames() { //getStations
 //1 2 3 4
   String calculatePrice(String from, String to) {
     //metroPrice
-    int routeLength = getRoute(from, to).routeStations.length - 1;
-    if (routeLength < 10) return '6 egp';
-    if (routeLength < 17) return '8 egp';
-    if (routeLength < 24) return '12 egp';
-    return '15 egp';
+    print("from " + from);
+    print("to " + to);
+    try {
+      print("inside try");
+      int routeLength = getRoute(from, to).routeStations.length - 1;
+      print('Route length: $routeLength');
+      if (routeLength < 10) return '6 egp';
+      if (routeLength < 17) return '8 egp';
+      if (routeLength < 24) return '12 egp';
+      return '15 egp';
+    } catch (e) {
+      print('Error calculating price: $e');
+      return 'Error'; // Return an error message if an exception occurs
+    }
   }
 
   String calculateTime(String from, String to) {
@@ -51,7 +72,10 @@ List<String> getStationNames() { //getStations
 
   int getStationIndex(String stationName) {
     //getStationIndex
+    print("-" + stationName + "-");
+    print("stationsLength" + stations.length.toString());
     for (int i = 0; i < stations.length; i++) {
+      print("in indx loop" + stations[i]['name']);
       if (stations[i]['name'] == stationName) {
         return i;
       }
@@ -65,9 +89,11 @@ List<String> getStationNames() { //getStations
     return 3;
   }
 
-
 //t3alaa
   MetroRoute getRoute(String from, String to) {
+    print("inside getRoute");
+    print("getRoute from" + from);
+    print("getRoute to" + to);
     MetroRoute route = MetroRoute();
     int fromIndx = getStationIndex(from);
     int toIndx = getStationIndex(to);
@@ -90,13 +116,18 @@ List<String> getStationNames() { //getStations
     }
     //done 1
     if (fromCollection == toCollection) {
+      print("inside if condition");
+      print("fromIndx" + fromIndx.toString());
+      print("toIndx" + toIndx.toString());
       for (int i = fromIndx;
           fromIndx < toIndx ? i < toIndx + 1 : i > toIndx - 1;
           fromIndx < toIndx ? i++ : i--) {
+        print("inside the loop");
         route.routeStations.add(stations[i]['name']);
         route.direction.add(getDirection(fromIndx, toIndx, toCollection));
         route.line.add(toCollection);
       }
+      print(route.routeStations.length);
     } else {
       //done 2
       if ((fromCollection == 1 && toCollection == 3) ||
@@ -403,7 +434,8 @@ List<String> getStationNames() { //getStations
     }
   } */
 
-  List<int> getTransitIndices(String from, String to) { //transitindex
+  List<int> getTransitIndices(String from, String to) {
+    //transitindex
     if ((from == transitStation23 || from == transitStation13) &&
         (to == transitStation23 || to == transitStation13)) {
       if (from == transitStation23) {
