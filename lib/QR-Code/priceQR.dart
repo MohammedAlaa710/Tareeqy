@@ -1,8 +1,7 @@
-//past code ==============================================================================================//
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:tareeqy_metro/QR-Code/QR-service.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
 
 class priceQR extends StatefulWidget {
@@ -13,71 +12,16 @@ class priceQR extends StatefulWidget {
 }
 
 class _priceQRState extends State<priceQR> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   String dropdownValue = '15 egp'; // Default dropdown value
   TextEditingController controller = TextEditingController();
-
-  /*Future<void> addQRDocument(String price) async {
-    try {
-      String? userId = _auth.currentUser?.uid;
-      if (userId != null) {
-        await _firestore.collection('QR').add({
-          'fromStation': "none",
-          'price': price,
-          'userId': userId,
-          'in': false,
-          'out': false,
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Document added successfully')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('User not found')),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add document: $e')),
-      );
-    }
-  }*/
-  Future<String> addQRDocument(String price) async {
-    try {
-      String? userId = _auth.currentUser?.uid;
-      if (userId != null) {
-        DocumentReference docRef = await _firestore.collection('QR').add({
-          'fromStation': "none",
-          'price': price,
-          'userId': userId,
-          'in': false,
-          'out': false,
-        });
-        String docId = docRef.id; // Get the document ID
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Document added successfully')),
-        );
-        return docId; // Return the document ID
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('User not found')),
-        );
-        return ''; // Return an empty string if user is not found
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add document: $e')),
-      );
-      return ''; // Return an empty string if an error occurs
-    }
-  }
+  final QRservices _qrServices =
+      QRservices(); // Create an instance of the service
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("price page"),
+        title: const Text("price page"),
       ),
       body: Center(
         child: Column(
@@ -100,7 +44,7 @@ class _priceQRState extends State<priceQR> {
                 );
               }).toList(),
             ),
-            SizedBox(
+            const SizedBox(
                 height: 20), // Add some space between the dropdown and button
             ElevatedButton(
               onPressed: () async {
@@ -112,8 +56,11 @@ class _priceQRState extends State<priceQR> {
                 } else {
                   price = 15;
                 }
-                String docId = await addQRDocument('$price egp');
+                String docId =
+                    await _qrServices.addQRWithPrice(context, '$price egp');
                 if (docId.isNotEmpty) {
+                  // ignore: use_build_context_synchronously
+                  await _qrServices.addQRCodeToUser(context, docId);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -122,7 +69,7 @@ class _priceQRState extends State<priceQR> {
                   );
                 }
               },
-              child: Text('Add Document'),
+              child: const Text('Add Document'),
             ),
           ],
         ),

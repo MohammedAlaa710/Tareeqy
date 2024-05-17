@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tareeqy_metro/admin/adminHomePage.dart';
 import 'package:tareeqy_metro/homepage.dart';
 import 'package:tareeqy_metro/Auth/Register.dart';
 
@@ -133,8 +135,19 @@ class _LoginState extends State<Login> {
                     );
                     // Navigate to another screen if sign in is successful
                     if (userCredential.user != null) {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => HomePage()));
+                      checkIsAdmin().then((isAdmin) {
+                        if (isAdmin != null && isAdmin) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => adminHomePage()));
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()));
+                        }
+                      });
                     }
                   } on FirebaseAuthException catch (e) {
                     // Handle error
@@ -195,5 +208,24 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  Future<bool?> checkIsAdmin() async {
+    String? userId = _auth.currentUser?.uid;
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      if (snapshot.exists) {
+        return snapshot.get('isAdmin');
+      } else {
+        print('Document does not exist');
+        return null;
+      }
+    } catch (e) {
+      print('Error getting user field: $e');
+      return null;
+    }
   }
 }

@@ -1,444 +1,76 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:tareeqy_metro/QR-Code/generateQrCode.dart';
-import 'package:tareeqy_metro/components/searchbar.dart';
 import 'package:tareeqy_metro/firebasemetro/Route.dart';
-import 'package:tareeqy_metro/firebasemetro/tripdetailsScreen.dart';
-//import 'package:tareeqy_metro/maps/getNearestStation.dart';
-import 'package:tareeqy_metro/maps/track_location.dart';
 
-class Metro_Screen extends StatefulWidget {
-  const Metro_Screen({super.key});
-
-  @override
-  State<Metro_Screen> createState() => _Metro_ScreenState();
-}
-
-class _Metro_ScreenState extends State<Metro_Screen> {
+class metroService {
   List<QueryDocumentSnapshot> stations = [];
-  String selectedValue1 = '';
-  String selectedValue2 = '';
-  bool timePrice = false;
   final List<String> transitStation12 = const ['Sadat', 'Al-Shohada'];
   final String transitStation23 = 'Attaba';
   final String transitStation13 = 'Gamal Abd Al-Naser';
 
-  GetStations() async {
-    QuerySnapshot metroLine1 = await FirebaseFirestore.instance
-        .collection('Metro_Line_1')
-        .orderBy('number')
-        .get();
-    QuerySnapshot metroLine2 = await FirebaseFirestore.instance
-        .collection('Metro_Line_2')
-        .orderBy('number')
-        .get();
-    QuerySnapshot metroLine3 = await FirebaseFirestore.instance
-        .collection('Metro_Line_3')
-        .orderBy('number')
-        .get();
-    stations.addAll(metroLine1.docs);
-    stations.addAll(metroLine2.docs);
-    stations.addAll(metroLine3.docs);
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    GetStations();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 5,
-        backgroundColor: Colors.white,
-        title: Text(
-          'Metro',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
-      //0xff2A2D2E,, Color.fromARGB(150, 0, 63, 171),
-      /* appBar: AppBar(
-          title: Text(
-            'Metro',
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: const Color.fromARGB(255, 14, 72, 171)), */
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Image(
-              image: AssetImage("assets/images/metroIconn.jpg"),
-              height: 220,
-              width: 220,
-            ),
-            ////////////////////////////////////////////////////////////////////////////
-            //const SizedBox(height: 0),
-            ////////////////////////////////////////////////////////////////////////////
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: MyDropdownSearch(
-                fromto: 'From',
-                items: getStations()
-                    .where((String x) => x != selectedValue2)
-                    .toSet(),
-                selectedValue: selectedValue1,
-                onChanged: (value) {
-                  setState(() {
-                    selectedValue1 = value!;
-                  });
-                },
-              ),
-            ),
-            ////////////////////////////////////////////////////////////////////////////
-            const SizedBox(height: 10),
-            ////////////////////////////////////////////////////////////////////////////
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: MyDropdownSearch(
-                fromto: 'To',
-                items: getStations()
-                    .where((String x) => x != selectedValue1)
-                    .toSet(),
-                selectedValue: selectedValue2,
-                onChanged: (value) {
-                  setState(() {
-                    selectedValue2 = value!;
-                  });
-                },
-              ),
-            ),
-            ////////////////////////////////////////////////////////////////////////////
-            const SizedBox(height: 15),
-            ////////////////////////////////////////////////////////////////////////////
-            ///clear/qr
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 40, 53, 173),
-                    minimumSize: Size(150, 50),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      // This gives the button squared edges
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      selectedValue1 = '';
-                      selectedValue2 = '';
-                    });
-                  },
-                  child: const Text(
-                    'Clear',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ),
-                Container(width: 20),
-                //=================================================================//
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 40, 53, 173),
-                    minimumSize: Size(150, 50),
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      // This gives the button squared edges
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GenerateQrCode()));
-                  },
-                  child: const Text(
-                    'Get a Tticket?',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ),
-              ],
-            ),
-
-            ////////////////////////////////////////////////////////////////////////////
-            const SizedBox(height: 10),
-            ////////////////////////////////////////////////////////////////////////////
-            if (selectedValue1 != '' && selectedValue2 != '')
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.white),
-                height: 150,
-                child: Row(
-                  children: [
-                    Spacer(
-                      flex: 1,
-                    ),
-                    ///////////////////////////////////////////////////////////////////////
-                    Container(
-                      padding: EdgeInsets.only(left: 15, top: 8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.attach_money,
-                            size: 70,
-                          ),
-                          const Text(
-                            'Ticket Price',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          Container(
-                            width: 80,
-                            height: 30,
-                            color: Colors.grey[300],
-                            child: Center(
-                              child: Text(
-                                metroPrice(selectedValue1, selectedValue2),
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    ///////////////////////////////////////////////////////////////////////
-                    Spacer(
-                      flex: 1,
-                    ),
-                    ///////////////////////////////////////////////////////////////////////
-
-                    VerticalDivider(
-                      thickness: 1,
-                      width: 20,
-                      color: Colors.black,
-                      endIndent: 10,
-                      indent: 10,
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.timelapse,
-                            size: 70,
-                          ),
-                          const Text(
-                            'Estimated Time',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          Container(
-                            width: 80,
-                            height: 30,
-                            color: Colors.grey[300],
-                            child: Center(
-                              child: Text(
-                                metroTime(selectedValue1, selectedValue2),
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    ///////////////////////////////////////////////////////////////////////
-                    Spacer(
-                      flex: 1,
-                    ),
-                    ///////////////////////////////////////////////////////////////////////
-                  ],
-                ),
-              ),
-            ////////////////////////////////////////////////////////////////////////////
-            const SizedBox(height: 20),
-            ////////////////////////////////////////////////////////////////////////////
-
-            ////////////////////////////////////////////////////////////////////////////
-            const SizedBox(height: 10),
-            ////////////////////////////////////////////////////////////////////////////
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.location_on_rounded,
-                          size: 30,
-                          color: Color.fromARGB(255, 14, 72, 171),
-                        ),
-                      ),
-                      //const SizedBox(width: 10),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: Color.fromARGB(255, 14, 72, 171),
-                          ),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 50),
-                              backgroundColor: Color.fromARGB(255, 40, 53, 173),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 0, vertical: 5),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return TrackLocation();
-                                  },
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              'Nearest Station?',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 10),
-
-                      //han7ot tripxxxx
-                      if (selectedValue1 != '' && selectedValue2 != '')
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: Color.fromARGB(255, 14, 72, 171),
-                            ),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Color.fromARGB(255, 40, 53, 173),
-                                minimumSize: Size(double.infinity,
-                                    50), // Adjust width to fit the available space
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 12),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return TripDetails(
-                                        route: GetRoute(
-                                            selectedValue1, selectedValue2),
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              child: const Text(
-                                'Trip Details',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            ////////////////////////////////////////////////////////////////////////////
-            //const SizedBox(height: 20),
-            ////////////////////////////////////////////////////////////////////////////
-          ],
-        ),
-      ),
-    );
-  }
-
-  List<String> getStations() {
-    List<String> stationName = [];
-    for (int i = 0; i < stations.length; i++) {
-      stationName.add(stations[i]['name']);
+  Future<void> GetStations() async {
+    try {
+      QuerySnapshot metroLine1 = await FirebaseFirestore.instance
+          .collection('Metro_Line_1')
+          .orderBy('number')
+          .get();
+      QuerySnapshot metroLine2 = await FirebaseFirestore.instance
+          .collection('Metro_Line_2')
+          .orderBy('number')
+          .get();
+      QuerySnapshot metroLine3 = await FirebaseFirestore.instance
+          .collection('Metro_Line_3')
+          .orderBy('number')
+          .get();
+      stations.addAll(metroLine1.docs);
+      stations.addAll(metroLine2.docs);
+      stations.addAll(metroLine3.docs);
+    } catch (e) {
+      print('Error fetching stations: $e');
     }
-    return stationName;
+  }
+
+List<String> getStationNames() { //getStations
+    return stations.map((station) => station['name'] as String).toList();
   }
 
 //0 1 2 3 4
 //1 2 3 4
-  String metroPrice(String from, String to) {
-    if (GetRoute(from, to).routeStations.length - 1 < 10) {
-      return '6 egp';
-    } else if (GetRoute(from, to).routeStations.length - 1 < 17) {
-      return '8 egp';
-    } else if (GetRoute(from, to).routeStations.length - 1 < 24) {
-      return '12 egp';
-    } else {
-      return '15 egp';
-    }
+  String calculatePrice(String from, String to) {
+    //metroPrice
+    int routeLength = getRoute(from, to).routeStations.length - 1;
+    if (routeLength < 10) return '6 egp';
+    if (routeLength < 17) return '8 egp';
+    if (routeLength < 24) return '12 egp';
+    return '15 egp';
   }
 
-  String metroTime(String from, String to) {
-    return ("${(GetRoute(from, to).routeStations.length - 1) * 2.5} min");
+  String calculateTime(String from, String to) {
+    //metroTime
+    return "${(getRoute(from, to).routeStations.length - 1) * 2.5} min";
   }
 
-  int getStationsIndx(String stationName) {
+  int getStationIndex(String stationName) {
+    //getStationIndex
     for (int i = 0; i < stations.length; i++) {
       if (stations[i]['name'] == stationName) {
         return i;
       }
     }
-
-    return 0;
+    return -1; // Station not found
   }
 
-  int getCollection(int indx) {
-    if (indx < 35) {
-      return 1;
-    } else if (indx < 55) {
-      return 2;
-    } else {
-      return 3;
-    }
+  int getCollection(int index) {
+    if (index < 35) return 1;
+    if (index < 55) return 2;
+    return 3;
   }
+
 
 //t3alaa
-  MetroRoute GetRoute(String from, String to) {
+  MetroRoute getRoute(String from, String to) {
     MetroRoute route = MetroRoute();
-    int fromIndx = getStationsIndx(from);
-    int toIndx = getStationsIndx(to);
+    int fromIndx = getStationIndex(from);
+    int toIndx = getStationIndex(to);
     int fromCollection = getCollection(fromIndx);
     int toCollection = getCollection(toIndx);
     if ((from == transitStation12[0] ||
@@ -451,10 +83,10 @@ class _Metro_ScreenState extends State<Metro_Screen> {
             to == transitStation13 ||
             to == transitStation23 ||
             to == 'Mohamed Naguib')) {
-      fromCollection = TransitIndx(from, to)[0];
-      toCollection = TransitIndx(from, to)[0];
-      fromIndx = TransitIndx(from, to)[1];
-      toIndx = TransitIndx(from, to)[2];
+      fromCollection = getTransitIndices(from, to)[0];
+      toCollection = getTransitIndices(from, to)[0];
+      fromIndx = getTransitIndices(from, to)[1];
+      toIndx = getTransitIndices(from, to)[2];
     }
     //done 1
     if (fromCollection == toCollection) {
@@ -771,7 +403,7 @@ class _Metro_ScreenState extends State<Metro_Screen> {
     }
   } */
 
-  List<int> TransitIndx(String from, String to) {
+  List<int> getTransitIndices(String from, String to) { //transitindex
     if ((from == transitStation23 || from == transitStation13) &&
         (to == transitStation23 || to == transitStation13)) {
       if (from == transitStation23) {
@@ -809,9 +441,9 @@ class _Metro_ScreenState extends State<Metro_Screen> {
       }
     }
     return [
-      getCollection(getStationsIndx(from)),
-      getStationsIndx(from),
-      getStationsIndx(to)
+      getCollection(getStationIndex(from)),
+      getStationIndex(from),
+      getStationIndex(to)
     ];
   }
 
