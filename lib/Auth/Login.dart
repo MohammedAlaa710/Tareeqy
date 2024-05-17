@@ -27,7 +27,7 @@ class _LoginState extends State<Login> {
       Future.delayed(Duration.zero, () {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       });
     }
@@ -37,7 +37,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
             Column(
@@ -50,7 +50,7 @@ class _LoginState extends State<Login> {
                   child: Container(
                     width: 110,
                     height: 110,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                         color: Colors.grey,
                         borderRadius: BorderRadius.circular(70)),
@@ -79,15 +79,15 @@ class _LoginState extends State<Login> {
                   decoration: InputDecoration(
                     hintText: "Enter Your Email",
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                     filled: true,
                     fillColor: Colors.grey[200],
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide(color: Colors.grey)),
+                        borderSide: const BorderSide(color: Colors.grey)),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide(color: Colors.grey)),
+                        borderSide: const BorderSide(color: Colors.grey)),
                   ),
                 ),
                 Container(height: 15),
@@ -102,15 +102,15 @@ class _LoginState extends State<Login> {
                   decoration: InputDecoration(
                     hintText: "Enter Your Password",
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
                     filled: true,
                     fillColor: Colors.grey[200],
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide(color: Colors.grey)),
+                        borderSide: const BorderSide(color: Colors.grey)),
                     enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50),
-                        borderSide: BorderSide(color: Colors.grey)),
+                        borderSide: const BorderSide(color: Colors.grey)),
                   ),
                 ),
               ],
@@ -134,7 +134,7 @@ class _LoginState extends State<Login> {
                     // Navigate to another screen if sign in is successful
                     if (userCredential.user != null) {
                       Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => HomePage()));
+                          MaterialPageRoute(builder: (context) => const HomePage()));
                     }
                   } on FirebaseAuthException catch (e) {
                     // Handle error

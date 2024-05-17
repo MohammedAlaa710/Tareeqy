@@ -7,7 +7,7 @@ class srcDstQR extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("src and dest stations"),
+        title: const Text("src and dest stations"),
       ),
     );
   }

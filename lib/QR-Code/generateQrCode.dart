@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tareeqy_metro/QR-Code/numberOfStaionsQR.dart';
 import 'package:tareeqy_metro/QR-Code/priceQR.dart';
 import 'package:tareeqy_metro/QR-Code/srcDstQR.dart';
@@ -21,8 +20,8 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.only(top: 100),
-              child: Text(
+              padding: const EdgeInsets.only(top: 100),
+              child: const Text(
                 "You can get your ticket in three ways : ",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
@@ -31,13 +30,13 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
               height: 60,
             ),
             //=================================================================//
-            Container(
+            SizedBox(
               width: 300,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 40, 53, 173),
-                  minimumSize: Size(150, 50),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  backgroundColor: const Color.fromARGB(255, 40, 53, 173),
+                  minimumSize: const Size(150, 50),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   shape: RoundedRectangleBorder(
                     // This gives the button squared edges
                     borderRadius: BorderRadius.circular(5),
@@ -47,7 +46,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => numberOfStaionsQR()));
+                          builder: (context) => const numberOfStaionsQR()));
                 },
                 child: const Text(
                   'Enter number of stations',
@@ -59,13 +58,13 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
               height: 60,
             ),
             //=================================================================//
-            Container(
+            SizedBox(
               width: 300,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 40, 53, 173),
-                  minimumSize: Size(150, 50),
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 12),
+                  backgroundColor: const Color.fromARGB(255, 40, 53, 173),
+                  minimumSize: const Size(150, 50),
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 12),
                   shape: RoundedRectangleBorder(
                     // This gives the button squared edges
                     borderRadius: BorderRadius.circular(5),
@@ -73,7 +72,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                 ),
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => srcDstQR()));
+                      MaterialPageRoute(builder: (context) => const srcDstQR()));
                 },
                 child: const Text(
                   'Enter the source and destination stations',
@@ -85,13 +84,13 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
               height: 60,
             ),
             //=================================================================//
-            Container(
+            SizedBox(
               width: 300,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 40, 53, 173),
-                  minimumSize: Size(150, 50),
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  backgroundColor: const Color.fromARGB(255, 40, 53, 173),
+                  minimumSize: const Size(150, 50),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   shape: RoundedRectangleBorder(
                     // This gives the button squared edges
                     borderRadius: BorderRadius.circular(5),
@@ -99,7 +98,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                 ),
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => priceQR()));
+                      MaterialPageRoute(builder: (context) => const priceQR()));
                 },
                 child: const Text(
                   'Enter the ticket Price',

@@ -7,7 +7,7 @@ class numberOfStaionsQR extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("no. stations"),
+        title: const Text("no. stations"),
       ),
     );
   }

@@ -2,7 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
 
 class priceQR extends StatefulWidget {
@@ -77,7 +76,7 @@ class _priceQRState extends State<priceQR> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("price page"),
+        title: const Text("price page"),
       ),
       body: Center(
         child: Column(
@@ -100,7 +99,7 @@ class _priceQRState extends State<priceQR> {
                 );
               }).toList(),
             ),
-            SizedBox(
+            const SizedBox(
                 height: 20), // Add some space between the dropdown and button
             ElevatedButton(
               onPressed: () async {
@@ -114,6 +113,7 @@ class _priceQRState extends State<priceQR> {
                 }
                 String docId = await addQRDocument('$price egp');
                 if (docId.isNotEmpty) {
+                  await addQRCodeToUser(docId); // Add QR code to user
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -122,11 +122,33 @@ class _priceQRState extends State<priceQR> {
                   );
                 }
               },
-              child: Text('Add Document'),
+              child: const Text('Add Document'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> addQRCodeToUser(String docId) async {
+    try {
+      String? userId = _auth.currentUser?.uid;
+      if (userId != null) {
+        await _firestore.collection('users').doc(userId).update({
+          'qrCodes': FieldValue.arrayUnion([docId]),
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('QR code added to user')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User not found')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add QR code to user: $e')),
+      );
+    }
   }
 }

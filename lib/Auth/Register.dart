@@ -91,7 +91,7 @@ class _RegisterState extends State<Register> {
                   // Navigate to another screen if sign up is successful
                   if (userCredential.user != null) {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomePage()));
+                        MaterialPageRoute(builder: (context) => const HomePage()));
                   }
                 } on FirebaseAuthException catch (e) {
                   // Handle error
