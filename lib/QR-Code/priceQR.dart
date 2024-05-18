@@ -36,7 +36,7 @@ class _priceQRState extends State<priceQR> {
                   });
                 }
               },
-              items: <String>['6 egp', '12 egp', '15 egp']
+              items: <String>['6 egp', '8 egp', '12 egp', '15 egp']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -53,6 +53,8 @@ class _priceQRState extends State<priceQR> {
                   price = 6;
                 } else if (dropdownValue == '12 egp') {
                   price = 12;
+                } else if (dropdownValue == '8 egp') {
+                  price = 8;
                 } else {
                   price = 15;
                 }

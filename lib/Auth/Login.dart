@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tareeqy_metro/admin/adminHomePage.dart';
+import 'package:tareeqy_metro/firebasemetro/metroService.dart';
 import 'package:tareeqy_metro/homepage.dart';
 import 'package:tareeqy_metro/Auth/Register.dart';
 
@@ -164,6 +165,8 @@ class _LoginState extends State<Login> {
                             TextButton(
                               child: const Text('OK'),
                               onPressed: () {
+                                metroService _metroService = metroService();
+                                _metroService.getStations();
                                 Navigator.of(dialogContext).pop();
                               },
                             ),
