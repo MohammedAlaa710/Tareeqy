@@ -4,10 +4,8 @@ import 'package:location/location.dart';
 import 'package:tareeqy_metro/maps/sevices_permissions.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class TrackLocation extends StatefulWidget {
   const TrackLocation({super.key});
@@ -94,7 +92,7 @@ class _TrackLocationState extends State<TrackLocation> {
     );
     var markerIcon = await BitmapDescriptor.fromAssetImage(
       const ImageConfiguration(),
-      'assets/images/placeholder.png',  
+      'assets/images/placeholder.png',
     );
     print("helloooooooooooooooooooooooo000000000000");
     location.onLocationChanged.listen((locationData) async {
@@ -131,7 +129,7 @@ class _TrackLocationState extends State<TrackLocation> {
       String nearestStationName = data['name'];
       showNearestStationInfo(nearestStationName);
       GeoPoint? stationLocation = data['latlng'];
-      print("hello" + nearestStation.id);
+      print("hello${nearestStation.id}");
       if (stationLocation != null) {
         // Marker for the nearest station
         var stationMarker = Marker(
@@ -224,26 +222,26 @@ Future<List<LatLng>> getDirections(
   print("inside get directions");
   var apiKey =
       'AIzaSyCVPrGU9xGHdKiB6SQeGjrx8U2TYbaJDBk'; // Replace with your API key
-  var urlString = '${startLocation?.latitude},${startLocation?.longitude}';
+  var urlString = '${startLocation.latitude},${startLocation.longitude}';
   var url = Uri.parse(
-      'https://maps.googleapis.com/maps/api/directions/json?origin=$urlString&destination=${endLocation?.latitude},${endLocation?.longitude}&key=$apiKey&mode=walking');
+      'https://maps.googleapis.com/maps/api/directions/json?origin=$urlString&destination=${endLocation.latitude},${endLocation.longitude}&key=$apiKey&mode=walking');
 
-  print("after apikey" + apiKey.toString());
-  print("after start" + startLocation.toString());
-  print("after start" + endLocation.toString());
-  print("after url" + url.toString());
+  print("after apikey$apiKey");
+  print("after start$startLocation");
+  print("after start$endLocation");
+  print("after url$url");
   try {
     var response = await http.get(url);
-    print("after response" + response.statusCode.toString());
+    print("after response${response.statusCode}");
 
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
       var routes = jsonResponse['routes'] as List;
-      print("after routes" + routes.toString());
+      print("after routes$routes");
 
       var overviewPolyline = routes[0]['overview_polyline']['points'];
       var points = decodePolyline(overviewPolyline);
-      print("pointsssssssssssssssssssssssss" + points.toString());
+      print("pointsssssssssssssssssssssssss$points");
       return points;
     } else {
       throw Exception('Failed to get directions: ${response.statusCode}');

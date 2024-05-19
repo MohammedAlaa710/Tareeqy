@@ -6,7 +6,7 @@ class BusDetails extends StatelessWidget {
   final String busNumber;
   final List<String> regions;
 
-  BusDetails({
+  const BusDetails({
     Key? key,
     required this.busNumber,
     required this.regions,
@@ -14,7 +14,7 @@ class BusDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late final QRservices _qrServices = QRservices();
+    late final QRservices qrServices = QRservices();
 
     return Scaffold(
       appBar: AppBar(
@@ -45,9 +45,9 @@ class BusDetails extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               onPressed: () async {
-                String docId = await _qrServices.busTicket(context, busNumber);
+                String docId = await qrServices.busTicket(context, busNumber);
                 if (docId.isNotEmpty) {
-                  await _qrServices.addBusQRCodeToUser(context, docId);
+                  await qrServices.addBusQRCodeToUser(context, docId);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -93,9 +93,9 @@ class BusDetails extends StatelessWidget {
                       color: Color(0xFF1D3557), // Dark Blue
                     ),
                   ),
-                  leading: CircleAvatar(
-                    backgroundColor: const Color(0xFFE63946), // Red
-                    child: const Icon(
+                  leading: const CircleAvatar(
+                    backgroundColor: Color(0xFFE63946), // Red
+                    child: Icon(
                       Icons.location_on,
                       color: Colors.white,
                     ),

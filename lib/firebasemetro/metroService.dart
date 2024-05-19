@@ -49,8 +49,8 @@ class metroService {
 //1 2 3 4
   String calculatePrice(String from, String to) {
     //metroPrice
-    print("from " + from);
-    print("to " + to);
+    print("from $from");
+    print("to $to");
     try {
       print("inside try");
       int routeLength = getRoute(from, to).routeStations.length - 1;
@@ -72,8 +72,8 @@ class metroService {
 
   int getStationIndex(String stationName) {
     //getStationIndex
-    print("-" + stationName + "-");
-    print("stationsLength" + stations.length.toString());
+    print("-$stationName-");
+    print("stationsLength${stations.length}");
     for (int i = 0; i < stations.length; i++) {
       print("in indx loop" + stations[i]['name']);
       if (stations[i]['name'] == stationName) {
@@ -92,8 +92,8 @@ class metroService {
 //t3alaa
   MetroRoute getRoute(String from, String to) {
     print("inside getRoute");
-    print("getRoute from" + from);
-    print("getRoute to" + to);
+    print("getRoute from$from");
+    print("getRoute to$to");
     MetroRoute route = MetroRoute();
     int fromIndx = getStationIndex(from);
     int toIndx = getStationIndex(to);
@@ -117,8 +117,8 @@ class metroService {
     //done 1
     if (fromCollection == toCollection) {
       print("inside if condition");
-      print("fromIndx" + fromIndx.toString());
-      print("toIndx" + toIndx.toString());
+      print("fromIndx$fromIndx");
+      print("toIndx$toIndx");
       for (int i = fromIndx;
           fromIndx < toIndx ? i < toIndx + 1 : i > toIndx - 1;
           fromIndx < toIndx ? i++ : i--) {

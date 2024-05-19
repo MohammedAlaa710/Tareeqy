@@ -8,7 +8,7 @@ class adminHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Admin Dashboard"),
+        title: const Text("Admin Dashboard"),
       ),
       body: Center(
           child: Column(
@@ -17,10 +17,11 @@ class adminHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MetroStations()),
+                  MaterialPageRoute(
+                      builder: (context) => const MetroStations()),
                 );
               },
-              child: Text("Scan code")),
+              child: const Text("Scan code")),
         ],
       )),
     );

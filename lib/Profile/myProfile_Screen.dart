@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tareeqy_metro/Payment/Screens/ChargeWallet_Screen.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
 import 'package:intl/intl.dart';
 
@@ -131,6 +132,19 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ChargeWalletScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text('Charge Wallet'),
+                          ),
                         ],
                       ),
                     ],
@@ -154,7 +168,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Tickets:',
                       style: TextStyle(
                         fontSize: 22,
@@ -176,7 +190,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                               )
                             : ListView.builder(
                                 shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 itemCount: _tickets.length,
                                 itemBuilder: (context, index) {
                                   final ticket = _tickets[index];
@@ -209,7 +223,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                                             color: Colors.blueAccent, size: 40),
                                         title: Text(
                                           'Time: ${_formatTimestamp(ticket['timestamp'])}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
                                         subtitle: Column(

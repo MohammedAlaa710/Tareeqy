@@ -54,7 +54,8 @@ class _NearestMetroStationScreenState extends State<NearestMetroStationScreen> {
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 
     // Replace with your current location
-    LatLng currentLocation = const LatLng(30.080944926478765, 31.24511076711392);
+    LatLng currentLocation =
+        const LatLng(30.080944926478765, 31.24511076711392);
 
     // Make a request to the Places API
     final response = await http.get(

@@ -15,7 +15,7 @@ class _MetroStationsState extends State<MetroStations> {
 
   late Future<void> stationsFuture;
 
-  metroService _metroService = metroService();
+  final metroService _metroService = metroService();
 
   @override
   void initState() {
@@ -37,12 +37,12 @@ class _MetroStationsState extends State<MetroStations> {
               future: stationsFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error fetching stations: ${snapshot.error}');
                 } else {
                   return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: MyDropdownSearch(
                       fromto: 'From',
                       items: _metroService.getStationNames().toSet(),

@@ -14,7 +14,7 @@ class QRCodeScannerPage extends StatefulWidget {
 }
 
 class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
-  metroService _metroService = metroService();
+  final metroService _metroService = metroService();
   String? qrText;
   bool isScanned = false;
   bool stop = false; // Control flag to stop the scanner
@@ -102,7 +102,7 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
           Expanded(
             flex: 5,
             child: stop
-                ? Center(child: Text('Processing QR code...'))
+                ? const Center(child: Text('Processing QR code...'))
                 : MobileScanner(
                     onDetect: (qrcodeCapture) async {
                       if (qrcodeCapture.barcodes.isEmpty || stop) return;
@@ -112,7 +112,7 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
                         setState(() {
                           qrText = qrcode.rawValue!;
                           stop = true; // Stop further scanning
-                          print("ticketId " + qrText.toString());
+                          print("ticketId $qrText");
                         });
 
                         try {
@@ -130,14 +130,14 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MetroStations()),
+                                builder: (context) => const MetroStations()),
                           );
                         } catch (e) {
                           // Show error message
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(e.toString()),
-                              duration: Duration(seconds: 2),
+                              duration: const Duration(seconds: 2),
                             ),
                           );
                           // Allow scanning again if an error occurs

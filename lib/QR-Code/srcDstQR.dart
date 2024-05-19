@@ -37,19 +37,19 @@ class _srcDstQRState extends State<srcDstQR> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("src and dest stations"),
+        title: const Text("src and dest stations"),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             //here must be a text box that takes only numbers and the number must be less than 80
-            if (!isDataLoaded) CircularProgressIndicator(),
+            if (!isDataLoaded) const CircularProgressIndicator(),
             if (isDataLoaded)
               Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: MyDropdownSearch(
                       fromto: 'From',
                       items: _metroService
@@ -68,7 +68,7 @@ class _srcDstQRState extends State<srcDstQR> {
                   const SizedBox(height: 10),
                   ////////////////////////////////////////////////////////////////////////////
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: MyDropdownSearch(
                       fromto: 'To',
                       items: _metroService

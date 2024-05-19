@@ -21,7 +21,7 @@ class _numberOfStaionsQRState extends State<numberOfStaionsQR> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Number Of Stations Page"),
+        title: const Text("Number Of Stations Page"),
       ),
       body: Center(
         child: Column(

@@ -18,17 +18,18 @@ class CustomTextField extends StatelessWidget {
       controller: mycontroller,
       decoration: InputDecoration(
           hintText: hinttext,
-          hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-          contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+          hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
           filled: true,
           fillColor: Colors.grey[200],
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50),
               borderSide:
-                  BorderSide(color: const Color.fromARGB(255, 184, 184, 184))),
+                  const BorderSide(color: Color.fromARGB(255, 184, 184, 184))),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50),
-              borderSide: BorderSide(color: Colors.grey))),
+              borderSide: const BorderSide(color: Colors.grey))),
     );
   }
 }
