@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tareeqy_metro/Payment/Screens/ChargeWallet_Screen.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
 import 'package:intl/intl.dart';
+import 'package:tareeqy_metro/homepage.dart';
 
 class myProfile_Screen extends StatefulWidget {
   const myProfile_Screen({Key? key}) : super(key: key);
@@ -58,7 +59,8 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
 
     for (DocumentSnapshot snapshot in snapshots) {
       if (snapshot.exists) {
-        Map<String, dynamic> ticketData = snapshot.data() as Map<String, dynamic>;
+        Map<String, dynamic> ticketData =
+            snapshot.data() as Map<String, dynamic>;
         ticketData['id'] = snapshot.id;
         ticketData['type'] = 'metro';
         if (!ticketData['out']) {
@@ -82,7 +84,8 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
 
     for (DocumentSnapshot snapshot in snapshots) {
       if (snapshot.exists) {
-        Map<String, dynamic> ticketData = snapshot.data() as Map<String, dynamic>;
+        Map<String, dynamic> ticketData =
+            snapshot.data() as Map<String, dynamic>;
         ticketData['id'] = snapshot.id;
         ticketData['type'] = 'bus';
         if (!ticketData['out']) {
@@ -95,8 +98,10 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
   }
 
   void _processAndSetTickets(List<Map<String, dynamic>> tickets) {
-    List<Map<String, dynamic>> ticketsInUse = tickets.where((ticket) => ticket['in']).toList();
-    List<Map<String, dynamic>> otherTickets = tickets.where((ticket) => !ticket['in']).toList();
+    List<Map<String, dynamic>> ticketsInUse =
+        tickets.where((ticket) => ticket['in']).toList();
+    List<Map<String, dynamic>> otherTickets =
+        tickets.where((ticket) => !ticket['in']).toList();
     ticketsInUse.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
     otherTickets.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
 
@@ -118,14 +123,19 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => HomePage()));
+            },
+            icon: Icon(Icons.arrow_back)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (_username != null && _wallet != null)
-              _buildUserInfo(),
+            if (_username != null && _wallet != null) _buildUserInfo(),
             const SizedBox(height: 20),
             _buildTicketsSection(),
           ],
@@ -160,11 +170,13 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.account_balance_wallet, color: Color.fromARGB(255, 9, 255, 17)),
+              const Icon(Icons.account_balance_wallet,
+                  color: Color.fromARGB(255, 9, 255, 17)),
               const SizedBox(width: 5),
               Text(
                 '\$$_wallet',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(width: 10),
               ElevatedButton(
@@ -210,7 +222,8 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
               fontWeight: FontWeight.bold,
               color: Colors.blueAccent,
             ),
-          ),          const SizedBox(height: 10),
+          ),
+          const SizedBox(height: 10),
           _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _tickets.isEmpty
@@ -293,5 +306,3 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
     );
   }
 }
-
-         

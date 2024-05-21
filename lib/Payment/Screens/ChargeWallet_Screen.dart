@@ -40,7 +40,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
               onPressed: () {
                 var TransactionData = getTransactionsData(amount: amount);
                 NavigateToPaypalView(context, TransactionData);
-                
+
                 // Handle the charge logic here
               },
               child: const Text('Confirm'),
@@ -51,13 +51,14 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
     );
   }
 
-  void NavigateToPaypalView(BuildContext context, ({AmountModel Amount, ItemListModel itemslist}) TransactionData) {
+  void NavigateToPaypalView(BuildContext context,
+      ({AmountModel Amount, ItemListModel itemslist}) TransactionData) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) => PaypalCheckoutView(
         sandboxMode: true,
         clientId: ApiKeys.PaypalClientID,
         secretKey: ApiKeys.PaypalSecretKey,
-        transactions:  [
+        transactions: [
           {
             "amount": TransactionData.Amount.toJson(),
             "description": "The payment transaction description.",
@@ -71,15 +72,8 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
         note: "Contact us for any questions on your order.",
         onSuccess: (Map params) async {
           log("onSuccess: $params");
-          PaymentService().addAmountToUserWallet(context,TransactionData.Amount.total.toString());
-          Navigator.pop(context);
-          Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const myProfile_Screen(),
-                                ),
-                              );
+          PaymentService().addAmountToUserWallet(
+              context, TransactionData.Amount.total.toString());
         },
         onError: (error) {
           log("onError: $error");
@@ -91,7 +85,6 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
         },
       ),
     ));
-    
   }
 
   @override
@@ -135,8 +128,8 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
               const SizedBox(height: 20),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      const Color.fromARGB(255, 255, 255, 255), // PayPal blue color
+                  backgroundColor: const Color.fromARGB(
+                      255, 255, 255, 255), // PayPal blue color
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -183,24 +176,23 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
       ),
     );
   }
+
   //Function for getting the transaction data to send it to paypal
-({AmountModel Amount, ItemListModel itemslist})  getTransactionsData({ double? amount}){
-          var amountModel = AmountModel(
-                  total: amount.toString(),
-                   currency: "USD" , 
-                   details: Details(
-                    shipping: "0" , 
-                    shippingDiscount: 0 ,
-                    subtotal: amount.toString())
-                    );
-                    List<Item> items = [
-                                        Item(name: "Charge Tareeqy Wallet" , currency: "USD" , price: amount.toString() , quantity: 1),
-
-                    ];
-                    var itemList = ItemListModel(items: items); 
-                    return( Amount : amountModel , itemslist : itemList);
-
-
+  ({AmountModel Amount, ItemListModel itemslist}) getTransactionsData(
+      {double? amount}) {
+    var amountModel = AmountModel(
+        total: amount.toString(),
+        currency: "USD",
+        details: Details(
+            shipping: "0", shippingDiscount: 0, subtotal: amount.toString()));
+    List<Item> items = [
+      Item(
+          name: "Charge Tareeqy Wallet",
+          currency: "USD",
+          price: amount.toString(),
+          quantity: 1),
+    ];
+    var itemList = ItemListModel(items: items);
+    return (Amount: amountModel, itemslist: itemList);
   }
-
-  }
+}

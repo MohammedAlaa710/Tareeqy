@@ -97,7 +97,7 @@ class _RegisterState extends State<Register> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>  adminHomePage()));
+                                builder: (context) => adminHomePage()));
                       } else {
                         Navigator.push(
                             context,
@@ -164,7 +164,8 @@ class _RegisterState extends State<Register> {
           'email': email,
           'isAdmin': false,
           'qrCodes': [],
-          'wallet': 0.0,
+          'busTickets': [],
+          'wallet': "0.0",
         })
         .then((value) => print("User added"))
         .catchError((error) => print("Failed to add user: $error"));

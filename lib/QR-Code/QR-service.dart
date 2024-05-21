@@ -61,28 +61,28 @@ class QRservices {
       if (userId != null) {
         DocumentSnapshot userSnapshot =
             await _firestore.collection('users').doc(userId).get();
-        Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-        double walletBalance =double.parse(userData['wallet'] ?? '0');
+        Map<String, dynamic> userData =
+            userSnapshot.data() as Map<String, dynamic>;
+        double walletBalance = double.parse(userData['wallet'] ?? '0');
         double ticketPrice = double.parse(price.replaceAll(' egp', ''));
 
         if (walletBalance >= ticketPrice) {
-           bool continueOperation = await showPurchaseConfirmationDialog(
-            context,
-            walletBalance,
-            ticketPrice);
+          bool continueOperation = await showPurchaseConfirmationDialog(
+              context, walletBalance, ticketPrice);
           if (continueOperation) {
-          // Proceed with the purchase
-           return await _performPurchase(context, userId, ticketPrice, walletBalance);
-         
+            // Proceed with the purchase
+            return await _performPurchase(
+                context, userId, ticketPrice, walletBalance, "QR");
+          } else {
+            // User chose not to proceed with the purchase
+            return '';
+          }
         } else {
-          // User chose not to proceed with the purchase
+          // User does not have enough funds, show warning
+          await showWalletConfirmationDialog(
+              context, walletBalance, ticketPrice);
           return '';
-        }} else {
-        // User does not have enough funds, show warning
-        await showWalletConfirmationDialog(context,walletBalance,ticketPrice);
-        return '';
-      }
-       
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User not found')),
@@ -97,37 +97,37 @@ class QRservices {
     }
   }
 
-  Future<String> addQRWithStationsNu(BuildContext context, int stationsNumber) async {
+  Future<String> addQRWithStationsNu(
+      BuildContext context, int stationsNumber) async {
     try {
       String? userId = _auth.currentUser?.uid;
       if (userId != null) {
         DocumentSnapshot userSnapshot =
             await _firestore.collection('users').doc(userId).get();
-        Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-        double walletBalance =
-            double.parse(userData['wallet'] ?? '0');
+        Map<String, dynamic> userData =
+            userSnapshot.data() as Map<String, dynamic>;
+        double walletBalance = double.parse(userData['wallet'] ?? '0');
 
         String price = _calculatePriceForStations(stationsNumber);
 
         double ticketPrice = double.parse(price.replaceAll(' egp', ''));
         if (walletBalance >= ticketPrice) {
-           bool continueOperation = await showPurchaseConfirmationDialog(
-            context,
-            walletBalance,
-            ticketPrice);
+          bool continueOperation = await showPurchaseConfirmationDialog(
+              context, walletBalance, ticketPrice);
           if (continueOperation) {
-          // Proceed with the purchase
-           return await _performPurchase(context, userId, ticketPrice, walletBalance);
-         
+            // Proceed with the purchase
+            return await _performPurchase(
+                context, userId, ticketPrice, walletBalance, "QR");
+          } else {
+            // User chose not to proceed with the purchase
+            return '';
+          }
         } else {
-          // User chose not to proceed with the purchase
+          // User does not have enough funds, show warning
+          await showWalletConfirmationDialog(
+              context, walletBalance, ticketPrice);
           return '';
-        }} else {
-        // User does not have enough funds, show warning
-        await showWalletConfirmationDialog(context,walletBalance,ticketPrice);
-        return '';
-      }
-       
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User not found')),
@@ -140,37 +140,38 @@ class QRservices {
       );
       return '';
     }
-}
+  }
 
-Future<String> addQRWithSrcandDst(BuildContext context, String from, String to) async {
-try {
-String? userId = _auth.currentUser?.uid;
-if (userId != null) {
-DocumentSnapshot userSnapshot =
-await _firestore.collection('users').doc(userId).get();
-Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-double walletBalance =
-double.parse(userData['wallet'] ?? '0');    String price = _metroService.calculatePrice(from, to);
+  Future<String> addQRWithSrcandDst(
+      BuildContext context, String from, String to) async {
+    try {
+      String? userId = _auth.currentUser?.uid;
+      if (userId != null) {
+        DocumentSnapshot userSnapshot =
+            await _firestore.collection('users').doc(userId).get();
+        Map<String, dynamic> userData =
+            userSnapshot.data() as Map<String, dynamic>;
+        double walletBalance = double.parse(userData['wallet'] ?? '0');
+        String price = _metroService.calculatePrice(from, to);
 
-    double ticketPrice = double.parse(price.replaceAll(' egp', ''));
-     if (walletBalance >= ticketPrice) {
-           bool continueOperation = await showPurchaseConfirmationDialog(
-            context,
-            walletBalance,
-            ticketPrice);
+        double ticketPrice = double.parse(price.replaceAll(' egp', ''));
+        if (walletBalance >= ticketPrice) {
+          bool continueOperation = await showPurchaseConfirmationDialog(
+              context, walletBalance, ticketPrice);
           if (continueOperation) {
-          // Proceed with the purchase
-           return await _performPurchase(context, userId, ticketPrice, walletBalance);
-         
+            // Proceed with the purchase
+            return await _performPurchase(
+                context, userId, ticketPrice, walletBalance, "QR");
+          } else {
+            // User chose not to proceed with the purchase
+            return '';
+          }
         } else {
-          // User chose not to proceed with the purchase
+          // User does not have enough funds, show warning
+          await showWalletConfirmationDialog(
+              context, walletBalance, ticketPrice);
           return '';
-        }} else {
-        // User does not have enough funds, show warning
-        await showWalletConfirmationDialog(context,walletBalance,ticketPrice);
-        return '';
-      }
-       
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User not found')),
@@ -183,37 +184,36 @@ double.parse(userData['wallet'] ?? '0');    String price = _metroService.calcula
       );
       return '';
     }
-}
+  }
 
-Future<String> busTicket(BuildContext context, String busNumber) async {
-try {
-String? userId = _auth.currentUser?.uid;
-if (userId != null) {
-DocumentSnapshot userSnapshot =
-await _firestore.collection('users').doc(userId).get();
-Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-double walletBalance =
-double.parse(userData['wallet'] ?? '0');
+  Future<String> busTicket(BuildContext context, String busNumber) async {
+    try {
+      String? userId = _auth.currentUser?.uid;
+      if (userId != null) {
+        DocumentSnapshot userSnapshot =
+            await _firestore.collection('users').doc(userId).get();
+        Map<String, dynamic> userData =
+            userSnapshot.data() as Map<String, dynamic>;
+        double walletBalance = double.parse(userData['wallet'] ?? '0');
 
-    double ticketPrice = 10.0; // Price of bus ticket
-     if (walletBalance >= ticketPrice) {
-           bool continueOperation = await showPurchaseConfirmationDialog(
-            context,
-            walletBalance,
-            ticketPrice);
+        double ticketPrice = 10.0; // Price of bus ticket
+        if (walletBalance >= ticketPrice) {
+          bool continueOperation = await showPurchaseConfirmationDialog(
+              context, walletBalance, ticketPrice);
           if (continueOperation) {
-          // Proceed with the purchase
-           return await _performPurchase(context, userId, ticketPrice, walletBalance);
-         
+            // Proceed with the purchase
+            return await _performPurchase(
+                context, userId, ticketPrice, walletBalance, "BusQRcodes");
+          } else {
+            // User chose not to proceed with the purchase
+            return '';
+          }
         } else {
-          // User chose not to proceed with the purchase
+          // User does not have enough funds, show warning
+          await showWalletConfirmationDialog(
+              context, walletBalance, ticketPrice);
           return '';
-        }} else {
-        // User does not have enough funds, show warning
-        await showWalletConfirmationDialog(context,walletBalance,ticketPrice);
-        return '';
-      }
-       
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User not found')),
@@ -226,163 +226,165 @@ double.parse(userData['wallet'] ?? '0');
       );
       return '';
     }
-}
+  }
 
-Future<bool> showWalletConfirmationDialog(BuildContext context, double walletBalance, double ticketPrice) async {
-bool? result = await showDialog<bool>(
-context: context,
-builder: (BuildContext context) {
-return AlertDialog(
-title: Row(
-children: [
-Icon(
-Icons.error_outline,
-color: Colors.red,
-),
-SizedBox(width: 10),
-Text(
-'Insufficient Funds',
-style: TextStyle(
-color: Colors.red,
-fontWeight: FontWeight.bold,
-),
-),
-],
-),
-content: Column(
-mainAxisSize: MainAxisSize.min,
-crossAxisAlignment: CrossAxisAlignment.start,
-children: [
-Text(
-'Your current wallet balance is $walletBalance EGP.',
-style: TextStyle(fontWeight: FontWeight.bold),
-),
-SizedBox(height: 10),
-Text(
-'You do not have enough funds in your wallet to make this purchase.',
-),
-SizedBox(height: 10),
-Text(
-'Would you like to charge your wallet?',
-),
-],
-),
-actions: <Widget>[
-TextButton(
-onPressed: () {
-Navigator.of(context).pop(false); // Do not continue operation
-},
-child: Text('No'),
-),
-TextButton(
-onPressed: () {
-Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ChargeWalletScreen()),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Insufficient funds. Please charge your wallet.'),
-            ),
-          );
-           ''; // Continue operation
-},
-child: Text('Yes, Charge Wallet'),
-),
-],
-);
-},
-);
-return result ?? false; // Return false if result is null
-}
-Future<bool> showPurchaseConfirmationDialog(
-    BuildContext context, double walletBalance, double ticketPrice) async {
-  bool? result = await showDialog<bool>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(
-          'Confirm Purchase',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+  Future<bool> showWalletConfirmationDialog(
+      BuildContext context, double walletBalance, double ticketPrice) async {
+    bool? result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(
+                Icons.error_outline,
+                color: Colors.red,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'Insufficient Funds',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Your current wallet balance is',
-              style: TextStyle(
-                fontSize: 16,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Your current wallet balance is $walletBalance EGP.',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'You do not have enough funds in your wallet to make this purchase.',
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Would you like to charge your wallet?',
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Do not continue operation
+              },
+              child: Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChargeWalletScreen()),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content:
+                        Text('Insufficient funds. Please charge your wallet.'),
+                  ),
+                );
+                ''; // Continue operation
+              },
+              child: Text('Yes, Charge Wallet'),
+            ),
+          ],
+        );
+      },
+    );
+    return result ?? false; // Return false if result is null
+  }
+
+  Future<bool> showPurchaseConfirmationDialog(
+      BuildContext context, double walletBalance, double ticketPrice) async {
+    bool? result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Confirm Purchase',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Your current wallet balance is',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                '$walletBalance EGP',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'The ticket price is',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                '$ticketPrice EGP',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Do you want to proceed with the purchase?',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Do not continue operation
+              },
+              child: Text(
+                'No',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 18,
+                ),
               ),
             ),
-            Text(
-              '$walletBalance EGP',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'The ticket price is',
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-            Text(
-              '$ticketPrice EGP',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Do you want to proceed with the purchase?',
-              style: TextStyle(
-                fontSize: 16,
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Continue operation
+              },
+              child: Text(
+                'Yes, Purchase Ticket',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(false); // Do not continue operation
-            },
-            child: Text(
-              'No',
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 18,
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true); // Continue operation
-            },
-            child: Text(
-              'Yes, Purchase Ticket',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      );
-    },
-  );
-  return result ?? false; // Return false if result is null
-}
+        );
+      },
+    );
+    return result ?? false; // Return false if result is null
+  }
 
-
-Future<String> _performPurchase(
-      BuildContext context, String userId, double ticketPrice, double walletBalance) async {
+  Future<String> _performPurchase(BuildContext context, String userId,
+      double ticketPrice, double walletBalance, String metroOrbus) async {
     try {
       // Deduct the ticket price from the wallet balance and update the user's wallet
       await _firestore.collection('users').doc(userId).update({
@@ -390,7 +392,7 @@ Future<String> _performPurchase(
       });
 
       // Add the QR to the collection
-      DocumentReference docRef = await _firestore.collection('QR').add({
+      DocumentReference docRef = await _firestore.collection(metroOrbus).add({
         'fromStation': "none",
         'price': ticketPrice.toString() + ' egp', // Convert to string
         'userId': userId,
@@ -417,19 +419,17 @@ Future<String> _performPurchase(
     }
   }
 
-String _calculatePriceForStations(int stationsNumber) {
-String price;
-if (stationsNumber < 10) {
-price = '6 egp';
-} else if (stationsNumber < 17) {
-price = '8 egp';
-} else if (stationsNumber < 24) {
-price = '12 egp';
-} else {
-price = '15 egp';
+  String _calculatePriceForStations(int stationsNumber) {
+    String price;
+    if (stationsNumber < 10) {
+      price = '6 egp';
+    } else if (stationsNumber < 17) {
+      price = '8 egp';
+    } else if (stationsNumber < 24) {
+      price = '12 egp';
+    } else {
+      price = '15 egp';
+    }
+    return price;
+  }
 }
-return price;
-}
-}
-     
-
