@@ -25,13 +25,13 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Confirm Charge'),
+          title: const Text('Confirm Charge'),
           content:
               Text('Are you sure you want to charge \$$amount to your wallet?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -43,7 +43,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                 
                 // Handle the charge logic here
               },
-              child: Text('Confirm'),
+              child: const Text('Confirm'),
             ),
           ],
         );
@@ -100,7 +100,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
       appBar: AppBar(
         elevation: 5,
         backgroundColor: Colors.white,
-        title: Text(
+        title: const Text(
           'Charge Wallet',
           style: TextStyle(
             color: Colors.black,
@@ -115,29 +115,29 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'Enter Amount to Charge',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ).animate().fadeIn(duration: 800.ms).slide(),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextField(
                 controller: _amountController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Amount',
                   hintText: 'Enter amount in USD',
                 ),
               ).animate().fadeIn(duration: 800.ms).slide(),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                      Color.fromARGB(255, 255, 255, 255), // PayPal blue color
-                  minimumSize: Size(double.infinity, 50),
+                      const Color.fromARGB(255, 255, 255, 255), // PayPal blue color
+                  minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -146,7 +146,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                   'assets/images/paypal.png',
                   height: 50,
                 ),
-                label: Text(
+                label: const Text(
                   'Pay with PayPal',
                   style: TextStyle(
                     fontSize: 18,
@@ -163,12 +163,12 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text('Invalid Amount'),
-                          content: Text('Please enter a valid amount.'),
+                          title: const Text('Invalid Amount'),
+                          content: const Text('Please enter a valid amount.'),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              child: Text('OK'),
+                              child: const Text('OK'),
                             ),
                           ],
                         );
@@ -185,7 +185,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
   }
   //Function for getting the transaction data to send it to paypal
 ({AmountModel Amount, ItemListModel itemslist})  getTransactionsData({ double? amount}){
-          var amount_model = AmountModel(
+          var amountModel = AmountModel(
                   total: amount.toString(),
                    currency: "USD" , 
                    details: Details(
@@ -198,7 +198,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
 
                     ];
                     var itemList = ItemListModel(items: items); 
-                    return( Amount : amount_model , itemslist : itemList);
+                    return( Amount : amountModel , itemslist : itemList);
 
 
   }

@@ -36,7 +36,7 @@ class PaymentService {
       await walletRef.update({'wallet': newTotalAmount.toString()});
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Wallet Charged Successfully!")),
+        const SnackBar(content: Text("Wallet Charged Successfully!")),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
