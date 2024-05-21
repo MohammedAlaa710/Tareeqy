@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tareeqy_metro/admin/metroScanner.dart';
+import 'package:tareeqy_metro/admin/AdminMetro/metroScanner.dart';
 import 'package:tareeqy_metro/components/searchbar.dart';
 import 'package:tareeqy_metro/firebasemetro/metroService.dart';
 

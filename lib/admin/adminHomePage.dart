@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tareeqy_metro/admin/metroStations.dart';
+import 'package:tareeqy_metro/admin/AdminBus/BusScanner.dart';
+import 'package:tareeqy_metro/admin/AdminMetro/metroStations.dart';
 
 class adminHomePage extends StatelessWidget {
   const adminHomePage({super.key});
@@ -21,8 +22,18 @@ class adminHomePage extends StatelessWidget {
                       builder: (context) => const MetroStations()),
                 );
               },
-              child: const Text("Scan code")),
+              child: const Text("Scan Metro code")),
+         ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const busQRCodeScannerPage()),
+                );
+              },
+              child: const Text("Scan Bus code")),
         ],
+        
       )),
     );
   }
