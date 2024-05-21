@@ -24,17 +24,36 @@ class _LoginState extends State<Login> {
     checkCurrentUser();
   }
 
-  void checkCurrentUser() async {
-    User? user = _auth.currentUser;
-    if (user != null) {
-      Future.delayed(Duration.zero, () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-      });
+void checkCurrentUser() async {
+  User? user = _auth.currentUser;
+  if (user != null) {
+    try {
+      bool? isAdmin = await checkIsAdmin();
+      if (isAdmin != null) {
+        if (isAdmin) {
+          // If the user is an admin, navigate to adminHomePage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const adminHomePage()),
+          );
+        } else {
+          // If the user is not an admin, navigate to HomePage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        }
+      } else {
+        print('isAdmin field not found or null');
+        // Handle case where isAdmin field is not found or null
+      }
+    } catch (e) {
+      print('Error checking user admin status: $e');
+      // Handle error
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +160,7 @@ class _LoginState extends State<Login> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const adminHomePage()));
+                                  builder: (context) =>  adminHomePage()));
                         } else {
                           Navigator.push(
                               context,
