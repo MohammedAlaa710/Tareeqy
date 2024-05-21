@@ -62,39 +62,27 @@ class QRservices {
         DocumentSnapshot userSnapshot =
             await _firestore.collection('users').doc(userId).get();
         Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-        double walletBalance =
-            double.parse(userData['wallet'] ?? '0');
-
-        bool continueOperation = await showWalletConfirmationDialog(context, walletBalance);
-        if (!continueOperation) return '';
-
+        double walletBalance =double.parse(userData['wallet'] ?? '0');
         double ticketPrice = double.parse(price.replaceAll(' egp', ''));
+
         if (walletBalance >= ticketPrice) {
-          DocumentReference docRef = await _firestore.collection('QR').add({
-            'fromStation': "none",
-            'price': price,
-            'userId': userId,
-            'in': false,
-            'out': false,
-            'timestamp': Timestamp.now(),
-          });
-          String docId = docRef.id;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Document added successfully')),
-          );
-          return docId;
-        } else {
-          Navigator.push(
+           bool continueOperation = await showPurchaseConfirmationDialog(
             context,
-            MaterialPageRoute(builder: (context) => ChargeWalletScreen()),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Insufficient funds. Please charge your wallet.'),
-            ),
-          );
+            walletBalance,
+            ticketPrice);
+          if (continueOperation) {
+          // Proceed with the purchase
+           return await _performPurchase(context, userId, ticketPrice, walletBalance);
+         
+        } else {
+          // User chose not to proceed with the purchase
           return '';
-        }
+        }} else {
+        // User does not have enough funds, show warning
+        await showWalletConfirmationDialog(context,walletBalance,ticketPrice);
+        return '';
+      }
+       
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User not found')),
@@ -119,47 +107,27 @@ class QRservices {
         double walletBalance =
             double.parse(userData['wallet'] ?? '0');
 
-        bool continueOperation = await showWalletConfirmationDialog(context, walletBalance);
-        if (!continueOperation) return '';
-
-        String price;
-        if (stationsNumber < 10) {
-          price = '6 egp';
-        } else if (stationsNumber < 17) {
-          price = '8 egp';
-        } else if (stationsNumber < 24) {
-          price = '12 egp';
-        } else {
-          price = '15 egp';
-        }
+        String price = _calculatePriceForStations(stationsNumber);
 
         double ticketPrice = double.parse(price.replaceAll(' egp', ''));
         if (walletBalance >= ticketPrice) {
-          DocumentReference docRef = await _firestore.collection('QR').add({
-            'fromStation': "none",
-            'price': price,
-            'userId': userId,
-            'in': false,
-            'out': false,
-            'timestamp': Timestamp.now(),
-          });
-          String docId = docRef.id;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Document added successfully')),
-          );
-          return docId;
-        } else {
-          Navigator.push(
+           bool continueOperation = await showPurchaseConfirmationDialog(
             context,
-            MaterialPageRoute(builder: (context) => ChargeWalletScreen()),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Insufficient funds. Please charge your wallet.'),
-            ),
-          );
+            walletBalance,
+            ticketPrice);
+          if (continueOperation) {
+          // Proceed with the purchase
+           return await _performPurchase(context, userId, ticketPrice, walletBalance);
+         
+        } else {
+          // User chose not to proceed with the purchase
           return '';
-        }
+        }} else {
+        // User does not have enough funds, show warning
+        await showWalletConfirmationDialog(context,walletBalance,ticketPrice);
+        return '';
+      }
+       
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User not found')),
@@ -172,50 +140,37 @@ class QRservices {
       );
       return '';
     }
-  }
+}
 
-  Future<String> addQRWithSrcandDst(BuildContext context, String from, String to) async {
-    try {
-      String? userId = _auth.currentUser?.uid;
-      if (userId != null) {
-        DocumentSnapshot userSnapshot =
-            await _firestore.collection('users').doc(userId).get();
-        Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-        double walletBalance =
-            double.parse(userData['wallet'] ?? '0');
+Future<String> addQRWithSrcandDst(BuildContext context, String from, String to) async {
+try {
+String? userId = _auth.currentUser?.uid;
+if (userId != null) {
+DocumentSnapshot userSnapshot =
+await _firestore.collection('users').doc(userId).get();
+Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+double walletBalance =
+double.parse(userData['wallet'] ?? '0');    String price = _metroService.calculatePrice(from, to);
 
-        bool continueOperation = await showWalletConfirmationDialog(context, walletBalance);
-        if (!continueOperation) return '';
-
-        String price = _metroService.calculatePrice(from, to);
-
-        double ticketPrice = double.parse(price.replaceAll(' egp', ''));
-        if (walletBalance >= ticketPrice) {
-          DocumentReference docRef = await _firestore.collection('QR').add({
-            'fromStation': "none",
-            'price': price,
-            'userId': userId,
-            'in': false,
-            'out': false,
-            'timestamp': Timestamp.now(),
-          });
-          String docId = docRef.id;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Document added successfully')),
-          );
-          return docId;
-        } else {
-          Navigator.push(
+    double ticketPrice = double.parse(price.replaceAll(' egp', ''));
+     if (walletBalance >= ticketPrice) {
+           bool continueOperation = await showPurchaseConfirmationDialog(
             context,
-            MaterialPageRoute(builder: (context) => ChargeWalletScreen()),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Insufficient funds. Please charge your wallet.'),
-            ),
-          );
+            walletBalance,
+            ticketPrice);
+          if (continueOperation) {
+          // Proceed with the purchase
+           return await _performPurchase(context, userId, ticketPrice, walletBalance);
+         
+        } else {
+          // User chose not to proceed with the purchase
           return '';
-        }
+        }} else {
+        // User does not have enough funds, show warning
+        await showWalletConfirmationDialog(context,walletBalance,ticketPrice);
+        return '';
+      }
+       
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User not found')),
@@ -228,50 +183,37 @@ class QRservices {
       );
       return '';
     }
-  }
+}
 
-  Future<String> busTicket(BuildContext context, String busNumber) async {
-    try {
-      String? userId = _auth.currentUser?.uid;
-      if (userId != null) {
-        DocumentSnapshot userSnapshot =
-            await _firestore.collection('users').doc(userId).get();
-        Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
-        double walletBalance =
-            double.parse(userData['wallet'] ?? '0');
+Future<String> busTicket(BuildContext context, String busNumber) async {
+try {
+String? userId = _auth.currentUser?.uid;
+if (userId != null) {
+DocumentSnapshot userSnapshot =
+await _firestore.collection('users').doc(userId).get();
+Map<String, dynamic> userData = userSnapshot.data() as Map<String, dynamic>;
+double walletBalance =
+double.parse(userData['wallet'] ?? '0');
 
-        bool continueOperation = await showWalletConfirmationDialog(context, walletBalance);
-        if (!continueOperation) return '';
-
-        double ticketPrice = 10.0; // Price of bus ticket
-        if (walletBalance >= ticketPrice) {
-          DocumentReference docRef =
-              await _firestore.collection('BusQRcodes').add({
-            'fromStation': "none",
-            'price': '10 egp',
-            'userId': userId,
-            'in': false,
-            'out': false,
-            'timestamp': Timestamp.now(),
-            'Bus_Number': busNumber
-          });
-          String docId = docRef.id;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Document added successfully')),
-          );
-          return docId;
-        } else {
-          Navigator.push(
+    double ticketPrice = 10.0; // Price of bus ticket
+     if (walletBalance >= ticketPrice) {
+           bool continueOperation = await showPurchaseConfirmationDialog(
             context,
-            MaterialPageRoute(builder: (context) => ChargeWalletScreen()),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Insufficient funds. Please charge your wallet.'),
-            ),
-          );
+            walletBalance,
+            ticketPrice);
+          if (continueOperation) {
+          // Proceed with the purchase
+           return await _performPurchase(context, userId, ticketPrice, walletBalance);
+         
+        } else {
+          // User chose not to proceed with the purchase
           return '';
-        }
+        }} else {
+        // User does not have enough funds, show warning
+        await showWalletConfirmationDialog(context,walletBalance,ticketPrice);
+        return '';
+      }
+       
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User not found')),
@@ -284,47 +226,125 @@ class QRservices {
       );
       return '';
     }
-  }
+}
 
-
-
-
-Future<bool> showWalletConfirmationDialog(BuildContext context, double walletBalance) async {
+Future<bool> showWalletConfirmationDialog(BuildContext context, double walletBalance, double ticketPrice) async {
+bool? result = await showDialog<bool>(
+context: context,
+builder: (BuildContext context) {
+return AlertDialog(
+title: Row(
+children: [
+Icon(
+Icons.error_outline,
+color: Colors.red,
+),
+SizedBox(width: 10),
+Text(
+'Insufficient Funds',
+style: TextStyle(
+color: Colors.red,
+fontWeight: FontWeight.bold,
+),
+),
+],
+),
+content: Column(
+mainAxisSize: MainAxisSize.min,
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Text(
+'Your current wallet balance is $walletBalance EGP.',
+style: TextStyle(fontWeight: FontWeight.bold),
+),
+SizedBox(height: 10),
+Text(
+'You do not have enough funds in your wallet to make this purchase.',
+),
+SizedBox(height: 10),
+Text(
+'Would you like to charge your wallet?',
+),
+],
+),
+actions: <Widget>[
+TextButton(
+onPressed: () {
+Navigator.of(context).pop(false); // Do not continue operation
+},
+child: Text('No'),
+),
+TextButton(
+onPressed: () {
+Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ChargeWalletScreen()),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Insufficient funds. Please charge your wallet.'),
+            ),
+          );
+           ''; // Continue operation
+},
+child: Text('Yes, Charge Wallet'),
+),
+],
+);
+},
+);
+return result ?? false; // Return false if result is null
+}
+Future<bool> showPurchaseConfirmationDialog(
+    BuildContext context, double walletBalance, double ticketPrice) async {
   bool? result = await showDialog<bool>(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Row(
-          children: [
-            Icon(
-              Icons.error_outline,
-              color: Colors.red,
-            ),
-            SizedBox(width: 10),
-            Text(
-              'Insufficient Funds',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        title: Text(
+          'Confirm Purchase',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Your current wallet balance is $walletBalance EGP.',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              'Your current wallet balance is',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            Text(
+              '$walletBalance EGP',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 10),
             Text(
-              'You do not have enough funds in your wallet to make this purchase.',
+              'The ticket price is',
+              style: TextStyle(
+                fontSize: 16,
+              ),
             ),
-            SizedBox(height: 10),
             Text(
-              'Would you like to charge your wallet?',
+              '$ticketPrice EGP',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Do you want to proceed with the purchase?',
+              style: TextStyle(
+                fontSize: 16,
+              ),
             ),
           ],
         ),
@@ -333,24 +353,83 @@ Future<bool> showWalletConfirmationDialog(BuildContext context, double walletBal
             onPressed: () {
               Navigator.of(context).pop(false); // Do not continue operation
             },
-            child: Text('No'),
+            child: Text(
+              'No',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 18,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop(true); // Continue operation
             },
-            child: Text('Yes, Charge Wallet'),
+            child: Text(
+              'Yes, Purchase Ticket',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       );
     },
   );
-
   return result ?? false; // Return false if result is null
 }
 
 
+Future<String> _performPurchase(
+      BuildContext context, String userId, double ticketPrice, double walletBalance) async {
+    try {
+      // Deduct the ticket price from the wallet balance and update the user's wallet
+      await _firestore.collection('users').doc(userId).update({
+        'wallet': (walletBalance - ticketPrice).toString(),
+      });
+
+      // Add the QR to the collection
+      DocumentReference docRef = await _firestore.collection('QR').add({
+        'fromStation': "none",
+        'price': ticketPrice.toString() + ' egp', // Convert to string
+        'userId': userId,
+        'in': false,
+        'out': false,
+        'timestamp': Timestamp.now(),
+      });
+
+      // Show success message with updated wallet balance
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'Ticket purchased successfully. Your wallet balance is now ${(walletBalance - ticketPrice).toStringAsFixed(2)} EGP.'),
+        ),
+      );
+
+      String docId = docRef.id;
+      return docId;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add document: $e')),
+      );
+      return '';
+    }
   }
 
-
+String _calculatePriceForStations(int stationsNumber) {
+String price;
+if (stationsNumber < 10) {
+price = '6 egp';
+} else if (stationsNumber < 17) {
+price = '8 egp';
+} else if (stationsNumber < 24) {
+price = '12 egp';
+} else {
+price = '15 egp';
+}
+return price;
+}
+}
+     
 
