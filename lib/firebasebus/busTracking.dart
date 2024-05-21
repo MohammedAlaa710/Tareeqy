@@ -22,7 +22,6 @@ class BusTrackingScreen extends StatelessWidget {
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
           }
-
           List<Marker> markers = [];
           snapshot.data!.docs.forEach((doc) {
             double latitude = doc['latitude'];
