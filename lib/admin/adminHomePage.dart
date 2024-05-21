@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tareeqy_metro/Auth/Login.dart';
+import 'package:tareeqy_metro/Auth/Register.dart';
 import 'package:tareeqy_metro/admin/AdminBus/BusScanner.dart';
 import 'package:tareeqy_metro/admin/AdminMetro/metroStations.dart';
 
@@ -36,7 +37,10 @@ class adminHomePage extends StatelessWidget {
                 Navigator.of(context).pop();
                 _logout(context);
               },
-              child: const Text('Logout' , style: TextStyle(color: Colors.white),),
+              child: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         );
@@ -65,7 +69,8 @@ class adminHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MetroStations()),
+                  MaterialPageRoute(
+                      builder: (context) => const MetroStations()),
                 );
               },
               child: const Text("Scan Metro code"),
@@ -75,14 +80,24 @@ class adminHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const busQRCodeScannerPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const busQRCodeScannerPage()),
                 );
               },
               child: const Text("Scan Bus code"),
             ),
             const SizedBox(height: 20),
-      
-        
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Register(
+                              collection: "Drivers",
+                            )));
+              },
+              child: const Text("Add driver"),
+            ),
           ],
         ),
       ),

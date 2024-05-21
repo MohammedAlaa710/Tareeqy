@@ -8,7 +8,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tareeqy_metro/homepage.dart';
 
 class Register extends StatefulWidget {
-  const Register({super.key});
+  String? collection;
+  Register({super.key, String collection = "users"}) {
+    this.collection = collection;
+  }
 
   @override
   State<Register> createState() => _RegisterState();
@@ -18,6 +21,7 @@ class _RegisterState extends State<Register> {
   TextEditingController username = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController busId = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
@@ -69,6 +73,21 @@ class _RegisterState extends State<Register> {
                 mycontroller: password,
                 obsecure: true,
               ),
+              /////////////////////////////
+              if (widget.collection == 'Drivers')
+                const Text(
+                  "Bus Id",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              if (widget.collection == 'Drivers') Container(height: 10),
+              if (widget.collection == 'Drivers')
+                CustomTextField(
+                  hinttext: "ُEnter Bus Id",
+                  mycontroller: busId,
+                  obsecure: false,
+                ),
+
+              //////////////////////////////
               Container(
                 margin: const EdgeInsets.only(top: 10, bottom: 20),
                 alignment: Alignment.topRight,
@@ -91,9 +110,12 @@ class _RegisterState extends State<Register> {
                     password: password.text,
                   );
                   if (userCredential.user != null) {
-                    storeUserData(username.text, email.text);
+                    storeUserData(username.text, email.text,
+                        collection: widget.collection, busId: busId.text);
+
                     checkIsAdmin().then((isAdmin) {
-                      if (isAdmin != null && isAdmin) {
+                      if (isAdmin != null && isAdmin ||
+                          widget.collection == "Drivers") {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -154,21 +176,41 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  void storeUserData(String userName, String email) {
+  void storeUserData(String userName, String email,
+      {String? collection = "users", String? busId}) {
     String? userId = _auth.currentUser?.uid;
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .set({
-          'userName': userName,
-          'email': email,
-          'isAdmin': false,
-          'qrCodes': [],
-          'busTickets': [],
-          'wallet': "0.0",
-        })
-        .then((value) => print("User added"))
-        .catchError((error) => print("Failed to add user: $error"));
+    if (collection == 'users') {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .set({
+            'userName': userName,
+            'email': email,
+            'isAdmin': false,
+            'qrCodes': [],
+            'busTickets': [],
+            'wallet': "0.0",
+          })
+          .then((value) => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("user is added Successfully!")),
+              ))
+          .catchError((error) => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text("user is not added Successfully!")),
+              ));
+    } else if (collection == 'Drivers') {
+      FirebaseFirestore.instance
+          .collection('Drivers')
+          .doc(userId)
+          .set({'userName': userName, 'email': email, 'busId': busId})
+          .then((value) => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("driver is added Successfully!")),
+              ))
+          .catchError((error) => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text("driver is not added Successfully!")),
+              ));
+    }
   }
 
   Future<bool?> checkIsAdmin() async {

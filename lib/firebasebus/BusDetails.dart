@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tareeqy_metro/QR-Code/QR-service.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
+import 'package:tareeqy_metro/firebasebus/busTracking.dart';
 
 class BusDetails extends StatelessWidget {
   final String busNumber;
@@ -31,31 +32,58 @@ class BusDetails extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                backgroundColor: const Color(0xFFE63946), // Red
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              ),
-              child: const Text(
-                "Get a Ticket",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              onPressed: () async {
-                String docId = await qrServices.busTicket(context, busNumber);
-                if (docId.isNotEmpty) {
-                  await qrServices.addBusQRCodeToUser(context, docId);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => QRcode(qrData: docId),
+            child: Row(
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                  );
-                }
-              },
+                    backgroundColor: const Color(0xFFE63946), // Red
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                  ),
+                  child: const Text(
+                    "Get a Ticket",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  onPressed: () async {
+                    String docId =
+                        await qrServices.busTicket(context, busNumber);
+                    if (docId.isNotEmpty) {
+                      await qrServices.addBusQRCodeToUser(context, docId);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QRcode(qrData: docId),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    backgroundColor: const Color(0xFFE63946), // Red
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                  ),
+                  child: const Text(
+                    "Track buses",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BusTrackingScreen(busNumber),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ],

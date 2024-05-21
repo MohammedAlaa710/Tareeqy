@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tareeqy_metro/admin/adminHomePage.dart';
+import 'package:tareeqy_metro/drivers/driverScreen.dart';
+import 'package:tareeqy_metro/drivers/driverService.dart';
 import 'package:tareeqy_metro/homepage.dart';
 import 'package:tareeqy_metro/Auth/Register.dart';
 import 'package:tareeqy_metro/firebasemetro/metroService.dart';
@@ -24,36 +26,35 @@ class _LoginState extends State<Login> {
     checkCurrentUser();
   }
 
-void checkCurrentUser() async {
-  User? user = _auth.currentUser;
-  if (user != null) {
-    try {
-      bool? isAdmin = await checkIsAdmin();
-      if (isAdmin != null) {
-        if (isAdmin) {
-          // If the user is an admin, navigate to adminHomePage
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const adminHomePage()),
-          );
+  void checkCurrentUser() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      try {
+        bool? isAdmin = await checkIsAdmin();
+        if (isAdmin != null) {
+          if (isAdmin) {
+            // If the user is an admin, navigate to adminHomePage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const adminHomePage()),
+            );
+          } else {
+            // If the user is not an admin, navigate to HomePage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          }
         } else {
-          // If the user is not an admin, navigate to HomePage
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
+          print('isAdmin field not found or null');
+          // Handle case where isAdmin field is not found or null
         }
-      } else {
-        print('isAdmin field not found or null');
-        // Handle case where isAdmin field is not found or null
+      } catch (e) {
+        print('Error checking user admin status: $e');
+        // Handle error
       }
-    } catch (e) {
-      print('Error checking user admin status: $e');
-      // Handle error
     }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -155,19 +156,26 @@ void checkCurrentUser() async {
                     );
                     // Navigate to another screen if sign in is successful
                     if (userCredential.user != null) {
-                      checkIsAdmin().then((isAdmin) {
-                        if (isAdmin != null && isAdmin) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>  adminHomePage()));
-                        } else {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomePage()));
-                        }
-                      });
+                      if (await checkIsDriver()) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DriverScreen()));
+                      } else {
+                        checkIsAdmin().then((isAdmin) {
+                          if (isAdmin != null && isAdmin) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => adminHomePage()));
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const HomePage()));
+                          }
+                        });
+                      }
                     }
                   } on FirebaseAuthException catch (e) {
                     // Handle error
@@ -211,10 +219,8 @@ void checkCurrentUser() async {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Register()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Register()));
                   },
                   child: const Text(
                     "Register",
@@ -248,6 +254,20 @@ void checkCurrentUser() async {
     } catch (e) {
       print('Error getting user field: $e');
       return null;
+    }
+  }
+
+  Future<bool> checkIsDriver() async {
+    String? userId = _auth.currentUser?.uid;
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('Drivers')
+          .doc(userId)
+          .get();
+      return snapshot.exists;
+    } catch (e) {
+      print('Error checking if user is a driver: $e');
+      return false;
     }
   }
 }
