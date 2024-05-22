@@ -45,6 +45,8 @@ dependencies:
   auto_size_text: ^3.0.0
   google_maps_flutter: ^2.5.3
   location: ^5.0.3
+  google_ml_kit: ^0.18.0
+  image_picker: ^1.1.1
 
 dev_dependencies:
   flutter_test:
