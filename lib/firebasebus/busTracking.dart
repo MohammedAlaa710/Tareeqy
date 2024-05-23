@@ -5,13 +5,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class BusTrackingScreen extends StatelessWidget {
   final String busId;
 
-  BusTrackingScreen(this.busId);
+  const BusTrackingScreen(this.busId, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bus Tracking'),
+        title: const Text('Bus Tracking'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -20,11 +20,11 @@ class BusTrackingScreen extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           List<Marker> markers = [];
-          snapshot.data!.docs.forEach((doc) {
+          for (var doc in snapshot.data!.docs) {
             double latitude = doc['latitude'];
             double longitude = doc['longitude'];
             markers.add(
@@ -34,10 +34,10 @@ class BusTrackingScreen extends StatelessWidget {
                 infoWindow: InfoWindow(title: doc['busId']),
               ),
             );
-          });
+          }
 
           return GoogleMap(
-            initialCameraPosition: CameraPosition(
+            initialCameraPosition: const CameraPosition(
               target:
                   LatLng(0, 0), // Initial position (e.g., center of the map)
               zoom: 10.0, // Initial zoom level

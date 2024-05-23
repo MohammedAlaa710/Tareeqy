@@ -24,7 +24,7 @@ class DriverService {
 
     bool permissionGranted = await _myLocation.caheckAndRqstLocPerm();
     if (!permissionGranted) {
-      throw PermissionDeniedException('Location permission denied');
+      throw const PermissionDeniedException('Location permission denied');
     }
 
     return await Geolocator.getCurrentPosition(
@@ -40,10 +40,10 @@ class DriverService {
 
     bool permissionGranted = await _myLocation.caheckAndRqstLocPerm();
     if (!permissionGranted) {
-      throw PermissionDeniedException('Location permission denied');
+      throw const PermissionDeniedException('Location permission denied');
     }
     yield* Geolocator.getPositionStream(
-      locationSettings: LocationSettings(
+      locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 10, // Update distance filter as needed
       ),
@@ -69,7 +69,7 @@ class DriverService {
 
   // Start sending location updates periodically
   void startSendingLocation() {
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) async {
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) async {
       try {
         Position position = await getCurrentLocation();
         await sendLocationToFirestore(position);

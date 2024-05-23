@@ -119,7 +119,7 @@ class _RegisterState extends State<Register> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => adminHomePage()));
+                                builder: (context) => const adminHomePage()));
                       } else {
                         Navigator.push(
                             context,

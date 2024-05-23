@@ -234,7 +234,7 @@ class QRservices {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Row(
+          title: const Row(
             children: [
               Icon(
                 Icons.error_outline,
@@ -256,14 +256,14 @@ class QRservices {
             children: [
               Text(
                 'Your current wallet balance is $walletBalance EGP.',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'You do not have enough funds in your wallet to make this purchase.',
               ),
-              SizedBox(height: 10),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'Would you like to charge your wallet?',
               ),
             ],
@@ -273,13 +273,13 @@ class QRservices {
               onPressed: () {
                 Navigator.of(context).pop(false); // Do not continue operation
               },
-              child: Text('No'),
+              child: const Text('No'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ChargeWalletScreen()),
+                  MaterialPageRoute(builder: (context) => const ChargeWalletScreen()),
                 );
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -289,7 +289,7 @@ class QRservices {
                 );
                 ''; // Continue operation
               },
-              child: Text('Yes, Charge Wallet'),
+              child: const Text('Yes, Charge Wallet'),
             ),
           ],
         );
@@ -304,7 +304,7 @@ class QRservices {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             'Confirm Purchase',
             style: TextStyle(
               fontSize: 20,
@@ -315,7 +315,7 @@ class QRservices {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Your current wallet balance is',
                 style: TextStyle(
                   fontSize: 16,
@@ -323,13 +323,13 @@ class QRservices {
               ),
               Text(
                 '$walletBalance EGP',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
-              Text(
+              const SizedBox(height: 10),
+              const Text(
                 'The ticket price is',
                 style: TextStyle(
                   fontSize: 16,
@@ -337,13 +337,13 @@ class QRservices {
               ),
               Text(
                 '$ticketPrice EGP',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'Do you want to proceed with the purchase?',
                 style: TextStyle(
                   fontSize: 16,
@@ -356,7 +356,7 @@ class QRservices {
               onPressed: () {
                 Navigator.of(context).pop(false); // Do not continue operation
               },
-              child: Text(
+              child: const Text(
                 'No',
                 style: TextStyle(
                   color: Colors.red,
@@ -368,7 +368,7 @@ class QRservices {
               onPressed: () {
                 Navigator.of(context).pop(true); // Continue operation
               },
-              child: Text(
+              child: const Text(
                 'Yes, Purchase Ticket',
                 style: TextStyle(
                   fontSize: 18,
@@ -394,7 +394,7 @@ class QRservices {
       // Add the QR to the collection
       DocumentReference docRef = await _firestore.collection(metroOrbus).add({
         'fromStation': "none",
-        'price': ticketPrice.toString() + ' egp', // Convert to string
+        'price': '$ticketPrice egp', // Convert to string
         'userId': userId,
         'in': false,
         'out': false,

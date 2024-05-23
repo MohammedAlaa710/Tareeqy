@@ -66,7 +66,7 @@ class _DriverScreenState extends State<DriverScreen> {
               onPressed: _stopLiveLocationUpdates,
               child: const Text("Stop Live Location Updates"),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(_locationMessage),
           ],
         ),

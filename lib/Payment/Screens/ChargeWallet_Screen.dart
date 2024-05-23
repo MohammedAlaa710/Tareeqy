@@ -8,7 +8,6 @@ import 'package:tareeqy_metro/Payment/Models/amount_model/details.dart';
 import 'package:tareeqy_metro/Payment/Models/item_list_model/item.dart';
 import 'package:tareeqy_metro/Payment/Models/item_list_model/item_list_model.dart';
 import 'package:tareeqy_metro/Payment/Services/PaymentService.dart';
-import 'package:tareeqy_metro/Profile/myProfile_Screen.dart';
 
 class ChargeWalletScreen extends StatefulWidget {
   const ChargeWalletScreen({super.key});
