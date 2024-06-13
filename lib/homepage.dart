@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tareeqy_metro/Profile/myProfile_Screen.dart';
+import 'package:tareeqy_metro/components/TransportCard.dart';
 import 'package:tareeqy_metro/firebasebus/BusScreen.dart';
 import 'package:tareeqy_metro/firebasemetro/metroscreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:tareeqy_metro/Auth/Login.dart';
+import '../Auth/Login.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,6 +18,48 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  String? _username;
+  dynamic _wallet;
+  int _selectedIndex = 0;
+
+  final PageController _pageController = PageController();
+
+  @override
+  void initState() {
+    if (mounted) {
+      _fetchUserData();
+    }
+    super.initState();
+  }
+
+  Future<void> _fetchUserData() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      try {
+        final userDoc =
+            await _firestore.collection('users').doc(user.uid).get();
+        if (userDoc.exists) {
+          if (mounted) {
+            setState(() {
+              _username = userDoc.data()!['userName'];
+              _wallet = userDoc.data()!['wallet'];
+            });
+          }
+        } else {
+          // Document does not exist
+          print('User document does not exist');
+        }
+      } catch (e) {
+        // Error fetching document
+        print('Error fetching user document: $e');
+      }
+    } else {
+      // User is not signed in
+      print('User is not signed in');
+    }
+  }
 
   void _logout() async {
     await _auth.signOut();
@@ -23,157 +69,247 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.logout, color: Color(0xffAD3838)),
+              const SizedBox(width: 8),
+              const Text('Logout'),
+            ],
+          ),
+          content: const Text('Are you sure you want to logout?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+              child: const Text('Cancel'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.grey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+                _logout(); // Call the logout method
+              },
+              child: const Text('Logout'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Color(0xffAD3838),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      _pageController.animateToPage(
+        _selectedIndex,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.ease,
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: const Color(0xffAD3838),
+    ));
     return Scaffold(
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          children: [
+            _buildHomePage(),
+            const myProfile_Screen(),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        backgroundColor: const Color(0xffAD3838),
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white.withOpacity(0.6),
+        selectedFontSize: 12.0,
+        unselectedFontSize: 10.0,
+        type: BottomNavigationBarType.fixed,
+        elevation: 8.0,
+        iconSize: 24.0,
+        selectedIconTheme: IconThemeData(size: 28.0),
+        unselectedIconTheme: IconThemeData(size: 22.0),
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHomePage() {
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 320,
+            child: Stack(
               children: [
                 Container(
-                  padding: const EdgeInsets.fromLTRB(50, 100, 50, 50),
-                  child: Image.asset(
-                    "assets/images/tareeqy.jpeg",
-                    width: 300,
-                    height: 170,
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: const Text(
-                    ' Select Your Transportation',
-                    style: TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold,
+                  height: 240,
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: const BoxDecoration(
+                    color: Color(0xffAD3838),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20.0),
+                      bottomRight: Radius.circular(20.0),
                     ),
-                    textAlign: TextAlign.center,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Text(
+                          'Hello, \n${_username ?? ''}',
+                          style: const TextStyle(
+                            fontSize: 40,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: IconButton(
+                          icon: const Icon(Icons.logout),
+                          onPressed: _showLogoutDialog,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 60),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 148, 189, 223),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color.fromARGB(255, 0, 0, 0),
-                            width: 4,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
+                const SizedBox(height: 16.0),
+                Positioned(
+                  left: 20,
+                  right: 20,
+                  top: 195,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    height: 100,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 5),
                         ),
-                        padding: const EdgeInsets.all(10),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BusScreen()));
-                          },
-                          icon: Image.asset(
-                            "assets/images/BusIcon.png",
-                            width: 200,
-                            height: 130,
-                          ),
-                          color: Colors.black,
+                      ],
+                    ),
+                    child: Card(
+                      elevation: 0,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            const Text('Balance',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontStyle: FontStyle.italic)),
+                            Text('\$ ${_wallet ?? ''}',
+                                style: const TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
+                          ],
                         ),
                       ),
                     ),
-                    Flexible(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 148, 189, 223),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color.fromARGB(255, 0, 0, 0),
-                            width: 4,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.all(10),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const MetroScreen()));
-                          },
-                          icon: Image.asset(
-                            "assets/images/MetroIcon.png",
-                            width: 200,
-                            height: 130,
-                          ),
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: _logout,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
                   ),
-                  child: const Text('Logout'),
                 ),
               ],
             ),
           ),
-          Positioned(
-            top: 40,
-            right: 20,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.blueAccent,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: IconButton(
-                iconSize: 40,
-                icon: const Icon(Icons.person, color: Colors.white),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const myProfile_Screen()),
-                  );
-                },
-              ),
+          const SizedBox(height: 20.0),
+          const Text(
+            'Choose your Transport',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 20.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: TransportCard(
+              transportType: 'Bus',
+              svgAssetPath: "assets/images/bus-side-view-icon.svg",
+              SVGColor: Colors.white,
+              BGcolor: Color(0xff343890),
+              width: 50,
+              height: 63,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BusScreen()),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: TransportCard(
+              transportType: 'Metro',
+              svgAssetPath: "assets/images/Subway-HomePage.svg",
+              SVGColor: Colors.white,
+              BGcolor: Color(0xffAD3838),
+              width: 80,
+              height: 75,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MetroScreen()),
+                );
+              },
             ),
           ),
         ],

@@ -5,8 +5,8 @@ class metroService {
   final List<String> transitStation12 = const ['Sadat', 'Al-Shohada'];
   final String transitStation23 = 'Attaba';
   final String transitStation13 = 'Gamal Abd Al-Naser';
-  static final metroService _instance = metroService._(); // Singleton instance
   static List<QueryDocumentSnapshot> stations = [];
+  static final metroService _instance = metroService._(); // Singleton instance
 
   factory metroService() {
     return _instance;

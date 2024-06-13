@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:tareeqy_metro/Payment/Screens/ChargeWallet_Screen.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
-import 'package:intl/intl.dart';
 import 'package:tareeqy_metro/homepage.dart';
 
 class myProfile_Screen extends StatefulWidget {
@@ -124,11 +124,14 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
       appBar: AppBar(
         title: const Text('Profile'),
         leading: IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => const HomePage()));
-            },
-            icon: const Icon(Icons.arrow_back)),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -148,7 +151,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
     return Container(
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color(0xffAD3838),
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
@@ -163,20 +166,22 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
         children: [
           Text(
             _username!,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.account_balance_wallet,
-                  color: Color.fromARGB(255, 9, 255, 17)),
+              const Icon(Icons.account_balance_wallet, color: Colors.white),
               const SizedBox(width: 5),
               Text(
                 '\$$_wallet',
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               const SizedBox(width: 10),
               ElevatedButton(
@@ -188,7 +193,12 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                     ),
                   );
                 },
-                child: const Text('Charge Wallet'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Color(0xffAD3838),
+                  backgroundColor: Colors.white,
+                ),
+                child: const Text('Charge Wallet',
+                    style: TextStyle(color: Color(0xffAD3838))),
               ),
             ],
           ),
@@ -220,7 +230,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.blueAccent,
+              color: Color(0xffAD3838),
             ),
           ),
           const SizedBox(height: 10),
@@ -255,9 +265,8 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
-                            color: ticket['in']
-                                ? const Color.fromARGB(255, 143, 255, 15)
-                                : Colors.white,
+                            color:
+                                ticket['in'] ? Colors.green[100] : Colors.white,
                             margin: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 5),
                             child: ListTile(
@@ -267,8 +276,8 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                                     ? Icons.train
                                     : Icons.directions_bus,
                                 color: ticket['type'] == 'metro'
-                                    ? Colors.blueAccent
-                                    : Colors.orangeAccent,
+                                    ? Color(0xffAD3838)
+                                    : Color(0xff343890),
                                 size: 40,
                               ),
                               title: Text(
