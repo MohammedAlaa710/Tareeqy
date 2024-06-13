@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tareeqy_metro/admin/Service/AdminService.dart';
 
 class BusManagementScreen extends StatefulWidget {
+  const BusManagementScreen({super.key});
+
   @override
   State<BusManagementScreen> createState() => _BusManagementScreenState();
 }
@@ -19,7 +21,7 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bus Management'),
+        title: const Text('Bus Management'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,7 +30,7 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _searchController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Search Bus Number',
                 prefixIcon: Icon(Icons.search),
               ),
@@ -50,11 +52,11 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
               builder: (context, snapshot) {
                 _snapshot = snapshot.data; // Storing the snapshot for later use
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(
+                  return const Center(
                     child: Text('No buses found.'),
                   );
                 } else {
@@ -72,7 +74,7 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
                             ? bus['Regions'] as List<dynamic>
                             : [];
                         return Card(
-                          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                           child: ListTile(
                             title: Text('Bus Number: ${bus.id}'),
                             subtitle: Text('Regions: ${regions.join(', ')}'),
@@ -80,13 +82,13 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  icon: Icon(Icons.edit),
+                                  icon: const Icon(Icons.edit),
                                   onPressed: () {
                                     _showUpdateBusDialog(context, bus.id, regions);
                                   },
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.delete),
+                                  icon: const Icon(Icons.delete),
                                   onPressed: () {
                                     _confirmDeleteBus(context, bus.id);
                                   },
@@ -108,7 +110,7 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
         onPressed: () {
           _showAddBusDialog(context);
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -120,7 +122,7 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add Bus'),
+          title: const Text('Add Bus'),
           content: SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -130,7 +132,7 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
                 children: [
                   TextFormField(
                     controller: _busNumberController,
-                    decoration: InputDecoration(labelText: 'Bus Number'),
+                    decoration: const InputDecoration(labelText: 'Bus Number'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter bus number';
@@ -138,10 +140,10 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   TextFormField(
                     controller: _regionsController,
-                    decoration: InputDecoration(labelText: 'Regions (comma-separated)'),
+                    decoration: const InputDecoration(labelText: 'Regions (comma-separated)'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter regions';
@@ -164,13 +166,13 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
                   Navigator.pop(context);
                 }
               },
-              child: Text('Add'),
+              child: const Text('Add'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
           ],
         );
@@ -186,7 +188,7 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Update Bus'),
+        title: const Text('Update Bus'),
         content: SingleChildScrollView(
           child: Form(
             child: Column(
@@ -195,13 +197,13 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
               children: <Widget>[
                 TextFormField(
                   controller: busNumberController,
-                  decoration: InputDecoration(labelText: 'Bus Number'),
+                  decoration: const InputDecoration(labelText: 'Bus Number'),
                   enabled: true, // Enable editing bus number
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextFormField(
                   controller: regionsController,
-                  decoration: InputDecoration(labelText: 'Regions (comma-separated)'),
+                  decoration: const InputDecoration(labelText: 'Regions (comma-separated)'),
                 ),
               ],
             ),
@@ -221,13 +223,13 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
               // Fetch updated list of buses
               _adminService.getAllBuses();
             },
-            child: Text('Update'),
+            child: const Text('Update'),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
         ],
       );
@@ -241,21 +243,21 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete this bus?'),
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this bus?'),
           actions: [
             TextButton(
               onPressed: () {
                 _adminService.removeBus(busNumber);
                 Navigator.pop(context);
               },
-              child: Text('Yes'),
+              child: const Text('Yes'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('No'),
+              child: const Text('No'),
             ),
           ],
         );

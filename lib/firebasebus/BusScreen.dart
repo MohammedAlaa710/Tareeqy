@@ -4,7 +4,7 @@ import 'package:tareeqy_metro/firebasebus/BusDetails.dart';
 import 'package:tareeqy_metro/firebasebus/busService.dart';
 
 class BusScreen extends StatefulWidget {
-  BusScreen({Key? key}) : super(key: key);
+  const BusScreen({Key? key}) : super(key: key);
 
   @override
   State<BusScreen> createState() => _BusScreenState();
@@ -25,10 +25,10 @@ class _BusScreenState extends State<BusScreen> {
   }
 
   Future<void> _loadData() async {
-    if (_busService.stations.isEmpty) {
+   // if (_busService.stations.isEmpty) { // mmkn nshelha el comment bta3 el if after devolopment (just for the cause of testing the database and keep it updated)
       await _busService.getStations();
       await _busService.getBusDetails();
-    }
+    //}
     setState(() {
       isLoading = false; // Set loading to false when data fetch completes
     });
@@ -64,7 +64,7 @@ class _BusScreenState extends State<BusScreen> {
             ),
             const SizedBox(height: 5),
             if (isLoading)
-              CircularProgressIndicator() // Show loading indicator while data is loading
+              const CircularProgressIndicator() // Show loading indicator while data is loading
             else
               Column(
                 children: [

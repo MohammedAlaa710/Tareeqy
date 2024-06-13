@@ -76,8 +76,8 @@ class BusService {
 
     for (int i = 0; i < busQuery.length; i++) {
       if (busQuery[i].id == busNumber) {
-        if (busQuery[i].get('Regions') != null) {
-          for (String busNumberItem in busQuery[i].get('Regions')) {
+        if (busQuery[i].get('Stations') != null) {
+          for (String busNumberItem in busQuery[i].get('Stations')) {
             if (toFlag && !fromFlag) {
               start = true;
             }

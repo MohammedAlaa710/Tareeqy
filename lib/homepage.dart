@@ -74,11 +74,11 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Row(
+          title: const Row(
             children: [
               Icon(Icons.logout, color: Color(0xffAD3838)),
-              const SizedBox(width: 8),
-              const Text('Logout'),
+              SizedBox(width: 8),
+              Text('Logout'),
             ],
           ),
           content: const Text('Are you sure you want to logout?'),
@@ -87,26 +87,26 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.of(context).pop(); // Dismiss the dialog
               },
-              child: const Text('Cancel'),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.white, backgroundColor: Colors.grey,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Dismiss the dialog
                 _logout(); // Call the logout method
               },
-              child: const Text('Logout'),
               style: TextButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Color(0xffAD3838),
+                foregroundColor: Colors.white, backgroundColor: const Color(0xffAD3838),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
+              child: const Text('Logout'),
             ),
           ],
         );
@@ -127,8 +127,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: const Color(0xffAD3838),
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Color(0xffAD3838),
     ));
     return Scaffold(
       backgroundColor: Colors.white,
@@ -157,9 +157,9 @@ class _HomePageState extends State<HomePage> {
         type: BottomNavigationBarType.fixed,
         elevation: 8.0,
         iconSize: 24.0,
-        selectedIconTheme: IconThemeData(size: 28.0),
-        unselectedIconTheme: IconThemeData(size: 22.0),
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        selectedIconTheme: const IconThemeData(size: 28.0),
+        unselectedIconTheme: const IconThemeData(size: 22.0),
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         showSelectedLabels: true,
         showUnselectedLabels: true,
         items: const [
@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          Container(
+          SizedBox(
             height: 320,
             child: Stack(
               children: [
@@ -199,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(top: 15),
+                        padding: const EdgeInsets.only(top: 15),
                         child: Text(
                           'Hello, \n${_username ?? ''}',
                           style: const TextStyle(
@@ -211,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 15),
+                        padding: const EdgeInsets.only(top: 15),
                         child: IconButton(
                           icon: const Icon(Icons.logout),
                           onPressed: _showLogoutDialog,
@@ -227,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                   right: 20,
                   top: 195,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     height: 100,
                     decoration: const BoxDecoration(
                       color: Colors.white,
@@ -283,7 +283,7 @@ class _HomePageState extends State<HomePage> {
               transportType: 'Bus',
               svgAssetPath: "assets/images/bus-side-view-icon.svg",
               SVGColor: Colors.white,
-              BGcolor: Color(0xff343890),
+              BGcolor: const Color(0xff343890),
               width: 50,
               height: 63,
               onTap: () {
@@ -301,7 +301,7 @@ class _HomePageState extends State<HomePage> {
               transportType: 'Metro',
               svgAssetPath: "assets/images/Subway-HomePage.svg",
               SVGColor: Colors.white,
-              BGcolor: Color(0xffAD3838),
+              BGcolor: const Color(0xffAD3838),
               width: 80,
               height: 75,
               onTap: () {

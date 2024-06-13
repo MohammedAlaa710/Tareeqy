@@ -151,7 +151,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
     return Container(
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Color(0xffAD3838),
+        color: const Color(0xffAD3838),
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
@@ -194,7 +194,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Color(0xffAD3838),
+                  foregroundColor: const Color(0xffAD3838),
                   backgroundColor: Colors.white,
                 ),
                 child: const Text('Charge Wallet',
@@ -276,8 +276,8 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                                     ? Icons.train
                                     : Icons.directions_bus,
                                 color: ticket['type'] == 'metro'
-                                    ? Color(0xffAD3838)
-                                    : Color(0xff343890),
+                                    ? const Color(0xffAD3838)
+                                    : const Color(0xff343890),
                                 size: 40,
                               ),
                               title: Text(
