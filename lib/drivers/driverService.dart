@@ -1,4 +1,7 @@
+// ignore_for_file: file_names, avoid_print
+
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -63,7 +66,22 @@ class DriverService {
         'timestamp': FieldValue.serverTimestamp(),
       });
     } else {
-      print("senlocationtofirestore error");
+      print("sendLocationToFirestore error");
+    }
+  }
+
+  // Send face count to Firestore
+  Future<void> sendFaceCountToFirestore(int faceCount) async {
+    String? userId = _auth.currentUser?.uid;
+    if (userId != null) {
+      await FirebaseFirestore.instance
+          .collection('Drivers')
+          .doc(userId)
+          .update({
+        'facesnumber': faceCount,
+      });
+    } else {
+      print("sendFaceCountToFirestore error");
     }
   }
 

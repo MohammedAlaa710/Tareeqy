@@ -1,7 +1,10 @@
+// ignore_for_file: file_names, library_private_types_in_public_api
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:tareeqy_metro/drivers/FaceDetection.dart';
 import 'package:tareeqy_metro/drivers/driverService.dart';
 
 class DriverScreen extends StatefulWidget {
@@ -58,6 +61,25 @@ class _DriverScreenState extends State<DriverScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+              child: const Text(
+                "             Open camera             ",
+              ),
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Camera(),
+                  ),
+                );
+              },
+            ),
             ElevatedButton(
               onPressed: _startLiveLocationUpdates,
               child: const Text("Start Live Location Updates"),

@@ -44,9 +44,18 @@ class _LoginState extends State<Login> {
               MaterialPageRoute(builder: (context) => const HomePage()),
             );
           }
-        } else {
-          print('isAdmin field not found or null');
+        } else  {
+           bool isDriver = await checkIsDriver();
+          if (isDriver){
+Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const DriverScreen()),
+            );
+
+          }else{
+          print('isAdmin and isDriver not found or null');
           // Handle case where isAdmin field is not found or null
+        }
         }
       } catch (e) {
         print('Error checking user admin status: $e');
@@ -59,6 +68,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color : Colors.white , 
         padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
@@ -70,14 +80,13 @@ class _LoginState extends State<Login> {
                 ),
                 Center(
                   child: Container(
-                    width: 110,
-                    height: 110,
+
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Colors.grey,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(70)),
                     child: Image.asset("assets/images/tareeqy.jpeg",
-                        width: 90, height: 90),
+                        width:220 , height: 180),
                   ),
                 ),
                 Container(height: 20),
@@ -257,12 +266,15 @@ class _LoginState extends State<Login> {
   }
 
   Future<bool> checkIsDriver() async {
+    print("Hi from check driver");
     String? userId = _auth.currentUser?.uid;
     try {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection('Drivers')
           .doc(userId)
           .get();
+          print("Hi from check driver 2" + snapshot.exists.toString());
+          print("Hi from check driver userid {$userId}");
       return snapshot.exists;
     } catch (e) {
       print('Error checking if user is a driver: $e');
