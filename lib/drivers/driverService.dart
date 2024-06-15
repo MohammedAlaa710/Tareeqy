@@ -69,21 +69,30 @@ class DriverService {
       print("sendLocationToFirestore error");
     }
   }
+  
+Future<void> sendFaceCountToFirestore(int faceCount) async {
+  print("hi from the send counts function and this is the face count {$faceCount}");
+  String? userId = _auth.currentUser?.uid;
+  print("User ID: $userId");
 
-  // Send face count to Firestore
-  Future<void> sendFaceCountToFirestore(int faceCount) async {
-    String? userId = _auth.currentUser?.uid;
-    if (userId != null) {
-      await FirebaseFirestore.instance
-          .collection('Drivers')
-          .doc(userId)
-          .update({
-        'facesnumber': faceCount,
+  if (userId != null) {
+    print("hi from if userid not null user is {$userId}");
+    try {
+      print("Attempting to update Firestore document in a transaction...");
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentReference docRef = FirebaseFirestore.instance.collection('Drivers').doc(userId);
+        transaction.update(docRef, {'facesnumber': faceCount});
       });
-    } else {
-      print("sendFaceCountToFirestore error");
+      print("after updating");
+    } catch (e) {
+      print("Failed to update facesnumber: $e");
     }
+  } else {
+    print("sendFaceCountToFirestore error: User ID is null");
   }
+}
+
+
 
   // Start sending location updates periodically
   void startSendingLocation() {

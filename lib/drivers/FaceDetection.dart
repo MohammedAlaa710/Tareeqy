@@ -88,6 +88,7 @@ print("hi after the permission");
       _imageFile = File(pickedFile.path);
       _faces = faces;
       _faceCount = faces.length; // Update face count
+    DriverService().sendFaceCountToFirestore(_faceCount);
       _loadImage(File(pickedFile.path));
     });
 
@@ -97,7 +98,6 @@ print("hi after the permission");
     );
 
     // Save face count to Firestore
-    DriverService().sendFaceCountToFirestore(_faceCount);
   }
 }
 
