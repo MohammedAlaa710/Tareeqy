@@ -26,6 +26,7 @@ if (flutterVersionName == null) {
 android {
     namespace "com.example.tareeqy_metro"
     compileSdkVersion 34
+    compileSdk 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -72,4 +73,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision-image-label:18.1.0'
     implementation platform('com.google.firebase:firebase-bom:26.2.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.guava:guava:28.2-android'
+}
+configurations.all {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
+    }
 }

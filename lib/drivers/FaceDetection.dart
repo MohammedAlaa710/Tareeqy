@@ -1,137 +1,225 @@
-// ignore_for_file: deprecated_member_use, file_names
-
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:tareeqy_metro/drivers/driverService.dart';
 
 class Camera extends StatefulWidget {
-  const Camera({super.key});
+  const Camera({Key? key}) : super(key: key);
 
   @override
   CameraState createState() => CameraState();
 }
 
 class CameraState extends State<Camera> {
+  CameraController? _controller;
+  bool _isTakingPhotos = false;
+  Timer? _timer;
+  bool _isCameraInitialized = false;
+
   File? _imageFile;
   List<Face>? _faces;
-  bool isLoading = false;
   ui.Image? _image;
-  final picker = ImagePicker();
-  int _faceCount = 0; // Variable to hold the count of faces
+  bool isLoading = false;
+  int _faceCount = 0;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: _getImage,
-        child: const Icon(Icons.add_a_photo),
-      ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _imageFile == null
-              ? const Center(child: Text('No image selected'))
-              : Center(
-                  child: _image == null
-                      ? const CircularProgressIndicator()
-                      : FittedBox(
-                          child: SizedBox(
-                            width: _image!.width.toDouble(),
-                            height: _image!.height.toDouble(),
-                            child: CustomPaint(
-                              painter: FacePainter(_image!, _faces!),
-                            ),
-                          ),
-                        ),
-                ),
-    );
+  void initState() {
+    super.initState();
+    _initializeCamera();
   }
 
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _controller?.dispose();
+    super.dispose();
+  }
 
+  Future<void> _initializeCamera() async {
+    WidgetsFlutterBinding.ensureInitialized(); // Ensure plugins are initialized
+    print("Inside camera initialization");
+    try {
+      var cameras = await availableCameras();
+      print("Available cameras: $cameras");
+      if (cameras.isEmpty) {
+        print("No cameras available");
+        return;
+      }
 
-Future<void> _getImage() async {
-  print("hi from Get image function");
+      try {
+        print("Initializing camera");
+        _controller = CameraController(cameras[0], ResolutionPreset.high);
+        print("Using camera: ${cameras[0]}");
 
-  // Request camera permission
-  var status = await Permission.camera.status;
-  print("status camera " + status.name) ; 
-  if (!status.isGranted) {
-    print("hi from if not gramted1");
-    status = await Permission.camera.request();
-    if (!status.isGranted) {
-      print("hi from if not gramted2");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Camera permission is required to take photos')),
-      );
-      return;
+        await _controller!.initialize();
+        print("Camera initialized");
+        setState(() {
+          _isCameraInitialized = true;
+        });
+        _toggleAutomaticCapture();
+      } catch (e) {
+        print("Error initializing camera: $e");
+      }
+    } catch (e) {
+      print("Error getting available cameras: $e");
     }
   }
-print("hi after the permission");
-  final pickedFile = await picker.pickImage(source: ImageSource.camera);
-  if (pickedFile == null) return;
-  print("hi after picked file isn't null");
 
-  setState(() {
-    isLoading = true;
-  });
+  void _toggleAutomaticCapture() {
+    if (_isTakingPhotos) {
+      // Stop taking photos
+      _timer?.cancel();
+      print("Automatic capture stopped");
+      setState(() {
+        _isTakingPhotos = false;
+      });
+    } else {
+      // Capture image immediately and start timer
+      _captureAndProcessImage();
 
-  final inputImage = InputImage.fromFile(File(pickedFile.path));
-  final faceDetector = GoogleMlKit.vision.faceDetector();
-  List<Face> faces = await faceDetector.processImage(inputImage);
+      // Start taking photos every minute
+      _timer = Timer.periodic(Duration(minutes: 1), (timer) {
+        if (!_isTakingPhotos) {
+          timer.cancel();
+          print("Timer canceled");
+          return;
+        }
+        _captureAndProcessImage();
+      });
 
-  if (mounted) {
-    setState(() {
-      _imageFile = File(pickedFile.path);
-      _faces = faces;
-      _faceCount = faces.length; // Update face count
-    DriverService().sendFaceCountToFirestore(_faceCount);
-      _loadImage(File(pickedFile.path));
-    });
-
-    // Show message with the number of faces recognized
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Number of faces recognized: $_faceCount')),
-    );
-
-    // Save face count to Firestore
+      setState(() {
+        _isTakingPhotos = true;
+      });
+    }
   }
-}
 
+  Future<void> _captureAndProcessImage() async {
+    if (!_isCameraInitialized || _controller == null || !_controller!.value.isInitialized) {
+      print("Camera not initialized or controller not available");
+      return;
+    }
+
+    try {
+      XFile file = await _controller!.takePicture();
+      print("Picture captured: ${file.path}");
+
+      final inputImage = InputImage.fromFilePath(file.path);
+      final faceDetector = GoogleMlKit.vision.faceDetector();
+      List<Face> faces = await faceDetector.processImage(inputImage);
+      print("Number of faces detected: ${faces.length}");
+
+     setState(() {
+  _imageFile = File(file.path);
+  _faces = faces;
+  _faceCount = faces.length; // Update face count
+});
+await _loadImage(File(file.path)); // Wait for image loading to complete
+
+      // Show message with the number of faces recognized
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Number of faces recognized: $_faceCount')),
+      );
+    } catch (e) {
+      print("Error taking picture: $e");
+    }
+  }
 
   Future<void> _loadImage(File file) async {
+    print("Loading image from file");
     final data = await file.readAsBytes();
-    await decodeImageFromList(data).then((value) => setState(() {
-          _image = value;
-          isLoading = false;
-        }));
+    await decodeImageFromList(data).then((value) {
+      setState(() {
+        _image = value;
+        isLoading = false;
+        print("Image loaded successfully");
+      });
+    }).catchError((error) {
+      print("Error loading image: $error");
+    });
   }
+
+  @override
+  @override
+Widget build(BuildContext context) {
+  if (!_isCameraInitialized) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Automatic Face Detection Camera')),
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  if (_imageFile == null) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Automatic Face Detection Camera')),
+      body: Center(child: Text('No image selected')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _toggleAutomaticCapture,
+        child: Icon(_isTakingPhotos ? Icons.stop : Icons.play_arrow),
+      ),
+    );
+  }
+
+  return Scaffold(
+    appBar: AppBar(title: Text('Automatic Face Detection Camera')),
+    body: isLoading
+      ? Center(child: CircularProgressIndicator())
+      : Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: FittedBox(
+                  child: SizedBox(
+                    width: _image?.width?.toDouble(),
+                    height: _image?.height?.toDouble(),
+                    child: CustomPaint(
+                      painter: _faces != null ? FacePainter(_image!, _faces!) : null,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Number of faces recognized: $_faceCount',
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+        ),
+    floatingActionButton: FloatingActionButton(
+      onPressed: _toggleAutomaticCapture,
+      child: Icon(_isTakingPhotos ? Icons.stop : Icons.play_arrow),
+    ),
+  );
+}
+
 }
 
 class FacePainter extends CustomPainter {
   final ui.Image image;
   final List<Face> faces;
-  final List<Rect> rects = [];
 
-  FacePainter(this.image, this.faces) {
-    for (var i = 0; i < faces.length; i++) {
-      rects.add(faces[i].boundingBox);
-    }
-  }
+  FacePainter(this.image, this.faces);
 
   @override
-  void paint(ui.Canvas canvas, ui.Size size) {
+  void paint(Canvas canvas, Size size) {
+    print("Painting canvas");
     final Paint paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0
       ..color = Colors.yellow;
 
-    canvas.drawImage(image, Offset.zero, Paint());
-    for (var i = 0; i < faces.length; i++) {
-      canvas.drawRect(rects[i], paint);
+    canvas.drawImage(image, Offset.zero, paint);
+
+    if (faces != null) {
+      for (var face in faces) {
+        canvas.drawRect(face.boundingBox, paint);
+      }
+    } else {
+      print("Faces in FacePainter is null!");
     }
   }
 
