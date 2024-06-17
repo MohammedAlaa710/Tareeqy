@@ -57,7 +57,6 @@ class BusTrackingScreen extends StatelessWidget {
                   ),
                 ),
               );
-if
               if (latitude < minLat) minLat = latitude;
               if (latitude > maxLat) maxLat = latitude;
               if (longitude < minLng) minLng = longitude;
