@@ -273,7 +273,7 @@ Navigator.pushReplacement(
           .collection('Drivers')
           .doc(userId)
           .get();
-          print("Hi from check driver 2" + snapshot.exists.toString());
+          print("Hi from check driver 2${snapshot.exists}");
           print("Hi from check driver userid {$userId}");
       return snapshot.exists;
     } catch (e) {
