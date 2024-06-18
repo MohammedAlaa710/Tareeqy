@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tareeqy_metro/admin/adminHomePage.dart';
 import 'package:tareeqy_metro/drivers/driverScreen.dart';
-import 'package:tareeqy_metro/drivers/driverService.dart';
 import 'package:tareeqy_metro/homepage.dart';
 import 'package:tareeqy_metro/Auth/Register.dart';
 import 'package:tareeqy_metro/firebasemetro/metroService.dart';
@@ -46,8 +45,16 @@ class _LoginState extends State<Login> {
             );
           }
         } else {
-          print('isAdmin field not found or null');
-          // Handle case where isAdmin field is not found or null
+          bool isDriver = await checkIsDriver();
+          if (isDriver) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const DriverScreen()),
+            );
+          } else {
+            print('isAdmin and isDriver not found or null');
+            // Handle case where isAdmin field is not found or null
+          }
         }
       } catch (e) {
         print('Error checking user admin status: $e');
@@ -60,6 +67,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: Colors.white,
         padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
@@ -71,14 +79,12 @@ class _LoginState extends State<Login> {
                 ),
                 Center(
                   child: Container(
-                    width: 110,
-                    height: 110,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Colors.grey,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(70)),
                     child: Image.asset("assets/images/tareeqy.jpeg",
-                        width: 90, height: 90),
+                        width: 220, height: 180),
                   ),
                 ),
                 Container(height: 20),
@@ -167,7 +173,8 @@ class _LoginState extends State<Login> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const adminHomePage()));
+                                    builder: (context) =>
+                                        const adminHomePage()));
                           } else {
                             Navigator.push(
                                 context,
@@ -258,12 +265,15 @@ class _LoginState extends State<Login> {
   }
 
   Future<bool> checkIsDriver() async {
+    print("Hi from check driver");
     String? userId = _auth.currentUser?.uid;
     try {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection('Drivers')
           .doc(userId)
           .get();
+      print("Hi from check driver 2${snapshot.exists}");
+      print("Hi from check driver userid {$userId}");
       return snapshot.exists;
     } catch (e) {
       print('Error checking if user is a driver: $e');
