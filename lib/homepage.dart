@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:tareeqy_metro/Profile/myProfile_Screen.dart';
 import 'package:tareeqy_metro/components/TransportCard.dart';
 import 'package:tareeqy_metro/firebasebus/BusScreen.dart';
+import 'package:tareeqy_metro/firebasebus/busService.dart';
+import 'package:tareeqy_metro/firebasemetro/metroService.dart';
 import 'package:tareeqy_metro/firebasemetro/metroscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tareeqy_metro/Auth/Login.dart';
@@ -24,6 +26,9 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   final PageController _pageController = PageController();
+  final metroService _metroService =
+      metroService(); // Initialize metroService here
+  late final BusService _busService = BusService();
 
   @override
   void initState() {
@@ -35,7 +40,14 @@ class _HomePageState extends State<HomePage> {
 
     if (mounted) {
       _fetchUserData();
+      _metroService.getStations();
+      _loadBusData();
     }
+  }
+
+  Future<void> _loadBusData() async {
+    await _busService.getStations();
+    await _busService.getBusDetails();
   }
 
   Future<void> _fetchUserData() async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:tareeqy_metro/Payment/Screens/ChargeWallet_Screen.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
 import 'package:intl/intl.dart';
@@ -125,8 +126,8 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
         title: const Text('Profile'),
         leading: IconButton(
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => const HomePage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomePage()));
             },
             icon: const Icon(Icons.arrow_back)),
       ),
@@ -148,7 +149,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
     return Container(
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF073042),
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
@@ -163,7 +164,12 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
         children: [
           Text(
             _username!,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+              color: Colors.white,
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 10),
@@ -171,15 +177,21 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.account_balance_wallet,
-                  color: Color.fromARGB(255, 9, 255, 17)),
+                  color: Color.fromARGB(255, 35, 184, 40)),
               const SizedBox(width: 5),
               Text(
                 '\$$_wallet',
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 35),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 178, 20, 20),
+                  foregroundColor: Colors.white, // Set text color (optional)
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -220,7 +232,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.blueAccent,
+              color: Color(0xFF073042),
             ),
           ),
           const SizedBox(height: 10),
@@ -231,7 +243,9 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                       child: Text(
                         'No tickets purchased',
                         style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 255, 17, 0)),
                       ),
                     )
                   : ListView.builder(
@@ -256,7 +270,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             color: ticket['in']
-                                ? const Color.fromARGB(255, 143, 255, 15)
+                                ? Color.fromARGB(255, 95, 255, 15)
                                 : Colors.white,
                             margin: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 5),
@@ -267,35 +281,51 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                                     ? Icons.train
                                     : Icons.directions_bus,
                                 color: ticket['type'] == 'metro'
-                                    ? Colors.blueAccent
-                                    : Colors.orangeAccent,
+                                    ? const Color(0xFF00796B)
+                                    : const Color(0xFFB31312),
                                 size: 40,
                               ),
                               title: Text(
-                                'Time: ${_formatTimestamp(ticket['timestamp'])}',
+                                ticket['type'] == 'metro'
+                                    ? 'Metro Ticket'
+                                    : 'Bus Ticket',
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(
+                                      0xff4A4A4D,
+                                    )),
                               ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Price: \$${ticket['price']}'),
                                   Text(
-                                    ticket['type'] == 'metro'
-                                        ? 'Metro Ticket'
-                                        : 'Bus Ticket',
+                                    'Time: ${_formatTimestamp(ticket['timestamp'])}',
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17,
+                                        color: Color.fromARGB(255, 0, 0, 0)),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Price: \$${ticket['price']}',
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
                                   ),
                                   if (ticket['in'])
                                     const Text(
                                       'This ticket is in use',
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 254, 17, 0),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
                                     ),
                                 ],
                               ),
                               trailing: const Icon(Icons.arrow_forward_ios,
-                                  color: Colors.grey),
+                                  color: Color.fromARGB(255, 121, 121, 121)),
                             ),
                           ),
                         );
