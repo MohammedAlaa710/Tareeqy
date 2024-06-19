@@ -37,11 +37,11 @@ class _MetroScreenState extends State<MetroScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 5,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF073042),
         title: const Text(
           'Metro',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -51,11 +51,13 @@ class _MetroScreenState extends State<MetroScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 20),
               const Image(
-                image: AssetImage("assets/images/metroIconn.jpg"),
-                height: 220,
-                width: 220,
+                image: AssetImage("assets/images/metroIconn.png"),
+                height: 150,
+                width: 150,
               ),
+              const SizedBox(height: 20),
               if (!isDataLoaded) const CircularProgressIndicator(),
               if (isDataLoaded)
                 Column(
@@ -95,14 +97,14 @@ class _MetroScreenState extends State<MetroScreen> {
                     ),
                   ],
                 ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 30),
               if (isDataLoaded)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 40, 53, 173),
+                        backgroundColor: const Color(0xFF073042),
                         minimumSize: const Size(150, 50),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 12),
@@ -124,7 +126,7 @@ class _MetroScreenState extends State<MetroScreen> {
                     Container(width: 20),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 40, 53, 173),
+                        backgroundColor: const Color(0xFF073042),
                         minimumSize: const Size(150, 50),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 12),
@@ -146,7 +148,7 @@ class _MetroScreenState extends State<MetroScreen> {
                     ),
                   ],
                 ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               if (selectedValue1 != '' && selectedValue2 != '')
                 Container(
                   decoration: BoxDecoration(
@@ -163,6 +165,7 @@ class _MetroScreenState extends State<MetroScreen> {
                           children: [
                             const Icon(
                               Icons.attach_money,
+                              color: Color(0xFF00796B),
                               size: 70,
                             ),
                             const Text(
@@ -205,6 +208,7 @@ class _MetroScreenState extends State<MetroScreen> {
                           children: [
                             const Icon(
                               Icons.timelapse,
+                              color: Color(0xFF00796B),
                               size: 70,
                             ),
                             const Text(
@@ -249,7 +253,7 @@ class _MetroScreenState extends State<MetroScreen> {
                       child: Icon(
                         Icons.location_on_rounded,
                         size: 30,
-                        color: Color.fromARGB(255, 14, 72, 171),
+                        color: Color(0xFFB31312),
                       ),
                     ),
                     Expanded(
@@ -261,8 +265,7 @@ class _MetroScreenState extends State<MetroScreen> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size(double.infinity, 50),
-                            backgroundColor:
-                                const Color.fromARGB(255, 40, 53, 173),
+                            backgroundColor: const Color(0xFF073042),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 0, vertical: 5),
                             shape: RoundedRectangleBorder(
@@ -291,12 +294,11 @@ class _MetroScreenState extends State<MetroScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.0),
-                            color: const Color.fromARGB(255, 14, 72, 171),
+                            color: const Color(0xFF073042),
                           ),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 40, 53, 173),
+                              backgroundColor: const Color(0xFF073042),
                               minimumSize: const Size(double.infinity, 50),
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 12),

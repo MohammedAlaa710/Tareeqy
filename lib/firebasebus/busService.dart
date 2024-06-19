@@ -5,7 +5,7 @@ class BusService {
   List<QueryDocumentSnapshot> stationsQuery = [];
   List<String> busquerytest = [];
   List<QueryDocumentSnapshot> busQuery = [];
-    static final BusService _instance = BusService._(); // Singleton instance
+  static final BusService _instance = BusService._(); // Singleton instance
 
   factory BusService() {
     return _instance;
@@ -14,7 +14,6 @@ class BusService {
   BusService._(); // Private constructor for singleton
 
   List<String> get _stations => stations;
-
 
   Future<void> getStations() async {
     try {

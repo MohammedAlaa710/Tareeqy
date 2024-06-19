@@ -295,7 +295,7 @@ class _HomePageState extends State<HomePage> {
               SVGColor: Colors.white,
               BGcolor: const Color(0xFFB31312), // Soft amber
               width: 50,
-              height: 63,
+              height: 65,
               onTap: () {
                 Navigator.push(
                   context,
@@ -308,13 +308,12 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: TransportCard(
-              transportType: 'Metro',
+              transportType: 'Metro', //assets/images/Subway-HomePage.png
               svgAssetPath: "assets/images/Subway-HomePage.svg",
               SVGColor: Colors.white,
               BGcolor: const Color(0xFF00796B), // Muted teal
-
-              width: 80,
-              height: 75,
+              width: 50,
+              height: 65,
               onTap: () {
                 Navigator.push(
                   context,

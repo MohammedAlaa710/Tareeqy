@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:tareeqy_metro/drivers/driverService.dart';
 
@@ -249,6 +248,3 @@ class FacePainter extends CustomPainter {
     return image != oldDelegate.image;
   }
 }
-
-
-//sh8al bs fyh moshkla fl ui

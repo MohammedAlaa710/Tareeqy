@@ -39,11 +39,11 @@ class _BusScreenState extends State<BusScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 10,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF073042),
         title: const Text(
           'Bus',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -53,16 +53,17 @@ class _BusScreenState extends State<BusScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const SizedBox(height: 30),
             Center(
               child: SingleChildScrollView(
                 child: Image.asset(
-                  "assets/images/busIconn.jpg",
-                  width: 250,
-                  height: 250,
+                  "assets/images/busIconn.png",
+                  width: 150,
+                  height: 150,
                 ),
               ),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 30),
             if (isLoading)
               const CircularProgressIndicator() // Show loading indicator while data is loading
             else
@@ -108,8 +109,7 @@ class _BusScreenState extends State<BusScreen> {
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 40, 53, 173),
+                          backgroundColor: const Color(0xFF073042),
                           minimumSize: const Size(150, 50),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 12),
@@ -132,8 +132,7 @@ class _BusScreenState extends State<BusScreen> {
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 40, 53, 173),
+                          backgroundColor: const Color(0xFF073042),
                           minimumSize: const Size(150, 50),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 12),
@@ -156,7 +155,7 @@ class _BusScreenState extends State<BusScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
                   if (showBusNumbers)
                     for (int i = 0;
                         i <
@@ -167,7 +166,7 @@ class _BusScreenState extends State<BusScreen> {
                       Container(
                         margin:
                             const EdgeInsets.only(left: 3, right: 3, bottom: 3),
-                        color: const Color.fromARGB(255, 128, 189, 250),
+                        color: Color.fromARGB(255, 148, 194, 214),
                         child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(
@@ -203,14 +202,6 @@ class _BusScreenState extends State<BusScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              /*Container(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Image.asset(
-                                  "assets/images/BusIcon.png",
-                                  width: 65,
-                                  height: 65,
-                                ),
-                              ),*/
                               const Spacer(
                                 flex: 1,
                               ),
@@ -225,10 +216,10 @@ class _BusScreenState extends State<BusScreen> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20,
+                                          color: Color.fromARGB(255, 0, 0, 0),
                                         ),
                                       ),
                                       Text(
-                                        //t3ala
                                         _busService.insertionSort(
                                             _busService.regionsCoveredList(
                                                 _busService.getBusNumber(
@@ -240,6 +231,7 @@ class _BusScreenState extends State<BusScreen> {
                                                 selectedValue1,
                                                 selectedValue2))[i],
                                         style: const TextStyle(
+                                          color: Color(0xFFB31312),
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25,
                                         ),
@@ -250,7 +242,10 @@ class _BusScreenState extends State<BusScreen> {
                                     children: [
                                       const Text(
                                         "Regions Covered : ",
-                                        style: TextStyle(fontSize: 18),
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Color.fromARGB(255, 0, 0, 0),
+                                        ),
                                       ),
                                       Text(
                                         _busService
@@ -271,8 +266,10 @@ class _BusScreenState extends State<BusScreen> {
                                             .length
                                             .toString(),
                                         style: const TextStyle(
-                                            //fontWeight: FontWeight.bold,
-                                            fontSize: 18),
+                                          color: Color(0xFFB31312),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -285,6 +282,7 @@ class _BusScreenState extends State<BusScreen> {
                                 "Click For \n Details",
                                 style: TextStyle(
                                   fontSize: 15,
+                                  color: Color.fromARGB(255, 0, 0, 0),
                                 ),
                               ),
                               const Spacer(
