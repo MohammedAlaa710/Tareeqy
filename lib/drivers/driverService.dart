@@ -1,4 +1,7 @@
+// ignore_for_file: file_names, avoid_print
+
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -63,7 +66,31 @@ class DriverService {
         'timestamp': FieldValue.serverTimestamp(),
       });
     } else {
-      print("senlocationtofirestore error");
+      print("sendLocationToFirestore error");
+    }
+  }
+
+  Future<void> sendFaceCountToFirestore(int faceCount) async {
+    print(
+        "hi from the send counts function and this is the face count {$faceCount}");
+    String? userId = _auth.currentUser?.uid;
+    print("User ID: $userId");
+
+    if (userId != null) {
+      print("hi from if userid not null user is {$userId}");
+      try {
+        print("Attempting to update Firestore document in a transaction...");
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          DocumentReference docRef =
+              FirebaseFirestore.instance.collection('Drivers').doc(userId);
+          transaction.update(docRef, {'facesnumber': faceCount});
+        });
+        print("after updating");
+      } catch (e) {
+        print("Failed to update facesnumber: $e");
+      }
+    } else {
+      print("sendFaceCountToFirestore error: User ID is null");
     }
   }
 
@@ -85,3 +112,4 @@ class DriverService {
     _timer?.cancel();
   }
 }
+//adem
