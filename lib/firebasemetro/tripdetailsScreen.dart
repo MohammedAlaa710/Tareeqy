@@ -37,7 +37,7 @@ class _TripDetailsState extends State<TripDetails> {
               ],
             ),
           ),
-          backgroundColor: const Color.fromARGB(255, 40, 53, 173)),
+          backgroundColor: const Color(0xFF073042)),
       body: Stack(
         //physics: BouncingScrollPhysics(),
         //fit: StackFit.expand,
@@ -76,14 +76,14 @@ class _TripDetailsState extends State<TripDetails> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(
-                              Icons.subway_outlined,
+                              Icons.subway,
                               size: 50,
-                              color: Color.fromARGB(255, 40, 53, 173),
+                              color: Color(0xFF00796B),
                             ),
                             const Text(
                               'Stations',
                               style: TextStyle(
-                                color: Color.fromARGB(255, 40, 53, 173),
+                                color: Color(0xFF00796B),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 17,
                               ),
@@ -131,14 +131,14 @@ class _TripDetailsState extends State<TripDetails> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Icon(
-                              color: Color.fromARGB(255, 40, 53, 173),
+                              color: Color(0xFF00796B),
                               Icons.transit_enterexit_outlined,
                               size: 50,
                             ),
                             const Text(
                               'Interchange Station',
                               style: TextStyle(
-                                color: Color.fromARGB(255, 40, 53, 173),
+                                color: Color(0xFF00796B),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 17,
                               ),
@@ -230,7 +230,7 @@ class _TripDetailsState extends State<TripDetails> {
             minChildSize: Draggablenumber(),
             builder: (context, scrollController) {
               return Container(
-                decoration: const BoxDecoration(color: Color(0xff0048AB)),
+                decoration: const BoxDecoration(color: Color(0xFF073042)),
                 child: ListView.builder(
                   physics: const ClampingScrollPhysics(),
                   controller: scrollController,
@@ -356,7 +356,7 @@ class _TripDetailsState extends State<TripDetails> {
               const Text(
                 'Trip Desription:',
                 style: TextStyle(
-                    color: Color(0xff0048AB),
+                    color: Color(0xFF00796B),
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),

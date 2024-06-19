@@ -37,7 +37,11 @@ class _srcDstQRState extends State<srcDstQR> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("src and dest stations"),
+        backgroundColor: const Color(0xFF073042),
+        title: const Text(
+          "Get a Ticket",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
       ),
       body: Center(
         child: Column(
@@ -89,20 +93,31 @@ class _srcDstQRState extends State<srcDstQR> {
                 height: 20), // Add some space between the dropdown and button
             if (isDataLoaded)
               ElevatedButton(
-                onPressed: () async {
-                  String docId = await _qrServices.addQRWithSrcandDst(
-                      context, selectedValue1, selectedValue2);
-                  if (docId.isNotEmpty) {
-                    await _qrServices.addQRCodeToUser(context, docId);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => QRcode(qrData: docId),
-                      ),
-                    );
-                  }
-                },
-                child: const Text('Add Document'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF00796B),
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: (selectedValue1 != '' && selectedValue2 != '')
+                    ? () async {
+                        String docId = await _qrServices.addQRWithSrcandDst(
+                            context, selectedValue1, selectedValue2);
+                        if (docId.isNotEmpty) {
+                          await _qrServices.addQRCodeToUser(context, docId);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QRcode(qrData: docId),
+                            ),
+                          );
+                        }
+                      }
+                    : null,
+                child: const Text(
+                  'Get The Ticket',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
           ],
         ),

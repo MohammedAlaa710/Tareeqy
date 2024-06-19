@@ -14,7 +14,13 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Color(0xFF073042),
+        title: const Text(
+          "Get a Ticket",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      ),
       body: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Center(
@@ -25,7 +31,11 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                 padding: const EdgeInsets.only(top: 80),
                 child: const Text(
                   "You can get your ticket in three ways : ",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF073042),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -36,7 +46,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                 width: 300,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 40, 53, 173),
+                    backgroundColor: const Color(0xFF00796B),
                     minimumSize: const Size(150, 50),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
@@ -49,7 +59,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const numberOfStaionsQR()));
+                            builder: (context) => const NumberOfStationsQR()));
                   },
                   child: const Text(
                     'Enter number of stations',
@@ -65,7 +75,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                 width: 300,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 40, 53, 173),
+                    backgroundColor: const Color(0xFF00796B),
                     minimumSize: const Size(150, 50),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 50, vertical: 12),
@@ -94,7 +104,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                 width: 300,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 40, 53, 173),
+                    backgroundColor: const Color(0xFF00796B),
                     minimumSize: const Size(150, 50),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 12),
@@ -107,7 +117,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const priceQR()));
+                            builder: (context) => const PriceQR()));
                   },
                   child: const Text(
                     'Enter the ticket Price',

@@ -1,17 +1,15 @@
-// ignore_for_file: camel_case_types
-
 import 'package:flutter/material.dart';
 import 'package:tareeqy_metro/QR-Code/QR-service.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
 
-class priceQR extends StatefulWidget {
-  const priceQR({super.key});
+class PriceQR extends StatefulWidget {
+  const PriceQR({Key? key}) : super(key: key);
 
   @override
-  State<priceQR> createState() => _priceQRState();
+  State<PriceQR> createState() => _PriceQRState();
 }
 
-class _priceQRState extends State<priceQR> {
+class _PriceQRState extends State<PriceQR> {
   String dropdownValue = '15 egp'; // Default dropdown value
   TextEditingController controller = TextEditingController();
   final QRservices _qrServices =
@@ -21,32 +19,46 @@ class _priceQRState extends State<priceQR> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("price page"),
+        backgroundColor: const Color(0xFF073042),
+        title: const Text(
+          "Get a Ticket",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            DropdownButton<String>(
-              value: dropdownValue,
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    dropdownValue = newValue;
-                  });
-                }
-              },
-              items: <String>['6 egp', '8 egp', '12 egp', '15 egp']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+            Container(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 143, 143, 143),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: DropdownButton<String>(
+                value: dropdownValue,
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      dropdownValue = newValue;
+                    });
+                  }
+                },
+                items: <String>['6 egp', '8 egp', '12 egp', '15 egp']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
             ),
             const SizedBox(
-                height: 20), // Add some space between the dropdown and button
+                height: 20), // Add space between the dropdown and button
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF00796B),
+                foregroundColor: Colors.white,
+              ),
               onPressed: () async {
                 int price;
                 if (dropdownValue == '6 egp') {
@@ -61,7 +73,6 @@ class _priceQRState extends State<priceQR> {
                 String docId =
                     await _qrServices.addQRWithPrice(context, '$price egp');
                 if (docId.isNotEmpty) {
-                  // ignore: use_build_context_synchronously
                   await _qrServices.addQRCodeToUser(context, docId);
                   Navigator.push(
                     context,
@@ -71,7 +82,12 @@ class _priceQRState extends State<priceQR> {
                   );
                 }
               },
-              child: const Text('Add Document'),
+              child: const Text(
+                'Get The Ticket',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ],
         ),
