@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tareeqy_metro/components/searchbar.dart';
 import 'package:tareeqy_metro/firebasebus/BusDetails.dart';
 import 'package:tareeqy_metro/firebasebus/busService.dart';
@@ -18,6 +19,10 @@ class _BusScreenState extends State<BusScreen> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Color(0xFF073042),
+    ));
+
     _busService = BusService();
   }
 

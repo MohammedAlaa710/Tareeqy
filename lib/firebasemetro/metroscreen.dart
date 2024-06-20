@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tareeqy_metro/QR-Code/generateQrCode.dart';
 import 'package:tareeqy_metro/components/searchbar.dart';
 import 'package:tareeqy_metro/firebasemetro/metroService.dart';
@@ -21,6 +22,10 @@ class _MetroScreenState extends State<MetroScreen> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Color(0xFF073042),
+    ));
+
     _metroService = metroService();
     _loadStations();
   }

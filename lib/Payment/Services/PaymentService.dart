@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tareeqy_metro/Profile/myProfile_Screen.dart';
-import 'package:tareeqy_metro/firebasebus/BusScreen.dart';
 import 'package:tareeqy_metro/homepage.dart';
 
 class PaymentService {
@@ -46,7 +45,7 @@ class PaymentService {
         const SnackBar(content: Text("Wallet Charged Successfully!")),
       );
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const myProfile_Screen()),
+          MaterialPageRoute(builder: (context) => const MyProfileScreen()),
           (Route<dynamic> route) => false);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

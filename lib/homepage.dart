@@ -26,8 +26,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   final PageController _pageController = PageController();
-  final metroService _metroService =
-      metroService(); // Initialize metroService here
+  final metroService _metroService = metroService();
   late final BusService _busService = BusService();
 
   @override
@@ -37,7 +36,6 @@ class _HomePageState extends State<HomePage> {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Color(0xFF073042),
     ));
-    
 
     if (mounted) {
       _fetchUserData();
@@ -50,6 +48,7 @@ class _HomePageState extends State<HomePage> {
     await _busService.getStations();
     await _busService.getBusDetails();
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -60,7 +59,11 @@ class _HomePageState extends State<HomePage> {
     final user = _auth.currentUser;
     if (user != null) {
       try {
-        _firestore.collection('users').doc(user.uid).snapshots().listen((userDoc) {
+        _firestore
+            .collection('users')
+            .doc(user.uid)
+            .snapshots()
+            .listen((userDoc) {
           if (userDoc.exists) {
             if (mounted) {
               setState(() {
@@ -154,10 +157,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // Set the system UI overlay style here to ensure it is applied whenever the HomePage is rebuilt
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color(0xFF073042),
+      statusBarColor: const Color(0xFF073042), // Desired status bar color
     ));
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF073042),
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Color(0xFF073042),
+        ),
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: PageView(
@@ -169,7 +178,7 @@ class _HomePageState extends State<HomePage> {
           },
           children: [
             _buildHomePage(),
-            const myProfile_Screen(),
+            const MyProfileScreen(),
           ],
         ),
       ),
@@ -226,16 +235,13 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Text(
-                          'Hello, \n${_username ?? ''}',
-                          style: const TextStyle(
-                            fontSize: 40,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                      Text(
+                        'Hello, \n${_username ?? ''}',
+                        style: const TextStyle(
+                          fontSize: 40,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Padding(

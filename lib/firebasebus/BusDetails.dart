@@ -22,7 +22,7 @@ class BusDetails extends StatelessWidget {
         elevation: 0,
         backgroundColor: const Color(0xFF073042), // Dark Blue
         title: Text(
-          busNumber,
+          'Bus Number: $busNumber',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 24,
@@ -69,7 +69,8 @@ class BusDetails extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => QRcode(qrData: docId),
+                            builder: (context) =>
+                                QRcode(qrData: docId, ticketType: 'Bus'),
                           ),
                         );
                       }

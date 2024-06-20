@@ -106,7 +106,7 @@ class _srcDstQRState extends State<srcDstQR> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => QRcode(qrData: docId),
+                              builder: (context) => QRcode(qrData: docId, ticketType: 'metro'),
                             ),
                           );
                         }

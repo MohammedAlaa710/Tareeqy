@@ -69,8 +69,8 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               "You can get your Metro ticket in three ways:",
               style: TextStyle(
                 fontSize: 20,
@@ -78,9 +78,9 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                 color: Color(0xFF073042),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             RadioListTile(
-              title: Text(
+              title: const Text(
                 'Enter the ticket Price',
                 style: TextStyle(fontSize: 18),
               ),
@@ -91,10 +91,10 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                   _selectedOption = value as int;
                 });
               },
-              activeColor: Color(0xFF073042),
+              activeColor: const Color(0xFF073042),
             ),
             RadioListTile(
-              title: Text(
+              title: const Text(
                 'Enter the source and destination stations',
                 style: TextStyle(fontSize: 18),
               ),
@@ -105,10 +105,10 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                   _selectedOption = value as int;
                 });
               },
-              activeColor: Color(0xFF073042),
+              activeColor: const Color(0xFF073042),
             ),
             RadioListTile(
-              title: Text(
+              title: const Text(
                 'Enter number of stations',
                 style: TextStyle(fontSize: 18),
               ),
@@ -119,16 +119,16 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                   _selectedOption = value as int;
                 });
               },
-              activeColor: Color(0xFF073042),
+              activeColor: const Color(0xFF073042),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _selectedOption == 1
                 ? _buildPriceOption()
                 : _selectedOption == 3
                     ? _buildStationsNumberOption()
                     : _selectedOption == 2
                         ? _buildSourceDestinationOption()
-                        : SizedBox(), // Placeholder for future options
+                        : const SizedBox(), // Placeholder for future options
           ],
         ),
       ),
@@ -139,14 +139,14 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Container(
           width: 300,
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Color(0xFF073042), width: 2),
+            border: Border.all(color: const Color(0xFF073042), width: 2),
           ),
           child: DropdownButton<String>(
             value: dropdownValue,
@@ -163,37 +163,39 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                     value: value,
                     child: Text(
                       value,
-                      style: TextStyle(color: Color(0xFF073042)),
+                      style: const TextStyle(color: Color(0xFF073042)),
                     ),
                   ),
                 )
                 .toList(),
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Center(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-              backgroundColor: Color(0xFF00796B),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+              backgroundColor: const Color(0xFF00796B),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
             onPressed: () async {
               int price = int.parse(dropdownValue.split(' ')[0]);
-              String docId = await _qrServices.addQRWithPrice(context, '$price egp');
+              String docId =
+                  await _qrServices.addQRWithPrice(context, '$price egp');
               if (docId.isNotEmpty) {
                 await _qrServices.addQRCodeToUser(context, docId);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => QRcode(qrData: docId),
+                    builder: (context) =>
+                        QRcode(qrData: docId, ticketType: 'Metro'),
                   ),
                 );
               }
             },
-            child: Text(
+            child: const Text(
               'Get The Ticket',
               style: TextStyle(
                 fontSize: 18,
@@ -210,8 +212,8 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 20),
-        Text(
+        const SizedBox(height: 20),
+        const Text(
           'Number of Stations',
           style: TextStyle(
             fontSize: 18,
@@ -219,34 +221,36 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         SizedBox(
           width: 350,
           child: TextFormField(
-            cursorColor: Color(0xFF073042),
+            cursorColor: const Color(0xFF073042),
             controller: controller,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF073042), width: 2),
+                borderSide:
+                    const BorderSide(color: Color(0xFF073042), width: 2),
                 borderRadius: BorderRadius.circular(10),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF073042), width: 2),
+                borderSide:
+                    const BorderSide(color: Color(0xFF073042), width: 2),
                 borderRadius: BorderRadius.circular(10),
               ),
               labelText: 'Enter number of stations',
-              labelStyle: TextStyle(color: Color(0xFF073042)),
+              labelStyle: const TextStyle(color: Color(0xFF073042)),
               suffixIcon: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
                     onPressed: incrementNumber,
-                    icon: Icon(Icons.add, color: Color(0xFF073042)),
+                    icon: const Icon(Icons.add, color: Color(0xFF073042)),
                   ),
                   IconButton(
                     onPressed: decrementNumber,
-                    icon: Icon(Icons.remove, color: Color(0xFF073042)),
+                    icon: const Icon(Icons.remove, color: Color(0xFF073042)),
                   ),
                 ],
               ),
@@ -258,12 +262,12 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
             },
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Center(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-              backgroundColor: Color(0xFF00796B),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+              backgroundColor: const Color(0xFF00796B),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -277,13 +281,14 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => QRcode(qrData: docId),
+                          builder: (context) =>
+                              QRcode(qrData: docId, ticketType: 'Metro'),
                         ),
                       );
                     }
                   }
                 : null,
-            child: Text(
+            child: const Text(
               'Get The Ticket',
               style: TextStyle(
                 fontSize: 18,
@@ -300,8 +305,8 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 20),
-        Text(
+        const SizedBox(height: 20),
+        const Text(
           'Select Source and Destination Stations',
           style: TextStyle(
             fontSize: 18,
@@ -309,14 +314,14 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         if (!isDataLoaded)
-          Center(child: CircularProgressIndicator())
+          const Center(child: CircularProgressIndicator())
         else
           Column(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: MyDropdownSearch(
                   fromto: 'From',
                   items: _metroService
@@ -331,9 +336,9 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                   },
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: MyDropdownSearch(
                   fromto: 'To',
                   items: _metroService
@@ -348,18 +353,20 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                   },
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF00796B),
+                    backgroundColor: const Color(0xFF00796B),
                     foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: (selectedValue1.isNotEmpty && selectedValue2.isNotEmpty)
+                  onPressed: (selectedValue1.isNotEmpty &&
+                          selectedValue2.isNotEmpty)
                       ? () async {
                           String docId = await _qrServices.addQRWithSrcandDst(
                               context, selectedValue1, selectedValue2);
@@ -368,13 +375,14 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => QRcode(qrData: docId),
+                                builder: (context) =>
+                                    QRcode(qrData: docId, ticketType: 'Metro'),
                               ),
                             );
                           }
                         }
                       : null,
-                  child: Text(
+                  child: const Text(
                     'Get The Ticket',
                     style: TextStyle(
                       fontSize: 18,

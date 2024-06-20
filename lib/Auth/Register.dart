@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:tareeqy_metro/Auth/AuthService.dart';
 import 'package:tareeqy_metro/Auth/Login.dart';
 import 'package:tareeqy_metro/admin/adminHomePage.dart';
 import 'package:tareeqy_metro/components/custombuttonauth.dart';
-import 'package:tareeqy_metro/components/customlogoauth.dart';
-import 'package:tareeqy_metro/components/textformfield.dart';
 import 'package:tareeqy_metro/homepage.dart';
 
 class Register extends StatefulWidget {
@@ -29,15 +28,25 @@ class _RegisterState extends State<Register> {
   bool isLoading = false;
 
   @override
+  void initState() {
+    super.initState();  
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: const Color(0xFF073042), // Desired status bar color
+    ));
+
+    authService.checkCurrentUser(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       inAsyncCall: isLoading,
       opacity: 0.5,
-      progressIndicator: CircularProgressIndicator(),
+      progressIndicator: const CircularProgressIndicator(),
       child: Scaffold(
-        backgroundColor: Color(0xFF073042),
+        backgroundColor: const Color(0xFF073042),
         appBar: AppBar(
-          backgroundColor: Color(0xFF073042),
+          backgroundColor: const Color(0xFF073042),
           elevation: 0,
         ),
         body: SafeArea(
@@ -46,12 +55,12 @@ class _RegisterState extends State<Register> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Center(
                   child: Column(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -62,8 +71,8 @@ class _RegisterState extends State<Register> {
                           height: 180,
                         ),
                       ),
-                      SizedBox(height: 20),
-                      Text(
+                      const SizedBox(height: 20),
+                      const Text(
                         "SignUp",
                         style: TextStyle(
                           fontSize: 30,
@@ -71,23 +80,24 @@ class _RegisterState extends State<Register> {
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: 10),
-                      Text(
+                      const SizedBox(height: 10),
+                      const Text(
                         "SignUp To Continue Using The App",
                         style: TextStyle(color: Colors.grey),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildInputField("Enter Your Username", Icons.person, username),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildInputField("Enter Your Email", Icons.email, email),
-                SizedBox(height: 20),
-                _buildInputField("Enter Your Password", Icons.lock, password, isPassword: true),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
+                _buildInputField("Enter Your Password", Icons.lock, password,
+                    isPassword: true),
+                const SizedBox(height: 20),
                 if (widget.collection == 'Drivers') ...[
-                  Text(
+                  const Text(
                     "Bus Id",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -95,13 +105,13 @@ class _RegisterState extends State<Register> {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _buildInputField("Enter Bus Id", Icons.directions_bus, busId),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 _buildSignUpButton(),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildLoginLink(),
               ],
             ),
@@ -111,10 +121,12 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  Widget _buildInputField(String hintText, IconData icon, TextEditingController controller, {bool isPassword = false}) {
+  Widget _buildInputField(
+      String hintText, IconData icon, TextEditingController controller,
+      {bool isPassword = false}) {
     return TextFormField(
       controller: controller,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       obscureText: isPassword,
       decoration: InputDecoration(
         hintText: hintText,
@@ -126,7 +138,8 @@ class _RegisterState extends State<Register> {
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
         ),
-        contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
       ),
     );
   }
@@ -148,14 +161,19 @@ class _RegisterState extends State<Register> {
           MaterialPageRoute(builder: (context) => Login()),
         );
       },
-      child: Center(
+      child: const Center(
         child: Text.rich(
           TextSpan(
             children: [
-              TextSpan(text: "Have An Account? ", style: TextStyle(color: Colors.white, fontSize: 16)),
+              TextSpan(
+                  text: "Have An Account? ",
+                  style: TextStyle(color: Colors.white, fontSize: 16)),
               TextSpan(
                 text: "Login",
-                style: TextStyle(color: Color(0xFF00796B), fontWeight: FontWeight.bold, fontSize: 16),
+                style: TextStyle(
+                    color: Color(0xFF00796B),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
               ),
             ],
           ),
@@ -173,23 +191,29 @@ class _RegisterState extends State<Register> {
     String emailText = email.text.trim();
     String passwordText = password.text.trim();
 
-    if (usernameText.isEmpty || emailText.isEmpty || passwordText.isEmpty || (widget.collection == 'Drivers' && busId.text.trim().isEmpty)) {
+    if (usernameText.isEmpty ||
+        emailText.isEmpty ||
+        passwordText.isEmpty ||
+        (widget.collection == 'Drivers' && busId.text.trim().isEmpty)) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('SignUp Error', style: TextStyle(color: Colors.red)),
-            content: Text('Please fill all fields.', style: TextStyle(color: Colors.black87)),
+            title:
+                const Text('SignUp Error', style: TextStyle(color: Colors.red)),
+            content: const Text('Please fill all fields.',
+                style: TextStyle(color: Colors.black87)),
             actions: <Widget>[
               TextButton(
-                child: Text('OK', style: TextStyle(color: Colors.blue)),
+                child: const Text('OK', style: TextStyle(color: Colors.blue)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
             ],
             backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           );
         },
       );
@@ -202,13 +226,14 @@ class _RegisterState extends State<Register> {
     }
 
     try {
-      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      final UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: emailText,
         password: passwordText,
       );
 
       if (userCredential.user != null) {
-         authService.storeUserData(
+        authService.storeUserData(
           usernameText,
           emailText,
           context,
@@ -246,18 +271,21 @@ class _RegisterState extends State<Register> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('SignUp Error', style: TextStyle(color: Colors.red)),
-            content: Text(errorMessage, style: TextStyle(color: Colors.black87)),
+            title:
+                const Text('SignUp Error', style: TextStyle(color: Colors.red)),
+            content:
+                Text(errorMessage, style: TextStyle(color: Colors.black87)),
             actions: <Widget>[
               TextButton(
-                child: Text('OK', style: TextStyle(color: Colors.blue)),
+                child: const Text('OK', style: TextStyle(color: Colors.blue)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
             ],
             backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           );
         },
       );
@@ -268,17 +296,20 @@ class _RegisterState extends State<Register> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Error', style: TextStyle(color: Colors.red)),
-            content: Text('An unexpected error occurred. Please try again later.', style: TextStyle(color: Colors.black87)),
+            content: const Text(
+                'An unexpected error occurred. Please try again later.',
+                style: TextStyle(color: Colors.black87)),
             actions: <Widget>[
               TextButton(
-                child: Text('OK', style: TextStyle(color: Colors.blue)),
+                child: const Text('OK', style: TextStyle(color: Colors.blue)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
             ],
             backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           );
         },
       );

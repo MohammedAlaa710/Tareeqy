@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:tareeqy_metro/Auth/AuthService.dart';
 import 'package:tareeqy_metro/admin/adminHomePage.dart';
@@ -24,6 +25,10 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: const Color(0xFF073042), // Desired status bar color
+    ));
+
     authService.checkCurrentUser(context);
   }
 
@@ -65,9 +70,12 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  _buildInputField("Enter Your Email", Icons.email, emailController),
+                  _buildInputField(
+                      "Enter Your Email", Icons.email, emailController),
                   SizedBox(height: 20),
-                  _buildInputField("Enter Your Password", Icons.lock, passwordController, isPassword: true),
+                  _buildInputField(
+                      "Enter Your Password", Icons.lock, passwordController,
+                      isPassword: true),
                   SizedBox(height: 30),
                   _buildLoginButton(),
                   SizedBox(height: 20),
@@ -81,7 +89,9 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Widget _buildInputField(String hintText, IconData icon, TextEditingController controller, {bool isPassword = false}) {
+  Widget _buildInputField(
+      String hintText, IconData icon, TextEditingController controller,
+      {bool isPassword = false}) {
     return TextFormField(
       controller: controller,
       style: TextStyle(color: Colors.white),
@@ -96,7 +106,8 @@ class _LoginState extends State<Login> {
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
         ),
-        contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
       ),
     );
   }
@@ -158,7 +169,8 @@ class _LoginState extends State<Login> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Login Error', style: TextStyle(color: Colors.red)),
-            content: Text('Please enter both email and password.', style: TextStyle(color: Colors.black87)),
+            content: Text('Please enter both email and password.',
+                style: TextStyle(color: Colors.black87)),
             actions: <Widget>[
               TextButton(
                 child: Text('OK', style: TextStyle(color: Colors.blue)),
@@ -168,7 +180,8 @@ class _LoginState extends State<Login> {
               ),
             ],
             backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           );
         },
       );
@@ -181,7 +194,8 @@ class _LoginState extends State<Login> {
     }
 
     try {
-      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      final UserCredential userCredential =
+          await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -225,7 +239,8 @@ class _LoginState extends State<Login> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Login Error', style: TextStyle(color: Colors.red)),
-            content: Text(errorMessage, style: TextStyle(color: Colors.black87)),
+            content:
+                Text(errorMessage, style: TextStyle(color: Colors.black87)),
             actions: <Widget>[
               TextButton(
                 child: Text('OK', style: TextStyle(color: Colors.blue)),
@@ -235,7 +250,8 @@ class _LoginState extends State<Login> {
               ),
             ],
             backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           );
         },
       );
@@ -246,7 +262,9 @@ class _LoginState extends State<Login> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Error', style: TextStyle(color: Colors.red)),
-            content: Text('An unexpected error occurred. Please try again later.', style: TextStyle(color: Colors.black87)),
+            content: Text(
+                'An unexpected error occurred. Please try again later.',
+                style: TextStyle(color: Colors.black87)),
             actions: <Widget>[
               TextButton(
                 child: Text('OK', style: TextStyle(color: Colors.blue)),
@@ -256,7 +274,8 @@ class _LoginState extends State<Login> {
               ),
             ],
             backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           );
         },
       );

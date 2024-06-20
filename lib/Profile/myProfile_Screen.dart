@@ -5,16 +5,15 @@ import 'package:flutter/services.dart';
 import 'package:tareeqy_metro/Payment/Screens/ChargeWallet_Screen.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
 import 'package:intl/intl.dart';
-import 'package:tareeqy_metro/homepage.dart';
 
-class myProfile_Screen extends StatefulWidget {
-  const myProfile_Screen({Key? key}) : super(key: key);
+class MyProfileScreen extends StatefulWidget {
+  const MyProfileScreen({super.key});
 
   @override
-  State<myProfile_Screen> createState() => _myProfile_ScreenState();
+  State<MyProfileScreen> createState() => _MyProfileScreenState();
 }
 
-class _myProfile_ScreenState extends State<myProfile_Screen> {
+class _MyProfileScreenState extends State<MyProfileScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -27,6 +26,9 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
   void initState() {
     _fetchUserData();
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Color(0xFF073042),
+    ));
   }
 
   Future<void> _fetchUserData() async {
@@ -34,7 +36,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
     if (user != null) {
       final userDoc = await _firestore.collection('users').doc(user.uid).get();
       if (userDoc.exists) {
-        if (mounted) {  
+        if (mounted) {
           setState(() {
             _username = userDoc.data()!['userName'];
             _wallet = userDoc.data()!['wallet'];
@@ -122,20 +124,12 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        leading: IconButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomePage()));
-            },
-            icon: const Icon(Icons.arrow_back)),
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 15),
             if (_username != null && _wallet != null) _buildUserInfo(),
             const SizedBox(height: 20),
             _buildTicketsSection(),
@@ -259,8 +253,10 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    QRcode(qrData: ticket['id']),
+                                builder: (context) => QRcode(
+                                  qrData: ticket['id'],
+                                  ticketType: ticket['type'],
+                                ),
                               ),
                             );
                           },

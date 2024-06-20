@@ -7,7 +7,7 @@ import 'package:tareeqy_metro/homepage.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  
+
   void storeUserData(String userName, String email, BuildContext context,
       {String? collection = "users", String? busId}) {
     String? userId = _auth.currentUser?.uid;
@@ -24,10 +24,12 @@ class AuthService {
             'wallet': "0.0",
           })
           .then((value) => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("User is added successfully!")),
+                const SnackBar(
+                    content:
+                        Text("Registration Succeeded, Welcome to Tareeqy!")),
               ))
           .catchError((error) => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("User is not added successfully!")),
+                const SnackBar(content: Text("Registration Failed!")),
               ));
     } else if (collection == 'Drivers') {
       FirebaseFirestore.instance
@@ -38,11 +40,13 @@ class AuthService {
                 const SnackBar(content: Text("Driver is added successfully!")),
               ))
           .catchError((error) => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Driver is not added successfully!")),
+                const SnackBar(
+                    content: Text("Driver is not added successfully!")),
               ));
     }
   }
-   Future<bool?> checkIsAdmin() async {
+
+  Future<bool?> checkIsAdmin() async {
     String? userId = _auth.currentUser?.uid;
     try {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
@@ -60,7 +64,8 @@ class AuthService {
       return null;
     }
   }
-    Future<bool> checkIsDriver() async {
+
+  Future<bool> checkIsDriver() async {
     print("Hi from check driver");
     String? userId = _auth.currentUser?.uid;
     try {
@@ -76,6 +81,7 @@ class AuthService {
       return false;
     }
   }
+
   void checkCurrentUser(BuildContext context) async {
     User? user = _auth.currentUser;
     if (user != null) {

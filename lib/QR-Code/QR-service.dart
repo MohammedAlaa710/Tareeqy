@@ -19,16 +19,19 @@ class QRservices {
           'qrCodes': FieldValue.arrayUnion([docId]),
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('QR code added to user')),
+          const SnackBar(
+              content:
+                  Text('The Ticket is added to your Profile Successfully.')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('User not found')),
+          const SnackBar(content: Text('Error in retrieving ticket')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add QR code to user: $e')),
+        const SnackBar(
+            content: Text('The Ticket FAILED to be added to your Profile.')),
       );
     }
   }
@@ -279,7 +282,8 @@ class QRservices {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ChargeWalletScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const ChargeWalletScreen()),
                 );
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -405,7 +409,7 @@ class QRservices {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Ticket purchased successfully. Your wallet balance is now ${(walletBalance - ticketPrice).toStringAsFixed(2)} EGP.'),
+              'Ticket purchased successfully. \nYour wallet balance is now ${(walletBalance - ticketPrice).toStringAsFixed(2)} EGP.'),
         ),
       );
 
