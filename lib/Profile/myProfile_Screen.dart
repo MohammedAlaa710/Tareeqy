@@ -34,7 +34,7 @@ class _myProfile_ScreenState extends State<myProfile_Screen> {
     if (user != null) {
       final userDoc = await _firestore.collection('users').doc(user.uid).get();
       if (userDoc.exists) {
-        if (mounted) {
+        if (mounted) {  
           setState(() {
             _username = userDoc.data()!['userName'];
             _wallet = userDoc.data()!['wallet'];

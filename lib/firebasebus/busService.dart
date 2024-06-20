@@ -125,4 +125,14 @@ class BusService {
     }
     return BusNumber;
   }
+
+  Future<List<String>> searchBusNumbers(String query) async {
+    List<String> busNumbers = [];
+    for (var doc in busQuery) {
+      if (doc.id.contains(query)) {
+        busNumbers.add(doc.id);
+      }
+    }
+    return busNumbers;
+  }
 }

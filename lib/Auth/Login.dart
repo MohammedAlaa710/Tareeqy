@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:tareeqy_metro/Auth/AuthService.dart';
 import 'package:tareeqy_metro/admin/adminHomePage.dart';
 import 'package:tareeqy_metro/drivers/driverScreen.dart';
 import 'package:tareeqy_metro/homepage.dart';
 import 'package:tareeqy_metro/Auth/Register.dart';
-import 'package:tareeqy_metro/firebasemetro/metroService.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -18,266 +18,252 @@ class _LoginState extends State<Login> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  AuthService authService = AuthService();
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    checkCurrentUser();
-  }
-
-  void checkCurrentUser() async {
-    User? user = _auth.currentUser;
-    if (user != null) {
-      try {
-        bool? isAdmin = await checkIsAdmin();
-        if (isAdmin != null) {
-          if (isAdmin) {
-            // If the user is an admin, navigate to adminHomePage
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const adminHomePage()),
-            );
-          } else {
-            // If the user is not an admin, navigate to HomePage
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
-            );
-          }
-        } else {
-          bool isDriver = await checkIsDriver();
-          if (isDriver) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const DriverScreen()),
-            );
-          } else {
-            print('isAdmin and isDriver not found or null');
-            // Handle case where isAdmin field is not found or null
-          }
-        }
-      } catch (e) {
-        print('Error checking user admin status: $e');
-        // Handle error
-      }
-    }
+    authService.checkCurrentUser(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.all(20),
-        child: ListView(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 50,
-                ),
-                Center(
-                  child: Container(
+    return ModalProgressHUD(
+      inAsyncCall: isLoading,
+      opacity: 0.5,
+      progressIndicator: CircularProgressIndicator(),
+      child: Scaffold(
+        backgroundColor: Color(0xFF073042),
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(70)),
-                    child: Image.asset("assets/images/tareeqy.jpeg",
-                        width: 220, height: 180),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Image.asset(
+                      "assets/images/tareeqy.jpeg",
+                      width: 220,
+                      height: 180,
+                    ),
                   ),
-                ),
-                Container(height: 20),
-                const Text(
-                  "Login",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-                Container(height: 2),
-                const Text(
-                  "Login to continue using the app",
-                  style: TextStyle(color: Colors.grey),
-                ),
-                Container(height: 20),
-                const Text(
-                  "Email",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Container(height: 5),
-                TextFormField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    hintText: "Enter Your Email",
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: const BorderSide(color: Colors.grey)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: const BorderSide(color: Colors.grey)),
+                  SizedBox(height: 40),
+                  Text(
+                    "Login",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                Container(height: 15),
-                const Text(
-                  "Password",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Container(height: 5),
-                TextFormField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: "Enter Your Password",
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: const BorderSide(color: Colors.grey)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: const BorderSide(color: Colors.grey)),
-                  ),
-                ),
-              ],
-            ),
-            Container(height: 50),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 45),
-              child: MaterialButton(
-                height: 50,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
-                textColor: Colors.white,
-                color: Colors.blue,
-                onPressed: () async {
-                  try {
-                    final UserCredential userCredential =
-                        await _auth.signInWithEmailAndPassword(
-                      email: emailController.text,
-                      password: passwordController.text,
-                    );
-                    // Navigate to another screen if sign in is successful
-                    if (userCredential.user != null) {
-                      if (await checkIsDriver()) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const DriverScreen()));
-                      } else {
-                        checkIsAdmin().then((isAdmin) {
-                          if (isAdmin != null && isAdmin) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const adminHomePage()));
-                          } else {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const HomePage()));
-                          }
-                        });
-                      }
-                    }
-                  } on FirebaseAuthException catch (e) {
-                    // Handle error
-                    print(e.message);
-                    BuildContext dialogContext;
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        dialogContext = context;
-                        return AlertDialog(
-                          title: const Text('Error'),
-                          content: Text(e.message ?? 'An error occurred'),
-                          actions: <Widget>[
-                            TextButton(
-                              child: const Text('OK'),
-                              onPressed: () {
-                                metroService metroservice = metroService();
-                                metroservice.getStations();
-                                Navigator.of(dialogContext).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                },
-                child: const Text(
-                  "Login",
-                  style: TextStyle(fontSize: 20),
-                ),
+                  SizedBox(height: 20),
+                  _buildInputField("Enter Your Email", Icons.email, emailController),
+                  SizedBox(height: 20),
+                  _buildInputField("Enter Your Password", Icons.lock, passwordController, isPassword: true),
+                  SizedBox(height: 30),
+                  _buildLoginButton(),
+                  SizedBox(height: 20),
+                  _buildRegisterLink(),
+                ],
               ),
             ),
-            Container(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Don't have an account ?  ",
-                  style: TextStyle(fontSize: 15),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Register()));
-                  },
-                  child: const Text(
-                    "Register",
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
-                  ),
-                )
-              ],
-            )
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Future<bool?> checkIsAdmin() async {
-    String? userId = _auth.currentUser?.uid;
-    try {
-      DocumentSnapshot snapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-      if (snapshot.exists) {
-        return snapshot.get('isAdmin');
-      } else {
-        print('Document does not exist');
-        return null;
-      }
-    } catch (e) {
-      print('Error getting user field: $e');
-      return null;
-    }
+  Widget _buildInputField(String hintText, IconData icon, TextEditingController controller, {bool isPassword = false}) {
+    return TextFormField(
+      controller: controller,
+      style: TextStyle(color: Colors.white),
+      obscureText: isPassword,
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(color: Colors.grey[400]),
+        prefixIcon: Icon(icon, color: Colors.white),
+        filled: true,
+        fillColor: Colors.grey[200]?.withOpacity(0.5) ?? Colors.transparent,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      ),
+    );
   }
 
-  Future<bool> checkIsDriver() async {
-    print("Hi from check driver");
-    String? userId = _auth.currentUser?.uid;
+  Widget _buildLoginButton() {
+    return MaterialButton(
+      height: 50,
+      minWidth: 200,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      textColor: Colors.white,
+      color: Color(0xFF00796B),
+      onPressed: isLoading ? null : () => _login(),
+      child: Text(
+        "Login",
+        style: TextStyle(fontSize: 20),
+      ),
+    );
+  }
+
+  Widget _buildRegisterLink() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Don't have an account?",
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Register()),
+            );
+          },
+          child: Text(
+            " Register",
+            style: TextStyle(
+              color: Colors.orange,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _login() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Login Error', style: TextStyle(color: Colors.red)),
+            content: Text('Please enter both email and password.', style: TextStyle(color: Colors.black87)),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK', style: TextStyle(color: Colors.blue)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          );
+        },
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+
+      return;
+    }
+
     try {
-      DocumentSnapshot snapshot = await FirebaseFirestore.instance
-          .collection('Drivers')
-          .doc(userId)
-          .get();
-      print("Hi from check driver 2${snapshot.exists}");
-      print("Hi from check driver userid {$userId}");
-      return snapshot.exists;
+      final UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (userCredential.user != null) {
+        if (await authService.checkIsDriver()) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const DriverScreen()),
+          );
+        } else {
+          authService.checkIsAdmin().then((isAdmin) {
+            if (isAdmin != null && isAdmin) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const adminHomePage()),
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            }
+          });
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = 'An error occurred';
+      if (e.code == 'user-not-found') {
+        errorMessage = 'No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'Wrong password provided for that user.';
+      } else if (e.code == 'invalid-email') {
+        errorMessage = 'Invalid email address.';
+      } else {
+        errorMessage = e.message ?? 'Login failed. Please try again later.';
+      }
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Login Error', style: TextStyle(color: Colors.red)),
+            content: Text(errorMessage, style: TextStyle(color: Colors.black87)),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK', style: TextStyle(color: Colors.blue)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          );
+        },
+      );
     } catch (e) {
-      print('Error checking if user is a driver: $e');
-      return false;
+      print('Unexpected error: $e');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error', style: TextStyle(color: Colors.red)),
+            content: Text('An unexpected error occurred. Please try again later.', style: TextStyle(color: Colors.black87)),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK', style: TextStyle(color: Colors.blue)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          );
+        },
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }

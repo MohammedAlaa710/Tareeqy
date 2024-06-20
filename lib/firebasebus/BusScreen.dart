@@ -13,8 +13,6 @@ class BusScreen extends StatefulWidget {
 class _BusScreenState extends State<BusScreen> {
   String selectedValue1 = '';
   String selectedValue2 = '';
-  bool showBusNumbers = false;
-  bool isLoading = true; // Track loading state
   late final BusService _busService;
 
   @override
@@ -39,66 +37,81 @@ class _BusScreenState extends State<BusScreen> {
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 30),
+            SizedBox(height: 30),
             Center(
-              child: SingleChildScrollView(
-                child: Image.asset(
-                  "assets/images/busIconn.png",
-                  width: 150,
-                  height: 150,
-                ),
+              child: Image.asset(
+                "assets/images/busIconn.png",
+                width: 150,
+                height: 150,
               ),
             ),
-            const SizedBox(height: 30),
+            SizedBox(height: 30),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: MyDropdownSearch(
-                    fromto: 'From',
-                    items: _busService.stations
-                        .where((x) => x != selectedValue2)
-                        .toSet(),
-                    selectedValue: selectedValue1,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedValue1 = value!;
-                      });
-                    },
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: [
+                      Icon(Icons.location_on, color: Color(0xFF00796B)),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: MyDropdownSearch(
+                          fromto: 'From',
+                          items: _busService.stations
+                              .where((x) => x != selectedValue2)
+                              .toSet(),
+                          selectedValue: selectedValue1,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedValue1 = value!;
+                              // Update bus numbers when 'From' changes
+                            });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Container(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: MyDropdownSearch(
-                    fromto: 'To',
-                    items: _busService.stations
-                        .where((x) => x != selectedValue1)
-                        .toSet(),
-                    selectedValue: selectedValue2,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedValue2 = value!;
-                      });
-                    },
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: [
+                      Icon(Icons.location_on, color: Color(0xFFB31312)),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: MyDropdownSearch(
+                          fromto: 'To',
+                          items: _busService.stations
+                              .where((x) => x != selectedValue1)
+                              .toSet(),
+                          selectedValue: selectedValue2,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedValue2 = value!;
+                              // Update bus numbers when 'To' changes
+                            });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Spacer(
-                      flex: 1,
-                    ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF073042),
-                        minimumSize: const Size(150, 50),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
+                        backgroundColor: Color(0xFF073042),
+                        minimumSize: Size(150, 50),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
                         ),
@@ -107,41 +120,18 @@ class _BusScreenState extends State<BusScreen> {
                         setState(() {
                           selectedValue1 = '';
                           selectedValue2 = '';
+                          // Update bus numbers after clearing
                         });
                       },
-                      child: const Text('Clear',
-                          style: TextStyle(color: Colors.white, fontSize: 20)),
-                    ),
-                    const Spacer(
-                      flex: 1,
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF073042),
-                        minimumSize: const Size(150, 50),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          showBusNumbers = true;
-                        });
-                      },
-                      child: const Text(
-                        'Show Buses',
+                      child: Text(
+                        'Clear',
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
-                    const Spacer(
-                      flex: 1,
-                    ),
                   ],
                 ),
-                const SizedBox(height: 30),
-                if (showBusNumbers)
+                SizedBox(height: 30),
+                if (selectedValue1.isNotEmpty && selectedValue2.isNotEmpty)
                   for (int i = 0;
                       i <
                           _busService
@@ -149,16 +139,55 @@ class _BusScreenState extends State<BusScreen> {
                               .length;
                       i++)
                     Container(
-                      margin:
-                          const EdgeInsets.only(left: 3, right: 3, bottom: 3),
-                      color: Color.fromARGB(255, 148, 194, 214),
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 148, 194, 214),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) {
-                                return BusDetails(
-                                  busNumber: _busService.insertionSort(
+                              builder: (context) => BusDetails(
+                                busNumber: _busService.insertionSort(
+                                    _busService.regionsCoveredList(
+                                        _busService.getBusNumber(
+                                            selectedValue1, selectedValue2),
+                                        selectedValue1,
+                                        selectedValue2),
+                                    _busService.getBusNumber(
+                                        selectedValue1, selectedValue2))[i],
+                                regions: _busService.getBusRegions(
+                                    _busService.insertionSort(
+                                        _busService.regionsCoveredList(
+                                            _busService.getBusNumber(
+                                                selectedValue1, selectedValue2),
+                                            selectedValue1,
+                                            selectedValue2),
+                                        _busService.getBusNumber(
+                                            selectedValue1, selectedValue2))[i],
+                                    selectedValue1,
+                                    selectedValue2),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Bus Number: ",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: Color(0xFF073042),
+                                  ),
+                                ),
+                                Text(
+                                  _busService.insertionSort(
                                       _busService.regionsCoveredList(
                                           _busService.getBusNumber(
                                               selectedValue1, selectedValue2),
@@ -166,111 +195,57 @@ class _BusScreenState extends State<BusScreen> {
                                           selectedValue2),
                                       _busService.getBusNumber(
                                           selectedValue1, selectedValue2))[i],
-                                  regions: _busService.getBusRegions(
-                                      _busService.insertionSort(
-                                          _busService.regionsCoveredList(
-                                              _busService.getBusNumber(
-                                                  selectedValue1,
-                                                  selectedValue2),
-                                              selectedValue1,
-                                              selectedValue2),
-                                          _busService.getBusNumber(
-                                              selectedValue1,
-                                              selectedValue2))[i],
-                                      selectedValue1,
-                                      selectedValue2),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Spacer(
-                              flex: 1,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      "Bus Number : ",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color: Color.fromARGB(255, 0, 0, 0),
-                                      ),
-                                    ),
-                                    Text(
-                                      _busService.insertionSort(
-                                          _busService.regionsCoveredList(
-                                              _busService.getBusNumber(
-                                                  selectedValue1,
-                                                  selectedValue2),
-                                              selectedValue1,
-                                              selectedValue2),
-                                          _busService.getBusNumber(
-                                              selectedValue1,
-                                              selectedValue2))[i],
-                                      style: const TextStyle(
-                                        color: Color(0xFFB31312),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 25,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      "Regions Covered : ",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Color.fromARGB(255, 0, 0, 0),
-                                      ),
-                                    ),
-                                    Text(
-                                      _busService
-                                          .getBusRegions(
-                                              _busService.insertionSort(
-                                                  _busService.regionsCoveredList(
-                                                      _busService.getBusNumber(
-                                                          selectedValue1,
-                                                          selectedValue2),
-                                                      selectedValue1,
-                                                      selectedValue2),
-                                                  _busService.getBusNumber(
-                                                      selectedValue1,
-                                                      selectedValue2))[i],
-                                              selectedValue1,
-                                              selectedValue2)
-                                          .length
-                                          .toString(),
-                                      style: const TextStyle(
-                                        color: Color(0xFFB31312),
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                                  style: TextStyle(
+                                    color: Color(0xFFB31312),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25,
+                                  ),
                                 ),
                               ],
                             ),
-                            const Spacer(
-                              flex: 1,
+                            SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Regions Covered: ",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Color(0xFF073042),
+                                  ),
+                                ),
+                                Text(
+                                  _busService
+                                      .getBusRegions(
+                                          _busService.insertionSort(
+                                              _busService.regionsCoveredList(
+                                                  _busService.getBusNumber(
+                                                      selectedValue1,
+                                                      selectedValue2),
+                                                  selectedValue1,
+                                                  selectedValue2),
+                                              _busService.getBusNumber(
+                                                  selectedValue1,
+                                                  selectedValue2))[i],
+                                          selectedValue1,
+                                          selectedValue2)
+                                      .length
+                                      .toString(),
+                                  style: TextStyle(
+                                    color: Color(0xFFB31312),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const Text(
-                              "Click For \n Details",
+                            SizedBox(height: 10),
+                            Text(
+                              "Click For Details",
                               style: TextStyle(
                                 fontSize: 15,
-                                color: Color.fromARGB(255, 0, 0, 0),
+                                color: Color(0xFF073042),
                               ),
-                            ),
-                            const Spacer(
-                              flex: 1,
                             ),
                           ],
                         ),

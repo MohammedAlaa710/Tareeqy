@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Color(0xFF073042),
     ));
+    
 
     if (mounted) {
       _fetchUserData();
@@ -49,24 +50,29 @@ class _HomePageState extends State<HomePage> {
     await _busService.getStations();
     await _busService.getBusDetails();
   }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchUserData();
+  }
 
   Future<void> _fetchUserData() async {
     final user = _auth.currentUser;
     if (user != null) {
       try {
-        final userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
-        if (userDoc.exists) {
-          if (mounted) {
-            setState(() {
-              _username = userDoc.data()!['userName'];
-              _wallet = userDoc.data()!['wallet'];
-            });
+        _firestore.collection('users').doc(user.uid).snapshots().listen((userDoc) {
+          if (userDoc.exists) {
+            if (mounted) {
+              setState(() {
+                _username = userDoc.data()!['userName'];
+                _wallet = userDoc.data()!['wallet'];
+              });
+            }
+          } else {
+            // Document does not exist
+            print('User document does not exist');
           }
-        } else {
-          // Document does not exist
-          print('User document does not exist');
-        }
+        });
       } catch (e) {
         // Error fetching document
         print('Error fetching user document: $e');

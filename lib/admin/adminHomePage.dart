@@ -63,85 +63,87 @@ class adminHomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Manage Metro Stations
-              AdminButton(
-                icon: Icons.directions_subway,
-                text: "Manage Metro Stations",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MetroManagementScreen()),
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-                            AdminButton(
-                icon: Icons.directions_bus,
-                text: "Manage Buses",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BusManagementScreen()),
-                  );
-                },
-                
-              ),
-              const SizedBox(height: 20),
-              // Scan Metro Code
-              AdminButton(
-                icon: Icons.qr_code_scanner,
-                text: "Scan Metro Code",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const MetroStations()),
-                  );
-                },
-                backgroundColor: Colors.green,
-              ),
-              const SizedBox(height: 20),
-              // Scan Bus Code
-              AdminButton(
-                icon: Icons.qr_code,
-                text: "Scan Bus Code",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const busQRCodeScannerPage()),
-                  );
-                },
-                backgroundColor: Colors.orange,
-              ),
-              const SizedBox(height: 20),
-              // Add Driver
-              AdminButton(
-                icon: Icons.person_add,
-                text: "Add Driver",
-                backgroundColor: Colors.deepPurple,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Register(
-                              collection: "Drivers",
-                            )),
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              // Manage Buses
-
-            ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Manage Metro Stations
+                AdminButton(
+                  icon: Icons.directions_subway,
+                  text: "Manage Metro Stations",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MetroManagementScreen()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+                              AdminButton(
+                  icon: Icons.directions_bus,
+                  text: "Manage Buses",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BusManagementScreen()),
+                    );
+                  },
+                  
+                ),
+                const SizedBox(height: 20),
+                // Scan Metro Code
+                AdminButton(
+                  icon: Icons.qr_code_scanner,
+                  text: "Scan Metro Code",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MetroStations()),
+                    );
+                  },
+                  backgroundColor: Colors.green,
+                ),
+                const SizedBox(height: 20),
+                // Scan Bus Code
+                AdminButton(
+                  icon: Icons.qr_code,
+                  text: "Scan Bus Code",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const busQRCodeScannerPage()),
+                    );
+                  },
+                  backgroundColor: Colors.orange,
+                ),
+                const SizedBox(height: 20),
+                // Add Driver
+                AdminButton(
+                  icon: Icons.person_add,
+                  text: "Add Driver",
+                  backgroundColor: Colors.deepPurple,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Register(
+                                collection: "Drivers",
+                              )),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+                // Manage Buses
+        
+              ],
+            ),
           ),
         ),
       ),
