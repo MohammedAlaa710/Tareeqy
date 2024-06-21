@@ -233,6 +233,17 @@ class _BusScreenState extends State<BusScreen> {
                                               selectedValue2))[i],
                                       selectedValue1,
                                       selectedValue2),
+                                  metroStations: _busService.getMetroStations(
+                                      _busService.insertionSort(
+                                          _busService.regionsCoveredList(
+                                              _busService.getBusNumber(
+                                                  selectedValue1,
+                                                  selectedValue2),
+                                              selectedValue1,
+                                              selectedValue2),
+                                          _busService.getBusNumber(
+                                              selectedValue1,
+                                              selectedValue2))[i]),
                                 ),
                               ),
                             );
@@ -317,6 +328,18 @@ class _BusScreenState extends State<BusScreen> {
                       ),
                 if (isSwitched)
                   if (busNumber.isNotEmpty)
+                    const Text(
+                      "Regions passes by:",
+                      style: TextStyle(
+                          color: Color(0xFFB31312),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25),
+                    ),
+
+                if (isSwitched)
+                  if (busNumber.isNotEmpty) const SizedBox(height: 10),
+                if (isSwitched)
+                  if (busNumber.isNotEmpty)
                     for (int i = 0;
                         i < _busService.getAllBusStations(busNumber).length;
                         i++)
@@ -337,6 +360,46 @@ class _BusScreenState extends State<BusScreen> {
                           ),
                         ),
                       ),
+                //////////////////////////////////////////////////////////
+                if (_busService.getMetroStations(busNumber).isNotEmpty)
+                  if (isSwitched)
+                    if (busNumber.isNotEmpty) const SizedBox(height: 10),
+                if (_busService.getMetroStations(busNumber).isNotEmpty)
+                  if (isSwitched)
+                    if (busNumber.isNotEmpty)
+                      const Text(
+                        "Metro Stations passes by:",
+                        style: TextStyle(
+                            color: Color(0xFFB31312),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25),
+                      ),
+                if (_busService.getMetroStations(busNumber).isNotEmpty)
+                  if (isSwitched)
+                    if (busNumber.isNotEmpty) const SizedBox(height: 10),
+                if (_busService.getMetroStations(busNumber).isNotEmpty)
+                  if (isSwitched)
+                    if (busNumber.isNotEmpty)
+                      for (int i = 0;
+                          i < _busService.getMetroStations(busNumber).length;
+                          i++)
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 78, 167, 156),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            "${i + 1}.  ${_busService.getMetroStations(busNumber)[i]}",
+                            style: const TextStyle(
+                              color: Color(0xFF073042),
+                              fontSize: 20,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
               ],
             ),
           ],

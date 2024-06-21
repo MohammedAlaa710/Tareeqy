@@ -43,7 +43,7 @@ class BusService {
 
     for (int i = 0; i < busQuery.length; i++) {
       if (busQuery[i].id == busNumber) {
-        if (stationsQuery[i].get('Bus_Number') != null) {
+        if (busQuery[i].get('Stations') != null) {
           for (String busStation in busQuery[i].get('Stations')) {
             busStations.add(busStation);
           }
@@ -53,6 +53,23 @@ class BusService {
     }
 
     return busStations;
+  }
+
+  List<String> getMetroStations(String busNumber) {
+    List<String> metroStations = [];
+
+    for (int i = 0; i < busQuery.length; i++) {
+      if (busQuery[i].id == busNumber) {
+        if (busQuery[i].get('Nearby_Metros') != null) {
+          for (String busStation in busQuery[i].get('Nearby_Metros')) {
+            metroStations.add(busStation);
+          }
+        }
+        break;
+      }
+    }
+
+    return metroStations;
   }
 
 ////////////////////////////////////////////////////////////////////////////
