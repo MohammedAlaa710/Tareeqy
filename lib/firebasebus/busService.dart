@@ -60,7 +60,8 @@ class BusService {
 
     for (int i = 0; i < busQuery.length; i++) {
       if (busQuery[i].id == busNumber) {
-        if (busQuery[i].get('Nearby_Metros') != null) {
+        final data = busQuery[i].data() as Map<String, dynamic>;
+        if (data.containsKey('Nearby_Metros') == true) {
           for (String busStation in busQuery[i].get('Nearby_Metros')) {
             metroStations.add(busStation);
           }
