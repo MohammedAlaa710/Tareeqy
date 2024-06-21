@@ -151,6 +151,7 @@ class _BusScreenState extends State<BusScreen> {
                         setState(() {
                           selectedValue1 = '';
                           selectedValue2 = '';
+                          busNumber = '';
                           // Update bus numbers after clearing
                         });
                       },
