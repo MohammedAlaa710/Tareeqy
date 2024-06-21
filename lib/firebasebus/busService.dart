@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class BusService {
   List<String> stations = [];
   List<QueryDocumentSnapshot> stationsQuery = [];
-  List<String> busquerytest = [];
+  List<String> buses = [];
   List<QueryDocumentSnapshot> busQuery = [];
   static final BusService _instance = BusService._(); // Singleton instance
 
@@ -26,17 +26,36 @@ class BusService {
     }
   }
 
-  Future<void> getBusDetails() async {
+  Future<void> getBuses() async {
     try {
       QuerySnapshot bus =
           await FirebaseFirestore.instance.collection('Bus2').get();
       busQuery.addAll(bus.docs);
-      busquerytest = bus.docs.map((doc) => doc.id).toList();
+      buses = bus.docs.map((doc) => doc.id).toList();
     } catch (error) {
       print("Error getting Bus2 data: $error");
     }
   }
 
+////////////////////////////////////////////////////////////////////////////
+  List<String> getAllBusStations(String busNumber) {
+    List<String> busStations = [];
+
+    for (int i = 0; i < busQuery.length; i++) {
+      if (busQuery[i].id == busNumber) {
+        if (stationsQuery[i].get('Bus_Number') != null) {
+          for (String busStation in busQuery[i].get('Stations')) {
+            busStations.add(busStation);
+          }
+        }
+        break;
+      }
+    }
+
+    return busStations;
+  }
+
+////////////////////////////////////////////////////////////////////////////
   List<String> getBusNumber(String selectedItem1, String selectedItem2) {
     List<String> busNumber1 = [];
     List<String> busNumber2 = [];

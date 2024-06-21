@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadBusData() async {
     await _busService.getStations();
-    await _busService.getBusDetails();
+    await _busService.getBuses();
   }
 
   @override
@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // Set the system UI overlay style here to ensure it is applied whenever the HomePage is rebuilt
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: const Color(0xFF073042), // Desired status bar color
+      statusBarColor: Color(0xFF073042), // Desired status bar color
     ));
 
     return Scaffold(
