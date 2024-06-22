@@ -89,7 +89,7 @@ class _NumberOfStationsQRState extends State<NumberOfStationsQR> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => QRcode(qrData: docId, ticketType: 'Metro'),
+                            builder: (context) => QRcode(qrData: docId, ticketType: 'metro'),
                           ),
                         );
                       }

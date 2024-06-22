@@ -190,7 +190,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        QRcode(qrData: docId, ticketType: 'Metro'),
+                        QRcode(qrData: docId, ticketType: 'metro'),
                   ),
                 );
               }
@@ -282,7 +282,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              QRcode(qrData: docId, ticketType: 'Metro'),
+                              QRcode(qrData: docId, ticketType: 'metro'),
                         ),
                       );
                     }
@@ -376,7 +376,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    QRcode(qrData: docId, ticketType: 'Metro'),
+                                    QRcode(qrData: docId, ticketType: 'metro'),
                               ),
                             );
                           }

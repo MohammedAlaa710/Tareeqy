@@ -26,15 +26,14 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Text(
             'Confirm Charge',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF073042)),
           ),
           content: Text(
             'Are you sure you want to charge \$${amount.toStringAsFixed(2)} to your wallet using $paymentMethod?',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16, color: Color(0xFF073042)),
           ),
           actions: [
             TextButton(
@@ -46,11 +45,9 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // PayPal blue color
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                backgroundColor: Color(0xFF00796B),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               ),
               onPressed: () {
                 if (_selectedPaymentMethod == 'PayPal') {
@@ -120,11 +117,11 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 5,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF073042),
         title: const Text(
           'Charge Wallet',
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -143,16 +140,25 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
+                      color: Color(0xFF073042),
                     ),
                   ).animate().fadeIn(duration: 800.ms).slide(),
                   const SizedBox(height: 20),
                   TextField(
                     controller: _amountController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       labelText: 'Amount',
-                      hintText: 'Enter amount in USD',
+                      hintText: 'Enter amount',
+                      labelStyle: TextStyle(color: Color(0xFF073042)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF00796B)),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     ),
                   ).animate().fadeIn(duration: 800.ms).slide(),
                   const SizedBox(height: 20),
@@ -167,19 +173,18 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: _selectedPaymentMethod == 'PayPal'
-                              ? Colors.blue
+                              ? Color(0xFF00796B)
                               : Colors.transparent,
                           width: 2,
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(
-                              255, 255, 255, 255), // PayPal blue color
+                          backgroundColor: Colors.white,
                           minimumSize: const Size(double.infinity, 50),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         icon: Image.asset(
@@ -213,19 +218,18 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: _selectedPaymentMethod == 'PayMob'
-                              ? Colors.blue
+                              ? Color(0xFF00796B)
                               : Colors.transparent,
                           width: 2,
                         ),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(
-                              255, 255, 255, 255), // PayMob blue color
+                          backgroundColor: Colors.white,
                           minimumSize: const Size(double.infinity, 50),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         icon: Icon(
@@ -252,31 +256,28 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                   if (_selectedPaymentMethod != null)
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue, // Proceed button color
+                        backgroundColor: Color(0xFF00796B),
                         minimumSize: const Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       onPressed: () {
-                        double? amount =
-                            double.tryParse(_amountController.text);
+                        double? amount = double.tryParse(_amountController.text);
                         if (amount != null && amount > 0) {
-                          _showConfirmationDialog(
-                              amount, _selectedPaymentMethod!);
+                          _showConfirmationDialog(amount, _selectedPaymentMethod!);
                         } else {
                           showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: const Text('Invalid Amount'),
-                                content:
-                                    const Text('Please enter a valid amount.'),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                title: const Text('Invalid Amount', style: TextStyle(color: Color(0xFF073042))),
+                                content: const Text('Please enter a valid amount.', style: TextStyle(color: Color(0xFF073042))),
                                 actions: [
                                   TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text('OK'),
+                                    onPressed: () => Navigator.of(context).pop(),
+                                    child: const Text('OK', style: TextStyle(color: Color(0xFF00796B))),
                                   ),
                                 ],
                               );
@@ -291,7 +292,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                           color: Colors.white,
                         ),
                       ),
-                    ).animate().fadeIn(duration: 800.ms).slide(),
+                    ).animate().fadeIn(duration: 400.ms).slide(),
                 ],
               ),
             ),
@@ -302,8 +303,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
   }
 
   // Function for getting the transaction data to send it to PayPal
-  ({AmountModel amount, ItemListModel itemslist}) getTransactionsData(
-      {double? amount}) {
+  ({AmountModel amount, ItemListModel itemslist}) getTransactionsData({double? amount}) {
     var amountModel = AmountModel(
         total: amount.toString(),
         currency: "USD",
@@ -320,3 +320,4 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
     return (amount: amountModel, itemslist: itemList);
   }
 }
+

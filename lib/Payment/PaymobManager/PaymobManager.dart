@@ -235,20 +235,54 @@ class PaymobManager {
       );
 
       // After returning from web view, attempt to get transaction details
-      try {
-        Map<String, dynamic> transactionDetails =
-            await PaymobManager()._getTransaction(_authKey, _orderId);
-        if (transactionDetails['isSuccess']) {
-          print("Transaction succeeded");
-          PaymentService().addAmountToUserWallet(context, amount.toString());
-        } else {
-          print("Transaction failed");
-        }
-      } catch (e) {
-        print('Error inquiring about the transaction: $e');
+    try {
+      showProgressScreen(context);
+      Map<String, dynamic> transactionDetails = await PaymobManager()._getTransaction(_authKey, _orderId);
+      
+      if (transactionDetails['isSuccess']) {
+        print("Transaction succeeded");
+        hideProgressScreen(context);
+        PaymentService().addAmountToUserWallet(
+              context, amount.toString());
+              
+      } else {
+        print("Transaction failed");
+        hideProgressScreen(context);
       }
     } catch (e) {
-      log('Error launching Paymob URL: ${e.toString()}' as num);
+      print('Error inquiring about the transaction: $e');
+      hideProgressScreen(context);
+      Navigator.pop(context);
     }
+  } catch (e) {
+    print('Error launching Paymob URL: ${e.toString()}');
+  hideProgressScreen(context);
+  }
+}
+
+  void showProgressScreen(BuildContext context) {
+    // Use showDialog to display a modal dialog with CircularProgressIndicator
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing dialog by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 10),
+              Text("Loading..."),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Method to hide progress screen
+  void hideProgressScreen(BuildContext context) {
+    // Use Navigator.pop to close the top-most modal dialog
+    Navigator.pop(context);
   }
 }
