@@ -279,42 +279,6 @@ class _BusScreenState extends State<BusScreen> {
                                 ],
                               ),
                               const SizedBox(height: 5),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    "Regions Covered: ",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Color(0xFF073042),
-                                    ),
-                                  ),
-                                  Text(
-                                    _busService
-                                        .getBusRegions(
-                                            _busService.insertionSort(
-                                                _busService.regionsCoveredList(
-                                                    _busService.getBusNumber(
-                                                        selectedValue1,
-                                                        selectedValue2),
-                                                    selectedValue1,
-                                                    selectedValue2),
-                                                _busService.getBusNumber(
-                                                    selectedValue1,
-                                                    selectedValue2))[i],
-                                            selectedValue1,
-                                            selectedValue2)
-                                        .length
-                                        .toString(),
-                                    style: const TextStyle(
-                                      color: Color(0xFFB31312),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
                               const Text(
                                 "Click For Details",
                                 style: TextStyle(

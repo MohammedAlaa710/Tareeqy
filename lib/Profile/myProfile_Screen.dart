@@ -34,19 +34,24 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   Future<void> _fetchUserData() async {
     final user = _auth.currentUser;
     if (user != null) {
-      final userDoc = await _firestore.collection('users').doc(user.uid).get();
-      if (userDoc.exists) {
-        if (mounted) {
-          setState(() {
-            _username = userDoc.data()!['userName'];
-            _wallet = userDoc.data()!['wallet'];
-          });
+      _firestore
+          .collection('users')
+          .doc(user.uid)
+          .snapshots()
+          .listen((userDoc) async {
+        if (userDoc.exists) {
+          if (mounted) {
+            setState(() {
+              _username = userDoc.data()!['userName'];
+              _wallet = userDoc.data()!['wallet'];
+            });
+          }
+          final metroTicketIds = List<String>.from(userDoc.data()!['qrCodes']);
+          final busTicketIds = List<String>.from(userDoc.data()!['busTickets']);
+          await _fetchMetroTickets(metroTicketIds);
+          await _fetchBusTickets(busTicketIds);
         }
-        final metroTicketIds = List<String>.from(userDoc.data()!['qrCodes']);
-        final busTicketIds = List<String>.from(userDoc.data()!['busTickets']);
-        await _fetchMetroTickets(metroTicketIds);
-        await _fetchBusTickets(busTicketIds);
-      }
+      });
     }
   }
 

@@ -44,9 +44,7 @@ class PaymentService {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Wallet Charged Successfully!")),
       );
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const MyProfileScreen()),
-          (Route<dynamic> route) => false);
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to Charge Wallet: ${e.toString()}")),
