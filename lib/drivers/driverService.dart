@@ -61,6 +61,7 @@ class DriverService {
           .collection('Drivers')
           .doc(userId)
           .update({
+        'work': true,
         'latitude': position.latitude,
         'longitude': position.longitude,
         'timestamp': FieldValue.serverTimestamp(),
@@ -70,6 +71,25 @@ class DriverService {
     }
   }
 
+////////////////////////////////////////////////////////////////
+  Future<void> stopWork() async {
+    String? userId = _auth.currentUser?.uid;
+    if (userId != null) {
+      await FirebaseFirestore.instance
+          .collection('Drivers')
+          .doc(userId)
+          .update({
+        'work': false,
+        'facesnumber': 0,
+        'latitude': 0.0,
+        'longitude': 0.0,
+      });
+    } else {
+      print("stopWork function error");
+    }
+  }
+
+////////////////////////////////////////////////////////////////
   Future<void> sendFaceCountToFirestore(int faceCount) async {
     print(
         "hi from the send counts function and this is the face count {$faceCount}");

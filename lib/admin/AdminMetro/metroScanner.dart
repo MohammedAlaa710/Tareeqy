@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:tareeqy_metro/admin/AdminMetro/metroStations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -94,7 +95,11 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('QR Code Scanner'),
+        backgroundColor: Color(0xFF073042),
+        title: const Text(
+          'Metro Ticket Scanner',
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -154,9 +159,9 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
             child: Center(
               child: (qrText != null)
                   ? Text('Scan result: $qrText')
-                  : const Text('Scan a code'),
+                  : Text(widget.station),
             ),
-          ),
+          )
         ],
       ),
     );

@@ -4,15 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:tareeqy_metro/Auth/AuthService.dart';
 import 'package:tareeqy_metro/Auth/Login.dart';
-import 'package:tareeqy_metro/admin/adminHomePage.dart';
 import 'package:tareeqy_metro/components/custombuttonauth.dart';
 import 'package:tareeqy_metro/homepage.dart';
 
 class Register extends StatefulWidget {
   String? collection;
-  Register({super.key, String collection = "users"}) {
-    this.collection = collection;
-  }
+  Register({super.key, String this.collection = "users"});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -29,12 +26,13 @@ class _RegisterState extends State<Register> {
 
   @override
   void initState() {
-    super.initState();  
+    super.initState();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: const Color(0xFF073042), // Desired status bar color
+      statusBarColor: Color(0xFF073042), // Desired status bar color
     ));
 
-    authService.checkCurrentUser(context);
+    // Temporarily comment out the checkCurrentUser call to test the navigation
+    // authService.checkCurrentUser(context);
   }
 
   @override
@@ -147,7 +145,7 @@ class _RegisterState extends State<Register> {
   Widget _buildSignUpButton() {
     return Center(
       child: CustomButtonAuth(
-        title: "SignUp",
+        title: "Sign Up",
         onPressed: isLoading ? null : () => _signUp(),
       ),
     );
@@ -158,7 +156,7 @@ class _RegisterState extends State<Register> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Login()),
+          MaterialPageRoute(builder: (context) => const Login()),
         );
       },
       child: const Center(
@@ -243,14 +241,11 @@ class _RegisterState extends State<Register> {
 
         authService.checkIsAdmin().then((isAdmin) {
           if (isAdmin != null && isAdmin || widget.collection == "Drivers") {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => adminHomePage()),
-            );
+            Navigator.of(context).pop();
           } else {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => const HomePage()),
             );
           }
         });
@@ -273,32 +268,8 @@ class _RegisterState extends State<Register> {
           return AlertDialog(
             title:
                 const Text('SignUp Error', style: TextStyle(color: Colors.red)),
-            content:
-                Text(errorMessage, style: TextStyle(color: Colors.black87)),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK', style: TextStyle(color: Colors.blue)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-            backgroundColor: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          );
-        },
-      );
-    } catch (e) {
-      print('Unexpected error: $e');
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error', style: TextStyle(color: Colors.red)),
-            content: const Text(
-                'An unexpected error occurred. Please try again later.',
-                style: TextStyle(color: Colors.black87)),
+            content: Text(errorMessage,
+                style: const TextStyle(color: Colors.black87)),
             actions: <Widget>[
               TextButton(
                 child: const Text('OK', style: TextStyle(color: Colors.blue)),
@@ -320,3 +291,5 @@ class _RegisterState extends State<Register> {
     }
   }
 }
+
+//sh8al

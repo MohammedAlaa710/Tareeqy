@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tareeqy_metro/admin/adminHomePage.dart';
-class busQRCodeScannerPage extends StatefulWidget {
 
-  const busQRCodeScannerPage({Key? key,}) : super(key: key);
+class busQRCodeScannerPage extends StatefulWidget {
+  const busQRCodeScannerPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _busQRCodeScannerPageState createState() => _busQRCodeScannerPageState();
@@ -32,7 +35,7 @@ class _busQRCodeScannerPageState extends State<busQRCodeScannerPage> {
       // If 'in' is false, update it to true
       if (!inStatus) {
         await qrCodeRef.update({'in': true});
-        
+
         isScanned = true; // Mark as scanned
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('the first scan (in=true)')),
@@ -71,7 +74,11 @@ class _busQRCodeScannerPageState extends State<busQRCodeScannerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('QR Code Scanner'),
+        backgroundColor: const Color(0xFF073042),
+        title: const Text(
+          'Bus Ticket Scanner',
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -107,7 +114,7 @@ class _busQRCodeScannerPageState extends State<busQRCodeScannerPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const adminHomePage()),
+                                builder: (context) => const AdminHomePage()),
                           );
                         } catch (e) {
                           // Show error message
@@ -131,7 +138,7 @@ class _busQRCodeScannerPageState extends State<busQRCodeScannerPage> {
             child: Center(
               child: (qrText != null)
                   ? Text('Scan result: $qrText')
-                  : const Text('Scan a code'),
+                  : const Text('Scan the code'),
             ),
           ),
         ],

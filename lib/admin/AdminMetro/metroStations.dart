@@ -27,7 +27,11 @@ class _MetroStationsState extends State<MetroStations> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("price page"),
+        backgroundColor: const Color(0xFF073042),
+        title: const Text(
+          "Metro Scanner",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Center(
         child: Column(
@@ -60,17 +64,31 @@ class _MetroStationsState extends State<MetroStations> {
             const SizedBox(
                 height: 20), // Add some space between the dropdown and button
             ElevatedButton(
-              onPressed: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          QRCodeScannerPage(station: selectedValue1)),
-                );
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF073042),
+                minimumSize: const Size(150, 50),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+              onPressed: selectedValue1.isEmpty
+                  ? null
+                  : () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                QRCodeScannerPage(station: selectedValue1)),
+                      );
 
-                // Add document functionality here QRCodeScannerPage
-              },
-              child: const Text('Add Document'),
+                      // Add document functionality here QRCodeScannerPage
+                    },
+              child: const Text(
+                'Scan',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
             ),
           ],
         ),

@@ -19,7 +19,11 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bus Management'),
+        backgroundColor: const Color(0xFF073042),
+        title: const Text(
+          'Bus Management',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,7 +32,7 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _searchController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Search Bus Number',
                 prefixIcon: Icon(Icons.search),
               ),
@@ -36,7 +40,8 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
                 // Filter the list of buses based on the entered search query
                 setState(() {
                   if (value.isNotEmpty) {
-                    _filteredBuses = _adminService.filterBusesByNumber(value, _snapshot?.docs ?? []);
+                    _filteredBuses = _adminService.filterBusesByNumber(
+                        value, _snapshot?.docs ?? []);
                   } else {
                     _filteredBuses = [];
                   }
@@ -58,21 +63,30 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
                     child: Text('No buses found.'),
                   );
                 } else {
-                  List<DocumentSnapshot> buses = _filteredBuses.isNotEmpty ? _filteredBuses : snapshot.data!.docs;
+                  List<DocumentSnapshot> buses = _filteredBuses.isNotEmpty
+                      ? _filteredBuses
+                      : snapshot.data!.docs;
                   return ListView.builder(
-                    itemCount: _filteredBuses.isEmpty && _searchController.text.isNotEmpty ? 1 : buses.length,
+                    itemCount: _filteredBuses.isEmpty &&
+                            _searchController.text.isNotEmpty
+                        ? 1
+                        : buses.length,
                     itemBuilder: (context, index) {
-                      if (_filteredBuses.isEmpty && _searchController.text.isNotEmpty) {
+                      if (_filteredBuses.isEmpty &&
+                          _searchController.text.isNotEmpty) {
                         return Center(
-                          child: Text('No buses found for "${_searchController.text}"'),
+                          child: Text(
+                              'No buses found for "${_searchController.text}"'),
                         );
                       } else {
                         final bus = buses[index];
-                        final regions = (bus.data() as Map<String, dynamic>).containsKey('Regions')
+                        final regions = (bus.data() as Map<String, dynamic>)
+                                .containsKey('Regions')
                             ? bus['Regions'] as List<dynamic>
                             : [];
                         return Card(
-                          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
                           child: ListTile(
                             title: Text('Bus Number: ${bus.id}'),
                             subtitle: Text('Regions: ${regions.join(', ')}'),
@@ -82,11 +96,15 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
                                 IconButton(
                                   icon: Icon(Icons.edit),
                                   onPressed: () {
-                                    _showUpdateBusDialog(context, bus.id, regions);
+                                    _showUpdateBusDialog(
+                                        context, bus.id, regions);
                                   },
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.delete),
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
                                   onPressed: () {
                                     _confirmDeleteBus(context, bus.id);
                                   },
@@ -141,7 +159,8 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
                   SizedBox(height: 16.0),
                   TextFormField(
                     controller: _regionsController,
-                    decoration: InputDecoration(labelText: 'Regions (comma-separated)'),
+                    decoration:
+                        InputDecoration(labelText: 'Regions (comma-separated)'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter regions';
@@ -157,7 +176,10 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
             TextButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  List<String> regions = _regionsController.text.split(',').map((region) => region.trim()).toList();
+                  List<String> regions = _regionsController.text
+                      .split(',')
+                      .map((region) => region.trim())
+                      .toList();
                   _adminService.addBus(_busNumberController.text, regions);
                   _busNumberController.clear();
                   _regionsController.clear();
@@ -178,63 +200,70 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
     );
   }
 
- void _showUpdateBusDialog(BuildContext context, String busNumber, List<dynamic> regions) {
-  TextEditingController busNumberController = TextEditingController(text: busNumber);
-  TextEditingController regionsController = TextEditingController(text: regions.join(', '));
+  void _showUpdateBusDialog(
+      BuildContext context, String busNumber, List<dynamic> regions) {
+    TextEditingController busNumberController =
+        TextEditingController(text: busNumber);
+    TextEditingController regionsController =
+        TextEditingController(text: regions.join(', '));
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Update Bus'),
-        content: SingleChildScrollView(
-          child: Form(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextFormField(
-                  controller: busNumberController,
-                  decoration: InputDecoration(labelText: 'Bus Number'),
-                  enabled: true, // Enable editing bus number
-                ),
-                SizedBox(height: 16.0),
-                TextFormField(
-                  controller: regionsController,
-                  decoration: InputDecoration(labelText: 'Regions (comma-separated)'),
-                ),
-              ],
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Update Bus'),
+          content: SingleChildScrollView(
+            child: Form(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextFormField(
+                    controller: busNumberController,
+                    decoration: InputDecoration(labelText: 'Bus Number'),
+                    enabled: true, // Enable editing bus number
+                  ),
+                  SizedBox(height: 16.0),
+                  TextFormField(
+                    controller: regionsController,
+                    decoration:
+                        InputDecoration(labelText: 'Regions (comma-separated)'),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () async {
-              String oldBusNumber = busNumber;
-              String newBusNumber = busNumberController.text;
-              List<String> updatedRegions = regionsController.text.split(',').map((region) => region.trim()).toList();
-              await _adminService.updateBus(oldBusNumber, newBusNumber, updatedRegions); // Update bus number and regions
-              Navigator.pop(context);
-              setState(() {
-                _filteredBuses = []; // Clear filters
-              });
-              // Fetch updated list of buses
-              _adminService.getAllBuses();
-            },
-            child: Text('Update'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('Cancel'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                String oldBusNumber = busNumber;
+                String newBusNumber = busNumberController.text;
+                List<String> updatedRegions = regionsController.text
+                    .split(',')
+                    .map((region) => region.trim())
+                    .toList();
+                await _adminService.updateBus(oldBusNumber, newBusNumber,
+                    updatedRegions); // Update bus number and regions
+                Navigator.pop(context);
+                setState(() {
+                  _filteredBuses = []; // Clear filters
+                });
+                // Fetch updated list of buses
+                _adminService.getAllBuses();
+              },
+              child: Text('Update'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _confirmDeleteBus(BuildContext context, String busNumber) {
     showDialog(
@@ -263,5 +292,3 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
     );
   }
 }
-
-               

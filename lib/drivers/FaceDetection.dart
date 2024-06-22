@@ -7,7 +7,7 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:tareeqy_metro/drivers/driverService.dart';
 
 class Camera extends StatefulWidget {
-  const Camera({Key? key}) : super(key: key);
+  const Camera({super.key});
 
   @override
   CameraState createState() => CameraState();
@@ -54,7 +54,11 @@ class CameraState extends State<Camera> {
 
       try {
         print("Initializing camera");
-        _controller = CameraController(cameras[0], ResolutionPreset.high);
+        _controller = CameraController(
+          cameras[0],
+          ResolutionPreset.high,
+          enableAudio: false,
+        );
         print("Using camera: ${cameras[0]}");
 
         await _controller!.initialize();

@@ -211,7 +211,7 @@ class _LoginState extends State<Login> {
             if (isAdmin != null && isAdmin) {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const adminHomePage()),
+                MaterialPageRoute(builder: (context) => const AdminHomePage()),
               );
             } else {
               Navigator.pushReplacement(

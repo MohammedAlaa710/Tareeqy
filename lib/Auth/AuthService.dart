@@ -35,7 +35,15 @@ class AuthService {
       FirebaseFirestore.instance
           .collection('Drivers')
           .doc(userId)
-          .set({'userName': userName, 'email': email, 'busId': busId})
+          .set({
+            'userName': userName,
+            'email': email,
+            'busId': busId,
+            'latitude': 0.0,
+            'longitude': 0.0,
+            'facesnumber': 0,
+            'work': false,
+          })
           .then((value) => ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Driver is added successfully!")),
               ))
@@ -91,7 +99,7 @@ class AuthService {
           if (isAdmin) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const adminHomePage()),
+              MaterialPageRoute(builder: (context) => const AdminHomePage()),
             );
           } else {
             Navigator.pushReplacement(

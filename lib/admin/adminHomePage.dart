@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tareeqy_metro/Auth/Login.dart';
 import 'package:tareeqy_metro/Auth/Register.dart';
 import 'package:tareeqy_metro/admin/AdminBus/BusScanner.dart';
@@ -7,8 +8,8 @@ import 'package:tareeqy_metro/admin/AdminManagement/BusManagementScreen.dart';
 import 'package:tareeqy_metro/admin/AdminManagement/MetroManagementScreen.dart';
 import 'package:tareeqy_metro/admin/AdminMetro/metroStations.dart';
 
-class adminHomePage extends StatelessWidget {
-  const adminHomePage({Key? key});
+class AdminHomePage extends StatelessWidget {
+  const AdminHomePage({Key? key});
 
   void _logout(BuildContext context) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -54,7 +55,12 @@ class adminHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Admin Dashboard"),
+        //a7mr Color(0xFFB31312),,  a5dr Color(0xFF00796B),,  Color(0xFF073042)
+        backgroundColor: const Color(0xFF073042),
+        title: const Text(
+          "Admin Dashboard",
+          style: TextStyle(color: Colors.white),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -70,78 +76,92 @@ class adminHomePage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 50),
                 // Manage Metro Stations
-                AdminButton(
-                  icon: Icons.directions_subway,
-                  text: "Manage Metro Stations",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MetroManagementScreen()),
-                    );
-                  },
+                Center(
+                  child: AdminButton(
+                    backgroundColor: const Color(0xFFB31312),
+                    icon: Icons.directions_subway,
+                    text: "Manage Metro Stations",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const MetroManagementScreen()),
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(height: 20),
-                              AdminButton(
-                  icon: Icons.directions_bus,
-                  text: "Manage Buses",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BusManagementScreen()),
-                    );
-                  },
-                  
+                Center(
+                  child: AdminButton(
+                    backgroundColor: const Color(0xFFB31312),
+                    icon: Icons.directions_bus,
+                    text: "Manage Buses",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BusManagementScreen()),
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(height: 20),
                 // Scan Metro Code
-                AdminButton(
-                  icon: Icons.qr_code_scanner,
-                  text: "Scan Metro Code",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MetroStations()),
-                    );
-                  },
-                  backgroundColor: Colors.green,
+                Center(
+                  child: AdminButton(
+                    icon: Icons.qr_code_scanner,
+                    text: "Scan Metro Code",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MetroStations()),
+                      );
+                    },
+                    backgroundColor: const Color(0xFF00796B),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 // Scan Bus Code
-                AdminButton(
-                  icon: Icons.qr_code,
-                  text: "Scan Bus Code",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const busQRCodeScannerPage()),
-                    );
-                  },
-                  backgroundColor: Colors.orange,
+                Center(
+                  child: AdminButton(
+                    icon: Icons.qr_code,
+                    text: "Scan Bus Code",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const busQRCodeScannerPage()),
+                      );
+                    },
+                    backgroundColor: const Color(0xFF00796B),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 // Add Driver
-                AdminButton(
-                  icon: Icons.person_add,
-                  text: "Add Driver",
-                  backgroundColor: Colors.deepPurple,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Register(
-                                collection: "Drivers",
-                              )),
-                    );
-                  },
+                Center(
+                  child: AdminButton(
+                    icon: Icons.person_add,
+                    text: "Add Driver",
+                    backgroundColor: Colors.orange,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return Register(
+                              collection: "Drivers",
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(height: 20),
                 // Manage Buses
-        
               ],
             ),
           ),
@@ -167,19 +187,23 @@ class AdminButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      icon: Icon(icon, size: 40),
-      label: Text(text, style: TextStyle(fontSize: 18)),
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white,
-        backgroundColor: backgroundColor ?? Colors.blueAccent,
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+    return SizedBox(
+      width: 250, // Fixed width
+      height: 80, // Fixed height
+      child: ElevatedButton.icon(
+        icon: Icon(icon, size: 40),
+        label: Text(text, style: TextStyle(fontSize: 18)),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: backgroundColor ?? Colors.blueAccent,
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          textStyle: TextStyle(fontSize: 16),
         ),
-        textStyle: TextStyle(fontSize: 16),
+        onPressed: onPressed,
       ),
-      onPressed: onPressed,
     );
   }
 }
