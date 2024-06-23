@@ -20,6 +20,12 @@ class ChargeWalletScreen extends StatefulWidget {
 class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
   final TextEditingController _amountController = TextEditingController();
   String? _selectedPaymentMethod;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
 
   void _showConfirmationDialog(double amount, String paymentMethod) {
     showDialog(
@@ -54,7 +60,16 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                   var transactionData = getTransactionsData(amount: amount);
                   navigateToPaypalView(context, transactionData);
                 } else if (_selectedPaymentMethod == 'PayMob') {
-                  navigateToPaymobView(context, _amountController);
+                  if (_formKey.currentState?.validate() ?? false) {
+                    navigateToPaymobView(
+                      context,
+                      _amountController,
+                      _emailController.text,
+                      _firstNameController.text,
+                      _lastNameController.text,
+                      _phoneNumberController.text,
+                    );
+                  }
                 }
               },
               child: Text(
@@ -69,10 +84,43 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
   }
 
   Future<void> navigateToPaymobView(
-      BuildContext context, TextEditingController _amountController) async {
-    setState(() {
-      PaymobManager().navigateToPaymobView(context, _amountController);
-    });
+    BuildContext context,
+    TextEditingController _amountController,
+    String email,
+    String firstName,
+    String lastName,
+    String phoneNumber,
+  ) async {
+    try {
+      await PaymobManager().navigateToPaymobView(
+        context,
+        _amountController,
+        email,
+        firstName,
+        lastName,
+        phoneNumber,
+      );
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: Text('Payment Error', style: TextStyle(color: Color(0xFF073042))),
+            content: Text(
+              'An error occurred during the payment process: $error',
+              style: TextStyle(color: Color(0xFF073042)),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK', style: TextStyle(color: Color(0xFF00796B))),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   void navigateToPaypalView(BuildContext context,
@@ -105,6 +153,28 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
         },
       ),
     ));
+  }
+
+  void _showMissingFieldsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text('Missing Fields', style: TextStyle(color: Color(0xFF073042))),
+          content: Text(
+            'Please fill out all required fields before proceeding.',
+            style: TextStyle(color: Color(0xFF073042)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK', style: TextStyle(color: Color(0xFF00796B))),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -162,6 +232,109 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                     ),
                   ).animate().fadeIn(duration: 800.ms).slide(),
                   const SizedBox(height: 20),
+                  if (_selectedPaymentMethod == 'PayMob') ...[
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              labelText: 'Email',
+                              hintText: 'Enter your email',
+                              labelStyle: TextStyle(color: Color(0xFF073042)),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xFF00796B)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty || !value.contains('@')) {
+                                return 'Please enter a valid email';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _firstNameController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              labelText: 'First Name',
+                              hintText: 'Enter your first name',
+                              labelStyle: TextStyle(color: Color(0xFF073042)),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xFF00796B)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your first name';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _lastNameController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              labelText: 'Last Name',
+                              hintText: 'Enter your last name',
+                              labelStyle: TextStyle(color: Color(0xFF073042)),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xFF00796B)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your last name';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          TextFormField(
+                            controller: _phoneNumberController,
+                            keyboardType: TextInputType.phone,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              labelText: 'Phone Number',
+                              hintText: 'Enter your phone number',
+                              labelStyle: TextStyle(color: Color(0xFF073042)),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Color(0xFF00796B)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your phone number';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  ],
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -264,6 +437,10 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                       ),
                       onPressed: () {
                         double? amount = double.tryParse(_amountController.text);
+                        if (_selectedPaymentMethod == 'PayMob' && !_formKey.currentState!.validate()) {
+                          _showMissingFieldsDialog();
+                          return;
+                        }
                         if (amount != null && amount > 0) {
                           _showConfirmationDialog(amount, _selectedPaymentMethod!);
                         } else {
@@ -320,4 +497,3 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
     return (amount: amountModel, itemslist: itemList);
   }
 }
-

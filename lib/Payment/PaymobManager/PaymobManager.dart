@@ -7,7 +7,13 @@ import 'package:tareeqy_metro/Keys/Api_Keys.dart';
 import 'package:tareeqy_metro/Payment/Services/PaymentService.dart';
 
 class PaymobManager {
-  Future<Map<String, dynamic>> _getPayment(int amount, String currency) async {
+  Future<Map<String, dynamic>> _getPayment(
+      int amount,
+      String currency,
+      String email,
+      String firstName,
+      String lastName,
+      String phoneNumber) async {
     try {
       String authenticationToken = await _getAuthenticationToken();
       print("hi: authentication token : " + authenticationToken);
@@ -22,6 +28,10 @@ class PaymobManager {
         amount: (100 * amount).toString(),
         currency: currency,
         orderId: orderId.toString(),
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
       );
 
       return {
@@ -65,6 +75,10 @@ class PaymobManager {
     required String orderId,
     required String amount,
     required String currency,
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
   }) async {
     final Response response = await Dio()
         .post("https://accept.paymob.com/api/acceptance/payment_keys", data: {
@@ -75,10 +89,10 @@ class PaymobManager {
       "amount_cents": amount,
       "currency": currency,
       "billing_data": {
-        "first_name": "Clifford",
-        "last_name": "Nicolas",
-        "email": "claudette09@exa.com",
-        "phone_number": "+86(8)9135210487",
+        "first_name": firstName,
+        "last_name": lastName,
+        "email": email,
+        "phone_number": phoneNumber,
         "apartment": "NA",
         "floor": "NA",
         "street": "NA",
@@ -183,13 +197,18 @@ class PaymobManager {
   }
 
   Future<void> navigateToPaymobView(
-      BuildContext context, TextEditingController _amountController) async {
+      BuildContext context, TextEditingController _amountController,String email,
+      String firstName,
+      String lastName,
+      String phoneNumber) async {
     try {
       int amount = int.parse(_amountController.text);
       Map<String, dynamic> paymentKeyResponse =
           await PaymobManager()._getPayment(
         amount,
         "EGP",
+        email,firstName,lastName,phoneNumber
+
       );
 
       String _paymentKey = paymentKeyResponse['paymentKey'];
@@ -235,30 +254,29 @@ class PaymobManager {
       );
 
       // After returning from web view, attempt to get transaction details
-    try {
-      showProgressScreen(context);
-      Map<String, dynamic> transactionDetails = await PaymobManager()._getTransaction(_authKey, _orderId);
-      
-      if (transactionDetails['isSuccess']) {
-        print("Transaction succeeded");
+      try {
+        showProgressScreen(context);
+        Map<String, dynamic> transactionDetails =
+            await PaymobManager()._getTransaction(_authKey, _orderId);
+
+        if (transactionDetails['isSuccess']) {
+          print("Transaction succeeded");
+          hideProgressScreen(context);
+          PaymentService().addAmountToUserWallet(context, amount.toString());
+        } else {
+          print("Transaction failed");
+          hideProgressScreen(context);
+        }
+      } catch (e) {
+        print('Error inquiring about the transaction: $e');
         hideProgressScreen(context);
-        PaymentService().addAmountToUserWallet(
-              context, amount.toString());
-              
-      } else {
-        print("Transaction failed");
-        hideProgressScreen(context);
+        Navigator.pop(context);
       }
     } catch (e) {
-      print('Error inquiring about the transaction: $e');
+      print('Error launching Paymob URL: ${e.toString()}');
       hideProgressScreen(context);
-      Navigator.pop(context);
     }
-  } catch (e) {
-    print('Error launching Paymob URL: ${e.toString()}');
-  hideProgressScreen(context);
   }
-}
 
   void showProgressScreen(BuildContext context) {
     // Use showDialog to display a modal dialog with CircularProgressIndicator
