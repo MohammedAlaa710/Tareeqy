@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:tareeqy_metro/Auth/AuthService.dart';
 import 'package:tareeqy_metro/Auth/Login.dart';
+import 'package:tareeqy_metro/admin/adminHomePage.dart';
 import 'package:tareeqy_metro/components/custombuttonauth.dart';
 import 'package:tareeqy_metro/homepage.dart';
 
@@ -231,7 +232,7 @@ class _RegisterState extends State<Register> {
       );
 
       if (userCredential.user != null) {
-        authService.storeUserData(
+        await authService.storeUserData(
           usernameText,
           emailText,
           context,
@@ -241,11 +242,16 @@ class _RegisterState extends State<Register> {
 
         authService.checkIsAdmin().then((isAdmin) {
           if (isAdmin != null && isAdmin || widget.collection == "Drivers") {
-            Navigator.of(context).pop();
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const AdminHomePage()),
+              (route) => false,
+            );
           } else {
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const HomePage()),
+              (route) => false,
             );
           }
         });

@@ -96,7 +96,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             snapshot.data() as Map<String, dynamic>;
         ticketData['id'] = snapshot.id;
         ticketData['type'] = 'bus';
-        if (!ticketData['out']) {
+        if (!ticketData['scanned']) {
           tickets.add(ticketData);
         }
       }
@@ -106,16 +106,24 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   }
 
   void _processAndSetTickets(List<Map<String, dynamic>> tickets) {
-    List<Map<String, dynamic>> ticketsInUse =
-        tickets.where((ticket) => ticket['in']).toList();
-    List<Map<String, dynamic>> otherTickets =
-        tickets.where((ticket) => !ticket['in']).toList();
-    ticketsInUse.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
-    otherTickets.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
+    List<Map<String, dynamic>>? ticketsInUse;
+    List<Map<String, dynamic>>? otherTickets;
+    List<Map<String, dynamic>> metroTickets =
+        tickets.where((ticket) => ticket['type'] == 'metro').toList();
+    if (metroTickets.isEmpty) {
+      otherTickets = tickets.where((ticket) => !ticket['scanned']).toList();
+    }
+    if (metroTickets.isNotEmpty) {
+      ticketsInUse = tickets.where((ticket) => ticket['in']).toList();
+      otherTickets = tickets.where((ticket) => !ticket['in']).toList();
+    }
+
+    ticketsInUse?.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
+    otherTickets?.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
 
     if (mounted) {
       setState(() {
-        _tickets = [..._tickets, ...ticketsInUse, ...otherTickets];
+        _tickets = [..._tickets, ...?ticketsInUse, ...?otherTickets];
         _isLoading = false;
       });
     }
@@ -261,74 +269,137 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 builder: (context) => QRcode(
                                   qrData: ticket['id'],
                                   ticketType: ticket['type'],
+                                  screen: "profile",
                                 ),
                               ),
                             );
                           },
-                          child: Card(
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            color: ticket['in']
-                                ? Color.fromARGB(255, 95, 255, 15)
-                                : Colors.white,
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 5),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.all(10.0),
-                              leading: Icon(
-                                ticket['type'] == 'metro'
-                                    ? Icons.train
-                                    : Icons.directions_bus,
-                                color: ticket['type'] == 'metro'
-                                    ? const Color(0xFF00796B)
-                                    : const Color(0xFFB31312),
-                                size: 40,
-                              ),
-                              title: Text(
-                                ticket['type'] == 'metro'
-                                    ? 'Metro Ticket'
-                                    : 'Bus Ticket',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(
-                                      0xff4A4A4D,
-                                    )),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Time: ${_formatTimestamp(ticket['timestamp'])}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 17,
-                                        color: Color.fromARGB(255, 0, 0, 0)),
+                          child: (ticket['type'] == "metro")
+                              ? Card(
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Price: \$${ticket['price']}',
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                  ),
-                                  if (ticket['in'])
-                                    const Text(
-                                      'This ticket is in use',
-                                      style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 254, 17, 0),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18),
+                                  color: ticket['in']
+                                      ? Color.fromARGB(255, 95, 255, 15)
+                                      : Colors.white,
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 5),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.all(10.0),
+                                    leading: Icon(
+                                      ticket['type'] == 'metro'
+                                          ? Icons.train
+                                          : Icons.directions_bus,
+                                      color: ticket['type'] == 'metro'
+                                          ? const Color(0xFF00796B)
+                                          : const Color(0xFFB31312),
+                                      size: 40,
                                     ),
-                                ],
-                              ),
-                              trailing: const Icon(Icons.arrow_forward_ios,
-                                  color: Color.fromARGB(255, 121, 121, 121)),
-                            ),
-                          ),
+                                    title: Text(
+                                      ticket['type'] == 'metro'
+                                          ? 'Metro Ticket'
+                                          : 'Bus Ticket',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(
+                                            0xff4A4A4D,
+                                          )),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Time: ${_formatTimestamp(ticket['timestamp'])}',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17,
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0)),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          'Price: \$${ticket['price']}',
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        ),
+                                        if (ticket['in'])
+                                          const Text(
+                                            'This ticket is in use',
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 254, 17, 0),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18),
+                                          ),
+                                      ],
+                                    ),
+                                    trailing: const Icon(
+                                        Icons.arrow_forward_ios,
+                                        color:
+                                            Color.fromARGB(255, 121, 121, 121)),
+                                  ),
+                                )
+                              : Card(
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  color: Colors.white,
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 5),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.all(10.0),
+                                    leading: Icon(
+                                      ticket['type'] == 'metro'
+                                          ? Icons.train
+                                          : Icons.directions_bus,
+                                      color: ticket['type'] == 'metro'
+                                          ? const Color(0xFF00796B)
+                                          : const Color(0xFFB31312),
+                                      size: 40,
+                                    ),
+                                    title: Text(
+                                      ticket['type'] == 'metro'
+                                          ? 'Metro Ticket'
+                                          : 'Bus Ticket',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(
+                                            0xff4A4A4D,
+                                          )),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Time: ${_formatTimestamp(ticket['timestamp'])}',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17,
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0)),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          'Price: \$${ticket['price']}',
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: const Icon(
+                                        Icons.arrow_forward_ios,
+                                        color:
+                                            Color.fromARGB(255, 121, 121, 121)),
+                                  ),
+                                ),
                         );
                       },
                     ),

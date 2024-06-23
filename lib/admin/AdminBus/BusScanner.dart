@@ -29,35 +29,22 @@ class _busQRCodeScannerPageState extends State<busQRCodeScannerPage> {
     // If the document exists
     if (qrCodeDoc.exists) {
       final qrCodeData = qrCodeDoc.data() as Map<String, dynamic>;
-      final bool inStatus = qrCodeData['in'] ?? false;
-      final bool outStatus = qrCodeData['out'] ?? false;
+      final bool scannedStatus = qrCodeData['scanned'] ?? false;
 
       // If 'in' is false, update it to true
-      if (!inStatus) {
-        await qrCodeRef.update({'in': true});
+      if (!scannedStatus) {
+        await qrCodeRef.update({'scanned': true});
 
         isScanned = true; // Mark as scanned
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('the first scan (in=true)')),
+          const SnackBar(content: Text('the first scan (scanned=true)')),
         );
       } else {
-        // If 'in' is true, update 'out' to true
-        if (!outStatus) {
-          isScanned = true; // Mark as scanned
-          String price = qrCodeData['price'];
-          print("Ticket price: $price");
-          await qrCodeRef.update({'out': true});
-          print('Second scan: out=true');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('the second scan (out=true)')),
-          );
-        } else {
-          // If 'out' is true, the QR code is already used
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('already scaned twice (in=out=true)')),
-          );
-          throw Exception('This QR code is already used');
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('already scaned twice (scanned=out=true)')),
+        );
+        throw Exception('This QR code is already used');
       }
     } else {
       throw Exception('QR code not found');

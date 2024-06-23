@@ -3,52 +3,57 @@ import 'package:tareeqy_metro/firebasemetro/Route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class TripDetails extends StatefulWidget {
-  MetroRoute route = MetroRoute();
-  TripDetails({super.key, required this.route});
+  final MetroRoute route;
+
+  TripDetails({Key? key, required this.route}) : super(key: key);
 
   @override
   State<TripDetails> createState() => _TripDetailsState();
 }
 
 class _TripDetailsState extends State<TripDetails> {
-  // backgroundColor: Color.fromARGB(255, 164, 53, 53)
-  // Color cardColor = Color.fromARGB(255, 188, 143, 143);
   Color cardColor = Colors.white;
   Color textColor = Colors.black;
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          title: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                Text(widget.route.routeStations.first,
-                    style: const TextStyle(color: Colors.white, fontSize: 20)),
-                const Text('  To  ',
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 255, 255, 255),
-                        fontWeight: FontWeight.bold)),
-                Text(widget.route.routeStations.last,
-                    style: const TextStyle(color: Colors.white, fontSize: 20)),
-              ],
-            ),
+        title: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              Text(widget.route.routeStations.first,
+                  style: TextStyle(
+                      color: Colors.white, fontSize: screenWidth * 0.05)),
+              const Text('  To  ',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      fontWeight: FontWeight.bold)),
+              Text(widget.route.routeStations.last,
+                  style: TextStyle(
+                      color: Colors.white, fontSize: screenWidth * 0.05)),
+            ],
           ),
-          backgroundColor: const Color(0xFF073042)),
+        ),
+        backgroundColor: const Color(0xFF073042),
+      ),
       body: Stack(
-        //physics: BouncingScrollPhysics(),
-        //fit: StackFit.expand,
         children: [
           Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  child: TripDescription(widget.route.line,
-                      widget.route.direction, widget.route.transit),
+                  child: TripDescription(
+                      widget.route.line,
+                      widget.route.direction,
+                      widget.route.transit,
+                      screenWidth),
                 ),
               ),
               Padding(
@@ -58,7 +63,7 @@ class _TripDetailsState extends State<TripDetails> {
                   children: [
                     Expanded(
                       child: Container(
-                        width: 150,
+                        width: screenWidth * 0.4,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           boxShadow: [
@@ -66,7 +71,6 @@ class _TripDetailsState extends State<TripDetails> {
                               color: Colors.black.withOpacity(0.3),
                               spreadRadius: 5,
                               blurRadius: 7,
-                              //offset: Offset(0, 5),
                             )
                           ],
                           color: cardColor,
@@ -75,28 +79,28 @@ class _TripDetailsState extends State<TripDetails> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.subway,
-                              size: 50,
+                              size: screenWidth * 0.12,
                               color: Color(0xFF00796B),
                             ),
-                            const Text(
+                            Text(
                               'Stations',
                               style: TextStyle(
                                 color: Color(0xFF00796B),
                                 fontWeight: FontWeight.bold,
-                                fontSize: 17,
+                                fontSize: screenWidth * 0.04,
                               ),
                             ),
                             SizedBox(
-                              width: 60,
-                              height: 30,
+                              width: screenWidth * 0.15,
+                              height: screenWidth * 0.08,
                               child: Center(
                                 child: Text(
                                   widget.route.routeStations.length.toString(),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20,
+                                    fontSize: screenWidth * 0.05,
                                     color: textColor,
                                   ),
                                 ),
@@ -106,12 +110,10 @@ class _TripDetailsState extends State<TripDetails> {
                         ),
                       ),
                     ),
-                    /////////////////////////////////////////////////////////////////////
                     if (widget.route.transit != '')
                       const SizedBox(
                         width: 10,
                       ),
-                    ///////////////////////////////////////////////////
                     if (widget.route.transit != '')
                       Container(
                         decoration: BoxDecoration(
@@ -120,7 +122,6 @@ class _TripDetailsState extends State<TripDetails> {
                               color: Colors.black.withOpacity(0.3),
                               spreadRadius: 5,
                               blurRadius: 7,
-                              //offset: Offset(0, 0),
                             )
                           ],
                           borderRadius: BorderRadius.circular(8),
@@ -130,26 +131,25 @@ class _TripDetailsState extends State<TripDetails> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(
+                            Icon(
                               color: Color(0xFF00796B),
                               Icons.transit_enterexit_outlined,
-                              size: 50,
+                              size: screenWidth * 0.12,
                             ),
-                            const Text(
+                            Text(
                               'Interchange Station',
                               style: TextStyle(
                                 color: Color(0xFF00796B),
                                 fontWeight: FontWeight.bold,
-                                fontSize: 17,
+                                fontSize: screenWidth * 0.04,
                               ),
                             ),
                             Container(
-                              //color: Colors.grey[300],
                               child: Center(
                                 child: Text(
                                   widget.route.transit,
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: screenWidth * 0.05,
                                     color: textColor,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -169,62 +169,6 @@ class _TripDetailsState extends State<TripDetails> {
               ),
             ],
           ),
-/*           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: 
-            ListView.separated(
-              separatorBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 23.0, right: 50.0),
-                  child: Container(
-                    color: Colors.black.withOpacity(0.6),
-                    width: double.infinity,
-                    height: 1.0,
-                  ),
-                );
-              },
-              //physics: BouncingScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: widget.route.routeStations.length,
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    if (widget.route.routeStations[index] ==
-                            widget.route.transit ||
-                        index == 0 ||
-                        index == (widget.route.routeStations.length - 1))
-                      Icon(Icons.circle, color: Colors.red),
-                    //SizedBox(height: 40),
-                    if (widget.route.routeStations[index] ==
-                            widget.route.transit ||
-                        index == 0 ||
-                        index == (widget.route.routeStations.length - 1))
-                      Text(
-                        widget.route.routeStations[index],
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    if (widget.route.routeStations[index] !=
-                            widget.route.transit &&
-                        index != 0 &&
-                        index != (widget.route.routeStations.length - 1))
-                      Icon(Icons.circle_outlined, color: Colors.red),
-                    //SizedBox(height: 40),
-                    if (widget.route.routeStations[index] !=
-                            widget.route.transit &&
-                        index != 0 &&
-                        index != (widget.route.routeStations.length - 1))
-                      Text(
-                        widget.route.routeStations[index],
-                        style: TextStyle(fontSize: 20),
-                      ),
-                  ],
-                );
-              },
-            ),
-          ),
- */
-
           DraggableScrollableSheet(
             initialChildSize: Draggablenumber(),
             minChildSize: Draggablenumber(),
@@ -254,15 +198,16 @@ class _TripDetailsState extends State<TripDetails> {
                                 fontSize: 30),
                           ),
                           Card(
-                              child: Row(
-                            children: [
-                              const Icon(Icons.circle, color: Colors.red),
-                              Text(
-                                widget.route.routeStations[0],
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                            ],
-                          )),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.circle, color: Colors.red),
+                                Text(
+                                  widget.route.routeStations[0],
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       );
                     }
@@ -275,7 +220,6 @@ class _TripDetailsState extends State<TripDetails> {
                               index == 0 ||
                               index == (widget.route.routeStations.length - 1))
                             const Icon(Icons.circle, color: Colors.red),
-                          //SizedBox(height: 40),
                           if (widget.route.routeStations[index] ==
                                   widget.route.transit ||
                               index == 0 ||
@@ -291,7 +235,6 @@ class _TripDetailsState extends State<TripDetails> {
                               index != (widget.route.routeStations.length - 1))
                             const Icon(Icons.circle_outlined,
                                 color: Colors.red),
-                          //SizedBox(height: 40),
                           if (widget.route.routeStations[index] !=
                                   widget.route.transit &&
                               index != 0 &&
@@ -314,7 +257,7 @@ class _TripDetailsState extends State<TripDetails> {
   }
 
   double Draggablenumber() {
-    double extra = 0;
+    double extra = 0.03;
     if (widget.route.direction[0] == 'Shoubra El-Kheima Direction' ||
         widget.route.direction[1] == 'Shoubra El-Kheima Direction' ||
         widget.route.direction[1] == 'Rod El Farag Corridor Direction' ||
@@ -322,7 +265,7 @@ class _TripDetailsState extends State<TripDetails> {
         widget.route.direction[1] == 'Adli Mansour Direction' ||
         widget.route.direction[0] == 'Adli Mansour Direction' ||
         widget.route.transit == 'Al-Shohada') {
-      extra = 0.04;
+      extra = 0.08;
     }
     if (widget.route.transit == '') {
       return 0.67 - extra;
@@ -331,8 +274,8 @@ class _TripDetailsState extends State<TripDetails> {
     }
   }
 
-  Widget TripDescription(
-      List<int> line, List<String> dircetion, String transit) {
+  Widget TripDescription(List<int> line, List<String> direction, String transit,
+      double screenWidth) {
     return Column(
       children: [
         Container(
@@ -342,65 +285,48 @@ class _TripDetailsState extends State<TripDetails> {
                 color: Colors.black.withOpacity(0.3),
                 spreadRadius: 5,
                 blurRadius: 7,
-                //offset: Offset(0, 5),
               )
             ],
             borderRadius: BorderRadius.circular(8),
             color: cardColor,
           ),
-          width: 370,
+          width: screenWidth * 0.95,
           padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Trip Desription:',
+              Text(
+                'Trip Description:',
                 style: TextStyle(
                     color: Color(0xFF00796B),
-                    fontSize: 20,
+                    fontSize: screenWidth * 0.05,
                     fontWeight: FontWeight.bold),
               ),
               if (transit != '')
-                // ignore: prefer_interpolation_to_compose_strings
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: AutoSizeText(
-                    // ignore: prefer_interpolation_to_compose_strings
-                    'You will take Line ' +
-                        line[0].toString() +
-                        ' in ' +
-                        dircetion[0] +
-                        ' till you reach ' +
-                        transit +
-                        ' station then you will change to line ' +
-                        line[1].toString() +
-                        " in " +
-                        dircetion[1],
+                    'You will take Line ${line[0]} in ${direction[0]} till you reach $transit station then you will change to line ${line[1]} in ${direction[1]}',
                     style: TextStyle(
-                        fontSize: 18,
+                        fontSize: screenWidth * 0.045,
                         color: textColor,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
               if (transit == '')
-                // ignore: prefer_interpolation_to_compose_strings
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: AutoSizeText(
-                    // ignore: prefer_interpolation_to_compose_strings
-                    'you will take Line ' +
-                        line[0].toString() +
-                        " in " +
-                        dircetion[0],
+                    'You will take Line ${line[0]} in ${direction[0]}',
                     style: TextStyle(
-                        fontSize: 18,
+                        fontSize: screenWidth * 0.045,
                         color: textColor,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

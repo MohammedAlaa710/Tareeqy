@@ -64,8 +64,11 @@ class BusDetails extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                QRcode(qrData: docId, ticketType: 'Bus'),
+                            builder: (context) => QRcode(
+                              qrData: docId,
+                              ticketType: 'Bus',
+                              screen: "bus",
+                            ),
                           ),
                         );
                       }

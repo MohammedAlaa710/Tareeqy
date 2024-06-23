@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tareeqy_metro/firebasebus/BusDetails.dart';
+import 'package:tareeqy_metro/firebasemetro/metroscreen.dart';
+import 'package:tareeqy_metro/homepage.dart';
 import 'package:vibration/vibration.dart';
 
 class QRcode extends StatefulWidget {
   final String qrData;
   final String ticketType;
-
-  const QRcode({Key? key, required this.qrData, required this.ticketType})
+  final String screen;
+  const QRcode(
+      {Key? key,
+      required this.qrData,
+      required this.ticketType,
+      required this.screen})
       : super(key: key);
 
   @override
@@ -16,29 +22,43 @@ class QRcode extends StatefulWidget {
 }
 
 class _QRcodeState extends State<QRcode> {
-  bool scanned = false; // Track if QR code has been scanned
-  bool showMessage = false; // Track if message is currently active
-  bool ticketNotUsable = false; // Track if ticket is no longer usable
-
+  bool scanned = false;
+  bool showMessage = false;
+  bool ticketNotUsable = false;
+  bool inStatus = false;
+  bool outStatus = false;
   @override
   void initState() {
     super.initState();
     // Listen for changes in Firestore
-    bool inStatus = false;
-    bool outStatus = false;
-       FirebaseFirestore.instance
+    if (widget.ticketType == 'metro') {
+      print("inside if");
+      handleMetroQRData();
+    } else {
+      print("inside else");
+
+      handleBusQRData();
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////////
+  void handleMetroQRData() {
+    /*FirebaseFirestore.instance
         .collection('QR') // Replace with your collection name
         .doc(widget.qrData) // Assuming qrData is the document ID
-        .snapshots().firstWhere((snapshot) => snapshot.exists) // Ensure we only handle existing snapshots
-      .then((snapshot) {
-         inStatus = snapshot.data()?['in'] ?? false;
-         outStatus = snapshot.data()?['out'] ?? false;
-if (inStatus) {
-          setState(() {
-            scanned = true;
-            showMessage = false;
-        
-});}});
+        .snapshots()
+        .firstWhere((snapshot) =>
+            snapshot.exists) // Ensure we only handle existing snapshots
+        .then((snapshot) {
+      inStatus = snapshot.data()?['in'] ?? false;
+      outStatus = snapshot.data()?['out'] ?? false;
+      if (inStatus) {
+        setState(() {
+          scanned = true;
+          //showMessage = false;
+        });
+      }
+    });*/
     FirebaseFirestore.instance
         .collection('QR') // Replace with your collection name
         .doc(widget.qrData) // Assuming qrData is the document ID
@@ -46,38 +66,38 @@ if (inStatus) {
         .listen((snapshot) {
       // Check if 'in' or 'out' fields have changed
       if (snapshot.exists) {
-
-         inStatus = snapshot.data()?['in'] ?? false;
-         outStatus = snapshot.data()?['out'] ?? false;
+        inStatus = snapshot.data()?['in'] ?? false;
+        outStatus = snapshot.data()?['out'] ?? false;
         // Check if QR code has been scanned
         if (inStatus && !scanned) {
           setState(() {
             scanned = true;
-            showMessage = true; // Show message
+            //showMessage = true; // Show message
           });
           // Trigger vibration
           Vibration.vibrate(duration: 200);
 
           // Show dialog
-          _showScannedDialog();
+          //_showScannedDialog();
         }
 
         // Handle outStatus similarly
         if (outStatus && !scanned) {
           setState(() {
             scanned = true;
-            showMessage = true; // Show message
+            //showMessage = true; // Show message
           });
           // Trigger vibration
           Vibration.vibrate(duration: 200);
 
           // Show dialog
-          _showScannedDialog();
+          //_showScannedDialog();
         }
 
         // If both inStatus and outStatus are true and scanned is true
         if (outStatus && inStatus) {
           setState(() {
+            Vibration.vibrate(duration: 200);
             ticketNotUsable = true; // Show ticket not usable message
           });
         }
@@ -85,14 +105,42 @@ if (inStatus) {
     });
   }
 
+  ///////////////////////////////////////////////////////////////////////////////
+  void handleBusQRData() {
+    bool scannedStatus = false;
+    FirebaseFirestore.instance
+        .collection('BusQRcodes') // Replace with your collection name
+        .doc(widget.qrData) // Assuming qrData is the document ID
+        .snapshots()
+        .listen((snapshot) {
+      if (snapshot.exists) {
+        scannedStatus = snapshot.data()?['scanned'] ?? false;
+        // Check if QR code has been scanned
+        if (scannedStatus) {
+          setState(() {
+            //showMessage = true; // Show message
+            ticketNotUsable = true;
+          });
+          // Trigger vibration
+          Vibration.vibrate(duration: 200);
+
+          // Show dialog
+          //_showScannedDialog();
+        }
+      }
+    });
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////
   void _showScannedDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Color(0xFF073042),
-          title: Text('Scanned', style: TextStyle(color: Colors.white)),
-          content: Text('QR code has been scanned!', style: TextStyle(color: Colors.white)),
+          title: const Text('Scanned', style: TextStyle(color: Colors.white)),
+          content: const Text('QR code has been scanned!',
+              style: TextStyle(color: Colors.white)),
           actions: <Widget>[
             TextButton(
               style: TextButton.styleFrom(backgroundColor: Color(0xFF00796B)),
@@ -102,7 +150,25 @@ if (inStatus) {
                   scanned = false;
                   showMessage = false; // Hide message
                 });
-                Navigator.of(context).pop();
+                if (widget.screen == "metro") {
+                  Navigator.of(context).popUntil((route) {
+                    return route.settings.name == null &&
+                        route is MaterialPageRoute &&
+                        route.builder(context) is MetroScreen;
+                  });
+                } else if (widget.screen == "bus") {
+                  Navigator.of(context).popUntil((route) {
+                    return route.settings.name == null &&
+                        route is MaterialPageRoute &&
+                        route.builder(context) is BusDetails;
+                  });
+                } else {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    (route) => false,
+                  );
+                }
               },
             ),
           ],
@@ -114,7 +180,32 @@ if (inStatus) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: Navigator.of(context).pop, icon: Icon(Icons.arrow_back)),
+        leading: IconButton(
+            onPressed: () {
+              if (widget.screen == "metro") {
+                Navigator.of(context).popUntil((route) {
+                  return route.settings.name == null &&
+                      route is MaterialPageRoute &&
+                      route.builder(context) is MetroScreen;
+                });
+              } else if (widget.screen == "bus") {
+                Navigator.of(context).popUntil((route) {
+                  return route.settings.name == null &&
+                      route is MaterialPageRoute &&
+                      route.builder(context) is BusDetails;
+                });
+              } else if (widget.screen == "profile" &&
+                  (inStatus || outStatus)) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                  (route) => false,
+                );
+              } else {
+                Navigator.of(context).pop();
+              }
+            },
+            icon: Icon(Icons.arrow_back)),
         backgroundColor: const Color(0xFF073042),
         title: Text(
           widget.ticketType == 'metro' ? 'Metro Ticket' : 'Bus Ticket',
@@ -126,7 +217,7 @@ if (inStatus) {
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Ticket is no longer in your profile',
                     style: TextStyle(
                       fontSize: 16,
@@ -136,7 +227,6 @@ if (inStatus) {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 10),
-                  
                   const SizedBox(height: 20),
                   Container(
                     decoration: BoxDecoration(
@@ -166,11 +256,12 @@ if (inStatus) {
                           ),
                         ],
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.error_outline, color: Color(0xFFB31312), size: 80),
+                            Icon(Icons.error_outline,
+                                color: Color(0xFFB31312), size: 80),
                             const SizedBox(height: 20),
                             Text(
                               'Ticket is no longer usable',
@@ -191,7 +282,7 @@ if (inStatus) {
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Ticket is stored in your profile',
                     style: TextStyle(
                       fontSize: 16,
@@ -231,6 +322,18 @@ if (inStatus) {
                       size: 280,
                     ),
                   ),
+                  if (widget.ticketType == "metro" && inStatus)
+                    const SizedBox(height: 40),
+                  if (widget.ticketType == "metro" && inStatus)
+                    const Text(
+                      "Ticket is Scanned Once",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                 ],
               ),
       ),

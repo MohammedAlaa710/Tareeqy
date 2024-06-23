@@ -55,10 +55,10 @@ class metroService {
       print("inside try");
       int routeLength = getRoute(from, to).routeStations.length - 1;
       print('Route length: $routeLength');
-      if (routeLength < 10) return '6 egp';
-      if (routeLength < 17) return '8 egp';
-      if (routeLength < 24) return '12 egp';
-      return '15 egp';
+      if (routeLength < 10) return '6.0 egp';
+      if (routeLength < 17) return '8.0 egp';
+      if (routeLength < 24) return '12.0 egp';
+      return '15.0 egp';
     } catch (e) {
       print('Error calculating price: $e');
       return 'Error'; // Return an error message if an exception occurs

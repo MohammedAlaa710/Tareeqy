@@ -202,21 +202,24 @@ class _LoginState extends State<Login> {
 
       if (userCredential.user != null) {
         if (await authService.checkIsDriver()) {
-          Navigator.pushReplacement(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const DriverScreen()),
+            (route) => false,
           );
         } else {
           authService.checkIsAdmin().then((isAdmin) {
             if (isAdmin != null && isAdmin) {
-              Navigator.pushReplacement(
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const AdminHomePage()),
+                (route) => false,
               );
             } else {
-              Navigator.pushReplacement(
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const HomePage()),
+                (route) => false,
               );
             }
           });

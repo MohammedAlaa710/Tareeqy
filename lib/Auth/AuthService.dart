@@ -8,49 +8,49 @@ import 'package:tareeqy_metro/homepage.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void storeUserData(String userName, String email, BuildContext context,
-      {String? collection = "users", String? busId}) {
-    String? userId = _auth.currentUser?.uid;
-    if (collection == 'users') {
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .set({
-            'userName': userName,
-            'email': email,
-            'isAdmin': false,
-            'qrCodes': [],
-            'busTickets': [],
-            'wallet': "0.0",
-          })
-          .then((value) => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content:
-                        Text("Registration Succeeded, Welcome to Tareeqy!")),
-              ))
-          .catchError((error) => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Registration Failed!")),
-              ));
-    } else if (collection == 'Drivers') {
-      FirebaseFirestore.instance
-          .collection('Drivers')
-          .doc(userId)
-          .set({
-            'userName': userName,
-            'email': email,
-            'busId': busId,
-            'latitude': 0.0,
-            'longitude': 0.0,
-            'facesnumber': 0,
-            'work': false,
-          })
-          .then((value) => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Driver is added successfully!")),
-              ))
-          .catchError((error) => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text("Driver is not added successfully!")),
-              ));
+  Future<void> storeUserData(
+      String userName, String email, BuildContext context,
+      {String? collection = "users", String? busId}) async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("User is not logged in!")),
+      );
+      return;
+    }
+
+    try {
+      if (collection == 'users') {
+        await FirebaseFirestore.instance.collection('users').doc(userId).set({
+          'userName': userName,
+          'email': email,
+          'isAdmin': false,
+          'qrCodes': [],
+          'busTickets': [],
+          'wallet': "0.0",
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text("Registration Succeeded, Welcome to Tareeqy!")),
+        );
+      } else if (collection == 'Drivers') {
+        await FirebaseFirestore.instance.collection('Drivers').doc(userId).set({
+          'userName': userName,
+          'email': email,
+          'busId': busId,
+          'latitude': 0.0,
+          'longitude': 0.0,
+          'facesnumber': 0,
+          'work': false,
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Driver is added successfully!")),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Operation Failed!")),
+      );
     }
   }
 

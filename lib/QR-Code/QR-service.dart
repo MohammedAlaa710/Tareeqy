@@ -42,9 +42,11 @@ class QRservices {
       if (userId != null) {
         await _firestore.collection('users').doc(userId).update({
           'busTickets': FieldValue.arrayUnion([docId]),
-        });
+        }); //t3ala hna ya x
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('QR code added to user')),
+          const SnackBar(
+              content:
+                  Text('The Ticket is added to your Profile Successfully.')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -205,7 +207,7 @@ class QRservices {
               context, walletBalance, ticketPrice);
           if (continueOperation) {
             // Proceed with the purchase
-            return await _performPurchase(
+            return await _busTicketPurchase(
                 context, userId, ticketPrice, walletBalance, "BusQRcodes");
           } else {
             // User chose not to proceed with the purchase
@@ -387,6 +389,7 @@ class QRservices {
     return result ?? false; // Return false if result is null
   }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   Future<String> _performPurchase(BuildContext context, String userId,
       double ticketPrice, double walletBalance, String metroOrbus) async {
     try {
@@ -423,6 +426,43 @@ class QRservices {
     }
   }
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Future<String> _busTicketPurchase(BuildContext context, String userId,
+      double ticketPrice, double walletBalance, String metroOrbus) async {
+    try {
+      // Deduct the ticket price from the wallet balance and update the user's wallet
+      await _firestore.collection('users').doc(userId).update({
+        'wallet': (walletBalance - ticketPrice).toString(),
+      });
+
+      // Add the QR to the collection
+      DocumentReference docRef = await _firestore.collection(metroOrbus).add({
+        'fromStation': "none",
+        'price': '$ticketPrice egp', // Convert to string
+        'userId': userId,
+        'scanned': false,
+        'timestamp': Timestamp.now(),
+      });
+
+      // Show success message with updated wallet balance
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              'Ticket purchased successfully. \nYour wallet balance is now ${(walletBalance - ticketPrice).toStringAsFixed(2)} EGP.'),
+        ),
+      );
+
+      String docId = docRef.id;
+      return docId;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add document: $e')),
+      );
+      return '';
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   String _calculatePriceForStations(int stationsNumber) {
     String price;
     if (stationsNumber < 10) {

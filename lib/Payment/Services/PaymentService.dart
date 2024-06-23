@@ -44,7 +44,11 @@ class PaymentService {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Wallet Charged Successfully!")),
       );
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).popUntil((route) {
+        return route.settings.name == null &&
+            route is MaterialPageRoute &&
+            route.builder(context) is HomePage;
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to Charge Wallet: ${e.toString()}")),

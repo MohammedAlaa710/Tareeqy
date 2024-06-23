@@ -58,10 +58,10 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
           String outprice =
               _metroService.calculatePrice(fromStation, widget.station);
           print("Calculated out price: $outprice");
-          if (((price == '6 egp') && (outprice != '6 egp')) ||
-              ((price == '8 egp') &&
-                  (outprice == '12 egp' || outprice == '15 egp')) ||
-              ((price == '12 egp') && (outprice == '15 egp'))) {
+          if (((price == '6.0 egp') && (outprice != '6.0 egp')) ||
+              ((price == '8.0 egp') &&
+                  (outprice == '12.0 egp' || outprice == '15.0 egp')) ||
+              ((price == '12.0 egp') && (outprice == '15.0 egp'))) {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content:
                     Text('the price of the ticket is less than the needed')));
@@ -122,21 +122,7 @@ class _QRCodeScannerPageState extends State<QRCodeScannerPage> {
 
                         try {
                           await checkAndUpdateQRCode(qrText!);
-
-                          // Show success message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('QR code processed successfully'),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-
-                          // Navigate back to the previous page
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MetroStations()),
-                          );
+                          Navigator.of(context).pop();
                         } catch (e) {
                           // Show error message
                           ScaffoldMessenger.of(context).showSnackBar(
