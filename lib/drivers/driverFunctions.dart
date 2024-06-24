@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:tareeqy_metro/drivers/FaceDetection.dart';
 import 'package:tareeqy_metro/drivers/driverService.dart';
@@ -57,6 +58,7 @@ class _driverFunctionsState extends State<driverFunctions> {
       appBar: AppBar(
         title: const Text(
           "Dirver Details",
+          style: TextStyle(color: Colors.white),
         ),
         //Color(0xFF00796B)
         backgroundColor: const Color(0xFF073042),

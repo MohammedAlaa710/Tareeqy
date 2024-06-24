@@ -81,8 +81,8 @@ class _BusManagementScreenState extends State<BusManagementScreen> {
                       } else {
                         final bus = buses[index];
                         final regions = (bus.data() as Map<String, dynamic>)
-                                .containsKey('Regions')
-                            ? bus['Regions'] as List<dynamic>
+                                .containsKey('Stations')
+                            ? bus['Stations'] as List<dynamic>
                             : [];
                         return Card(
                           margin: EdgeInsets.symmetric(

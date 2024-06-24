@@ -24,11 +24,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
   @override
   void initState() {
-    _fetchUserData();
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Color(0xFF073042),
     ));
+    setState(() {
+      _tickets.clear();
+      _isLoading = true;
+      _fetchUserData();
+    });
   }
 
   Future<void> _fetchUserData() async {
@@ -50,6 +54,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           final busTicketIds = List<String>.from(userDoc.data()!['busTickets']);
           await _fetchMetroTickets(metroTicketIds);
           await _fetchBusTickets(busTicketIds);
+          _isLoading = false;
         }
       });
     }
@@ -87,9 +92,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     for (String ticketId in ticketIds) {
       futures.add(_firestore.collection('BusQRcodes').doc(ticketId).get());
     }
-
     final List<DocumentSnapshot> snapshots = await Future.wait(futures);
-
     for (DocumentSnapshot snapshot in snapshots) {
       if (snapshot.exists) {
         Map<String, dynamic> ticketData =
@@ -101,7 +104,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         }
       }
     }
-
     _processAndSetTickets(tickets);
   }
 
@@ -124,7 +126,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     if (mounted) {
       setState(() {
         _tickets = [..._tickets, ...?ticketsInUse, ...?otherTickets];
-        _isLoading = false;
       });
     }
   }
@@ -244,7 +245,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           ),
           const SizedBox(height: 10),
           _isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(
+                  child: CircularProgressIndicator(color: Color(0xFFB31312)))
               : _tickets.isEmpty
                   ? const Center(
                       child: Text(

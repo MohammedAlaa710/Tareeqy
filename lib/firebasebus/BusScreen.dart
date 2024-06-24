@@ -44,7 +44,7 @@ class _BusScreenState extends State<BusScreen> {
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -60,12 +60,62 @@ class _BusScreenState extends State<BusScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (isSwitched)
+                        const Text(
+                          "Select Regions",
+                          style: TextStyle(
+                              fontSize: 14.0, fontWeight: FontWeight.bold),
+                        ),
+                      if (!isSwitched)
+                        const Text(
+                          "Select Regions",
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF00796B)),
+                        ),
+                      const SizedBox(width: 5),
+                      Switch(
+                        activeColor: const Color(0xFFB31312),
+                        activeTrackColor:
+                            const Color.fromARGB(255, 209, 100, 100),
+                        inactiveThumbColor: const Color(0xFF00796B),
+                        inactiveTrackColor:
+                            const Color.fromARGB(255, 45, 184, 168),
+                        value: isSwitched,
+                        onChanged: (value) =>
+                            setState(() => isSwitched = value),
+                      ),
+                      const SizedBox(width: 5),
+                      if (!isSwitched)
+                        const Text(
+                          "Select Bus Number",
+                          style: TextStyle(
+                              fontSize: 14.0, fontWeight: FontWeight.bold),
+                        ),
+                      if (isSwitched)
+                        const Text(
+                          "Select Bus Number",
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFB31312)),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
                 if (!isSwitched)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       children: [
-                        const Icon(Icons.location_on, color: Color(0xFF00796B)),
+                        const Icon(Icons.location_on, color: Color(0xFFB31312)),
                         const SizedBox(width: 10),
                         Expanded(
                           child: MyDropdownSearch(
@@ -91,7 +141,7 @@ class _BusScreenState extends State<BusScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       children: [
-                        const Icon(Icons.location_on, color: Color(0xFFB31312)),
+                        const Icon(Icons.location_on, color: Color(0xFF00796B)),
                         const SizedBox(width: 10),
                         Expanded(
                           child: MyDropdownSearch(
@@ -125,7 +175,19 @@ class _BusScreenState extends State<BusScreen> {
                             selectedValue: busNumber,
                             onChanged: (value) {
                               setState(() {
+                                //wadi
                                 busNumber = value!;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BusDetails(
+                                            busNumber: busNumber,
+                                            metroStations: _busService
+                                                .getMetroStations(busNumber),
+                                            regions: _busService
+                                                .getAllBusStations(busNumber),
+                                          )),
+                                );
                               });
                             },
                           ),
@@ -134,63 +196,33 @@ class _BusScreenState extends State<BusScreen> {
                     ),
                   ),
                 const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF073042),
-                        minimumSize: const Size(150, 50),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          selectedValue1 = '';
-                          selectedValue2 = '';
-                          busNumber = '';
-                          // Update bus numbers after clearing
-                        });
-                      },
-                      child: const Text(
-                        'Clear',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 100),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF073042),
+                      minimumSize: const Size(100, 40),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (isSwitched)
-                          const Text(
-                            "Bus Regions",
-                            style: TextStyle(
-                                fontSize: 15.0, fontWeight: FontWeight.bold),
-                          ),
-                        Switch(
-                          activeColor: const Color(0xFFB31312),
-                          activeTrackColor:
-                              const Color.fromARGB(255, 209, 100, 100),
-                          inactiveThumbColor: const Color(0xFF00796B),
-                          inactiveTrackColor:
-                              const Color.fromARGB(255, 45, 184, 168),
-                          value: isSwitched,
-                          onChanged: (value) =>
-                              setState(() => isSwitched = value),
-                        ),
-                        if (!isSwitched)
-                          const Text(
-                            "Bus Number",
-                            style: TextStyle(
-                                fontSize: 15.0, fontWeight: FontWeight.bold),
-                          )
-                      ],
-                    )
-                  ],
+                    onPressed: () {
+                      setState(() {
+                        selectedValue1 = '';
+                        selectedValue2 = '';
+                        busNumber = '';
+                        // Update bus numbers after clearing
+                      });
+                    },
+                    child: const Text(
+                      'Clear',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
                 ),
+                const SizedBox(width: 10),
                 const SizedBox(height: 30),
                 if (!isSwitched)
                   if (selectedValue1.isNotEmpty && selectedValue2.isNotEmpty)
@@ -200,6 +232,7 @@ class _BusScreenState extends State<BusScreen> {
                                 .getBusNumber(selectedValue1, selectedValue2)
                                 .length;
                         i++)
+                      //hna
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 5),
                         padding: const EdgeInsets.all(10),
@@ -290,80 +323,6 @@ class _BusScreenState extends State<BusScreen> {
                           ),
                         ),
                       ),
-                if (isSwitched)
-                  if (busNumber.isNotEmpty)
-                    const Text(
-                      "Regions passes by:",
-                      style: TextStyle(
-                          color: Color(0xFFB31312),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25),
-                    ),
-
-                if (isSwitched)
-                  if (busNumber.isNotEmpty) const SizedBox(height: 10),
-                if (isSwitched)
-                  if (busNumber.isNotEmpty)
-                    for (int i = 0;
-                        i < _busService.getAllBusStations(busNumber).length;
-                        i++)
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 5),
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 148, 194, 214),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          "${i + 1}.  ${_busService.getAllBusStations(busNumber)[i]}",
-                          style: const TextStyle(
-                            color: Color(0xFF073042),
-                            fontSize: 20,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                //////////////////////////////////////////////////////////
-                if (_busService.getMetroStations(busNumber).isNotEmpty)
-                  if (isSwitched)
-                    if (busNumber.isNotEmpty) const SizedBox(height: 10),
-                if (_busService.getMetroStations(busNumber).isNotEmpty)
-                  if (isSwitched)
-                    if (busNumber.isNotEmpty)
-                      const Text(
-                        "Metro Stations passes by:",
-                        style: TextStyle(
-                            color: Color(0xFFB31312),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25),
-                      ),
-                if (_busService.getMetroStations(busNumber).isNotEmpty)
-                  if (isSwitched)
-                    if (busNumber.isNotEmpty) const SizedBox(height: 10),
-                if (_busService.getMetroStations(busNumber).isNotEmpty)
-                  if (isSwitched)
-                    if (busNumber.isNotEmpty)
-                      for (int i = 0;
-                          i < _busService.getMetroStations(busNumber).length;
-                          i++)
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 5),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 78, 167, 156),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            "${i + 1}.  ${_busService.getMetroStations(busNumber)[i]}",
-                            style: const TextStyle(
-                              color: Color(0xFF073042),
-                              fontSize: 20,
-                              fontStyle: FontStyle.italic,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
               ],
             ),
           ],
