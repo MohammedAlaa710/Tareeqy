@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tareeqy_metro/QR-Code/QR-service.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
+import 'package:tareeqy_metro/firebasebus/busService.dart';
 import 'package:tareeqy_metro/firebasebus/busTracking.dart';
 
-class BusDetails extends StatelessWidget {
+class BusDetails extends StatefulWidget {
   final String busNumber;
   final List<String> regions;
   final List<String> metroStations;
@@ -16,15 +18,28 @@ class BusDetails extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    late final QRservices qrServices = QRservices();
+  State<BusDetails> createState() => _BusDetailsState();
+}
 
+class _BusDetailsState extends State<BusDetails> {
+  late final QRservices qrServices;
+  late final BusService _busService;
+
+  @override
+  void initState() {
+    qrServices = QRservices();
+    _busService = BusService();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: const Color(0xFF073042), // Dark Blue
         title: Text(
-          'Bus Number: $busNumber',
+          'Bus Number: ${widget.busNumber}',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 24,
@@ -57,8 +72,7 @@ class BusDetails extends StatelessWidget {
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                     onPressed: () async {
-                      String docId =
-                          await qrServices.busTicket(context, busNumber);
+                      String docId = await qrServices.busTicket(context);
                       if (docId.isNotEmpty) {
                         await qrServices.addBusQRCodeToUser(context, docId);
                         Navigator.push(
@@ -89,13 +103,64 @@ class BusDetails extends StatelessWidget {
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                     onPressed: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BusTrackingScreen(busNumber),
-                        ),
-                      );
+                      bool busesAvailable = await _busService
+                          .checkIfBusesAvailable(widget.busNumber);
+                      if (busesAvailable) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                BusTrackingScreen(widget.busNumber),
+                          ),
+                        );
+                      } else {
+                        _busService.showNoBusesAvailableDialog(context);
+                      }
                     },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('Drivers')
+                          .where('busId', isEqualTo: widget.busNumber)
+                          .where('work', isEqualTo: true)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return const Text('Error fetching bus data');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return const Text(
+                            'No buses available now',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFB31312),
+                            ),
+                          );
+                        } else {
+                          int busCount = snapshot.data!.docs.length;
+                          return Text(
+                            'Available Buses Now: $busCount',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFB31312),
+                            ),
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -126,7 +191,7 @@ class BusDetails extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Column(
-                      children: regions.map((region) {
+                      children: widget.regions.map((region) {
                         return Card(
                           color: const Color.fromARGB(255, 148, 194, 214),
                           shape: RoundedRectangleBorder(
@@ -159,11 +224,11 @@ class BusDetails extends StatelessWidget {
                   ],
                 ),
               ),
-              if (metroStations.isNotEmpty)
+              if (widget.metroStations.isNotEmpty)
                 const SizedBox(
                   height: 10,
                 ),
-              if (metroStations.isNotEmpty)
+              if (widget.metroStations.isNotEmpty)
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -190,9 +255,9 @@ class BusDetails extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Column(
-                        children: metroStations.map((metroStation) {
+                        children: widget.metroStations.map((metroStation) {
                           return Card(
-                            color: Color.fromARGB(255, 78, 167, 156),
+                            color: const Color.fromARGB(255, 78, 167, 156),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),

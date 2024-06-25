@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tareeqy_metro/components/metroStationCard.dart';
 import 'package:tareeqy_metro/firebasemetro/Route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class TripDetails extends StatefulWidget {
   final MetroRoute route;
 
-  TripDetails({Key? key, required this.route}) : super(key: key);
+  const TripDetails({super.key, required this.route});
 
   @override
   State<TripDetails> createState() => _TripDetailsState();
@@ -14,9 +15,9 @@ class TripDetails extends StatefulWidget {
 class _TripDetailsState extends State<TripDetails> {
   Color cardColor = Colors.white;
   Color textColor = Colors.black;
-    Color appBarColor = Color(0xFF073042);
-  Color accentColor = Color(0xFF00796B);
-  Color errorColor = Color(0xFFB31312);
+  Color appBarColor = const Color(0xFF073042);
+  Color accentColor = const Color(0xFF00796B);
+  Color errorColor = const Color(0xFFB31312);
   final GlobalKey part1Key = GlobalKey();
   final GlobalKey descKey = GlobalKey();
   final GlobalKey appbarKey = GlobalKey();
@@ -114,12 +115,12 @@ class _TripDetailsState extends State<TripDetails> {
                             Icon(
                               Icons.subway,
                               size: screenWidth * 0.12,
-                              color: Color(0xFF00796B),
+                              color: const Color(0xFF00796B),
                             ),
                             Text(
                               'Stations',
                               style: TextStyle(
-                                color: Color(0xFF00796B),
+                                color: const Color(0xFF00796B),
                                 fontWeight: FontWeight.bold,
                                 fontSize: screenWidth * 0.04,
                               ),
@@ -164,27 +165,25 @@ class _TripDetailsState extends State<TripDetails> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Icon(
-                              color: Color(0xFF00796B),
+                              color: const Color(0xFF00796B),
                               Icons.transit_enterexit_outlined,
                               size: screenWidth * 0.12,
                             ),
                             Text(
                               'Interchange Station',
                               style: TextStyle(
-                                color: Color(0xFF00796B),
+                                color: const Color(0xFF00796B),
                                 fontWeight: FontWeight.bold,
                                 fontSize: screenWidth * 0.04,
                               ),
                             ),
-                            Container(
-                              child: Center(
-                                child: Text(
-                                  widget.route.transit,
-                                  style: TextStyle(
-                                    fontSize: screenWidth * 0.05,
-                                    color: textColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            Center(
+                              child: Text(
+                                widget.route.transit,
+                                style: TextStyle(
+                                  fontSize: screenWidth * 0.05,
+                                  color: textColor,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
@@ -220,12 +219,16 @@ class _TripDetailsState extends State<TripDetails> {
                   shrinkWrap: true,
                   itemCount: widget.route.routeStations.length,
                   itemBuilder: (context, index) {
-                     bool isTransit = widget.route.routeStations[index] ==
-                      widget.route.transit;
-                  bool isFirst = index == 0;
-                  bool isLast = index == widget.route.routeStations.length - 1;
-                  bool afterTransit = widget.route.transit != '' &&
-                      index > widget.route.routeStations.indexOf(widget.route.transit);
+                    bool isTransit = widget.route.routeStations[index] ==
+                        widget.route.transit;
+                    bool isFirst = index == 0;
+                    bool isLast =
+                        index == widget.route.routeStations.length - 1;
+                    // ignore: unused_local_variable
+                    bool afterTransit = widget.route.transit != '' &&
+                        index >
+                            widget.route.routeStations
+                                .indexOf(widget.route.transit);
 
                     if (index == 0) {
                       return Column(
@@ -244,11 +247,11 @@ class _TripDetailsState extends State<TripDetails> {
                                 fontSize: 30),
                           ),
                           StationCard(
-                      stationName: widget.route.routeStations[index],
-                      isTransit: isTransit,
-                      isFirst: isFirst,
-                      isLast: isLast,
-                    ),
+                            stationName: widget.route.routeStations[index],
+                            isTransit: isTransit,
+                            isFirst: isFirst,
+                            isLast: isLast,
+                          ),
                         ],
                       );
                     }
@@ -272,24 +275,7 @@ class _TripDetailsState extends State<TripDetails> {
     );
   }
 
-  double Draggablenumber() {
-    double extra = 0.03;
-    if (widget.route.direction[0] == 'Shoubra El-Kheima Direction' ||
-        widget.route.direction[1] == 'Shoubra El-Kheima Direction' ||
-        widget.route.direction[1] == 'Rod El Farag Corridor Direction' ||
-        widget.route.direction[0] == 'Rod El Farag Corridor Direction' ||
-        widget.route.direction[1] == 'Adli Mansour Direction' ||
-        widget.route.direction[0] == 'Adli Mansour Direction' ||
-        widget.route.transit == 'Al-Shohada') {
-      extra = 0.00;
-    }
-    if (widget.route.transit == '') {
-      return 0.67 - extra;
-    } else {
-      return 0.6 - extra;
-    }
-  }
-
+  // ignore: non_constant_identifier_names
   Widget TripDescription(List<int> line, List<String> direction, String transit,
       double screenWidth) {
     return Column(
@@ -314,7 +300,7 @@ class _TripDetailsState extends State<TripDetails> {
               Text(
                 'Trip Description:',
                 style: TextStyle(
-                    color: Color(0xFF00796B),
+                    color: const Color(0xFF00796B),
                     fontSize: screenWidth * 0.05,
                     fontWeight: FontWeight.bold),
               ),
@@ -356,96 +342,4 @@ class _TripDetailsState extends State<TripDetails> {
   double screenHeight(BuildContext context) {
     return MediaQuery.of(context).size.height;
   }
-  
 }
-
-class StationCard extends StatelessWidget {
-  final String stationName;
-  final bool isTransit;
-  final bool isFirst;
-  final bool isLast;
-
-  const StationCard({
-    Key? key,
-    required this.stationName,
-    required this.isTransit,
-    required this.isFirst,
-    required this.isLast,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    Color accentColor = Color(0xFF00796B);
-    Color errorColor = Color(0xFFB31312);
-
-    return Card(
-      color: Colors.white,
-      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-      elevation: 5.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                if (!isFirst) VerticalDividerLine(),
-                if (isFirst) const SizedBox(height: 10),
-                Icon(
-                  isFirst
-                      ? Icons.location_on
-                      : isLast
-                          ? Icons.flag
-                          : isTransit
-                              ? Icons.transfer_within_a_station
-                              : Icons.circle,
-                  color: isFirst || isLast || isTransit ? errorColor : accentColor,
-                  size: 24.0,
-                ),
-                if (!isLast) VerticalDividerLine(),
-                if (isLast) const SizedBox(height: 10),
-              ],
-            ),
-            SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    stationName,
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: isFirst || isLast || isTransit
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class VerticalDividerLine extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 2,
-      height: 20,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.black,Color(0xFF00796B) ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-    );
-  }
-  }

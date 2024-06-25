@@ -34,7 +34,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
         return AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Text(
+          title: const Text(
             'Confirm Charge',
             style: TextStyle(
                 fontSize: 18,
@@ -43,7 +43,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
           ),
           content: Text(
             'Are you sure you want to charge \$${amount.toStringAsFixed(2)} to your wallet using $paymentMethod?',
-            style: TextStyle(fontSize: 16, color: Color(0xFF073042)),
+            style: const TextStyle(fontSize: 16, color: Color(0xFF073042)),
           ),
           actions: [
             TextButton(
@@ -55,7 +55,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF00796B),
+                backgroundColor: const Color(0xFF00796B),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
                 padding:
@@ -78,7 +78,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                   }
                 }
               },
-              child: Text(
+              child: const Text(
                 'Confirm',
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
@@ -113,16 +113,16 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
           return AlertDialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            title: Text('Payment Error',
+            title: const Text('Payment Error',
                 style: TextStyle(color: Color(0xFF073042))),
             content: Text(
               'An error occurred during the payment process: $error',
-              style: TextStyle(color: Color(0xFF073042)),
+              style: const TextStyle(color: Color(0xFF073042)),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK', style: TextStyle(color: Color(0xFF00796B))),
+                child: const Text('OK', style: TextStyle(color: Color(0xFF00796B))),
               ),
             ],
           );
@@ -170,16 +170,16 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
         return AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Text('Missing Fields',
+          title: const Text('Missing Fields',
               style: TextStyle(color: Color(0xFF073042))),
-          content: Text(
+          content: const Text(
             'Please fill out all required fields before proceeding.',
             style: TextStyle(color: Color(0xFF073042)),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK', style: TextStyle(color: Color(0xFF00796B))),
+              child: const Text('OK', style: TextStyle(color: Color(0xFF00796B))),
             ),
           ],
         );
@@ -197,7 +197,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 5,
-        backgroundColor: Color(0xFF073042),
+        backgroundColor: const Color(0xFF073042),
         title: const Text(
           'Charge Wallet',
           style: TextStyle(
@@ -233,13 +233,13 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                       ),
                       labelText: 'Amount',
                       hintText: 'Enter amount',
-                      labelStyle: TextStyle(color: Color(0xFF073042)),
+                      labelStyle: const TextStyle(color: Color(0xFF073042)),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF00796B)),
+                        borderSide: const BorderSide(color: Color(0xFF00796B)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       contentPadding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                          const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                     ),
                   ).animate().fadeIn(duration: 800.ms).slide(),
                   const SizedBox(height: 20),
@@ -257,13 +257,13 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                               ),
                               labelText: 'Email',
                               hintText: 'Enter your email',
-                              labelStyle: TextStyle(color: Color(0xFF073042)),
+                              labelStyle: const TextStyle(color: Color(0xFF073042)),
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Color(0xFF00796B)),
+                                    const BorderSide(color: Color(0xFF00796B)),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              contentPadding: EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 15),
                             ),
                             validator: (value) {
@@ -284,13 +284,13 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                               ),
                               labelText: 'First Name',
                               hintText: 'Enter your first name',
-                              labelStyle: TextStyle(color: Color(0xFF073042)),
+                              labelStyle: const TextStyle(color: Color(0xFF073042)),
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Color(0xFF00796B)),
+                                    const BorderSide(color: Color(0xFF00796B)),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              contentPadding: EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 15),
                             ),
                             validator: (value) {
@@ -309,13 +309,13 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                               ),
                               labelText: 'Last Name',
                               hintText: 'Enter your last name',
-                              labelStyle: TextStyle(color: Color(0xFF073042)),
+                              labelStyle: const TextStyle(color: Color(0xFF073042)),
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Color(0xFF00796B)),
+                                    const BorderSide(color: Color(0xFF00796B)),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              contentPadding: EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 15),
                             ),
                             validator: (value) {
@@ -335,13 +335,13 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                               ),
                               labelText: 'Phone Number',
                               hintText: 'Enter your phone number',
-                              labelStyle: TextStyle(color: Color(0xFF073042)),
+                              labelStyle: const TextStyle(color: Color(0xFF073042)),
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
-                                    BorderSide(color: Color(0xFF00796B)),
+                                    const BorderSide(color: Color(0xFF00796B)),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              contentPadding: EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 15),
                             ),
                             validator: (value) {
@@ -367,8 +367,8 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: _selectedPaymentMethod == 'PayPal'
-                              ? Color(0xFF00796B)
-                              : Color.fromARGB(255, 230, 230, 230),
+                              ? const Color(0xFF00796B)
+                              : const Color.fromARGB(255, 230, 230, 230),
                           width: 2,
                         ),
                         borderRadius: BorderRadius.circular(10),
@@ -412,8 +412,8 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: _selectedPaymentMethod == 'PayMob'
-                              ? Color(0xFF00796B)
-                              : Color.fromARGB(255, 230, 230, 230),
+                              ? const Color(0xFF00796B)
+                              : const Color.fromARGB(255, 230, 230, 230),
                           width: 2,
                         ),
                         borderRadius: BorderRadius.circular(10),
@@ -449,7 +449,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                   if (_selectedPaymentMethod != null)
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF00796B),
+                        backgroundColor: const Color(0xFF00796B),
                         minimumSize: const Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),

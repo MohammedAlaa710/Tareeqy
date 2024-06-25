@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:tareeqy_metro/components/searchbar.dart';
 import 'package:tareeqy_metro/firebasebus/BusDetails.dart';
 import 'package:tareeqy_metro/firebasebus/busService.dart';
+import 'package:tareeqy_metro/firebasebus/twoBusesDetails.dart';
 
 class BusScreen extends StatefulWidget {
   const BusScreen({super.key});
@@ -242,44 +243,84 @@ class _BusScreenState extends State<BusScreen> {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => BusDetails(
-                                  busNumber: _busService.insertionSort(
-                                      _busService.regionsCoveredList(
-                                          _busService.getBusNumber(
-                                              selectedValue1, selectedValue2),
-                                          selectedValue1,
-                                          selectedValue2),
-                                      _busService.getBusNumber(
-                                          selectedValue1, selectedValue2))[i],
-                                  regions: _busService.getBusRegions(
-                                      _busService.insertionSort(
-                                          _busService.regionsCoveredList(
-                                              _busService.getBusNumber(
-                                                  selectedValue1,
-                                                  selectedValue2),
-                                              selectedValue1,
-                                              selectedValue2),
-                                          _busService.getBusNumber(
-                                              selectedValue1,
-                                              selectedValue2))[i],
-                                      selectedValue1,
-                                      selectedValue2),
-                                  metroStations: _busService.getMetroStations(
-                                      _busService.insertionSort(
-                                          _busService.regionsCoveredList(
-                                              _busService.getBusNumber(
-                                                  selectedValue1,
-                                                  selectedValue2),
-                                              selectedValue1,
-                                              selectedValue2),
-                                          _busService.getBusNumber(
-                                              selectedValue1,
-                                              selectedValue2))[i]),
+                            String busNu = _busService.insertionSort(
+                                _busService.regionsCoveredList(
+                                    _busService.getBusNumber(
+                                        selectedValue1, selectedValue2),
+                                    selectedValue1,
+                                    selectedValue2),
+                                _busService.getBusNumber(
+                                    selectedValue1, selectedValue2))[i];
+                            int numberOfeBuses = _busService.numberOfeBuses;
+                            print("************************* " +
+                                numberOfeBuses.toString());
+                            if (numberOfeBuses == 1) {
+                              print("************************* inside one" +
+                                  numberOfeBuses.toString());
+
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => BusDetails(
+                                    busNumber: busNu,
+                                    regions: _busService.getBusRegions(
+                                        _busService.insertionSort(
+                                            _busService.regionsCoveredList(
+                                                _busService.getBusNumber(
+                                                    selectedValue1,
+                                                    selectedValue2),
+                                                selectedValue1,
+                                                selectedValue2),
+                                            _busService.getBusNumber(
+                                                selectedValue1,
+                                                selectedValue2))[i],
+                                        selectedValue1,
+                                        selectedValue2),
+                                    metroStations: _busService.getMetroStations(
+                                        _busService.insertionSort(
+                                            _busService.regionsCoveredList(
+                                                _busService.getBusNumber(
+                                                    selectedValue1,
+                                                    selectedValue2),
+                                                selectedValue1,
+                                                selectedValue2),
+                                            _busService.getBusNumber(
+                                                selectedValue1,
+                                                selectedValue2))[i]),
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+                            } else {
+                              print("************************* inside 2" +
+                                  numberOfeBuses.toString());
+
+                              int indx = _busService
+                                  .getBusNumber(selectedValue1, selectedValue2)
+                                  .indexOf(busNumber);
+                              List<String> buses = [];
+                              if (indx == 0) {
+                                buses.add(_busService.twoBusesForDetails[0]);
+                                buses.add(_busService.twoBusesForDetails[1]);
+                              } else {
+                                buses.add(
+                                    _busService.twoBusesForDetails[indx + 1]);
+                                buses.add(
+                                    _busService.twoBusesForDetails[indx + 2]);
+                              }
+                              _busService.getRegionsOfTwoBuses(buses[0],
+                                  buses[1], selectedValue1, selectedValue2);
+                              print(numberOfeBuses);
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => TwoBusesDetails(
+                                        busNumbers: buses,
+                                        metroStations1: _busService
+                                            .getMetroStations(buses[0]),
+                                        metroStations2: _busService
+                                            .getMetroStations(buses[1]),
+                                        regions1: _busService.regionsBus1,
+                                        regions2: _busService.regionsBus2,
+                                        commonRegions: _busService.commonRegionsDetails,
+                                      )));
+                            }
                           },
                           child: Column(
                             children: [

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:tareeqy_metro/admin/AdminMetro/metroStations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tareeqy_metro/firebasemetro/metroService.dart';
 

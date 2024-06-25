@@ -6,8 +6,11 @@ import 'package:tareeqy_metro/Auth/AuthService.dart';
 import 'package:tareeqy_metro/Auth/Login.dart';
 import 'package:tareeqy_metro/admin/adminHomePage.dart';
 import 'package:tareeqy_metro/components/custombuttonauth.dart';
+import 'package:tareeqy_metro/components/searchbar.dart';
+import 'package:tareeqy_metro/firebasebus/busService.dart';
 import 'package:tareeqy_metro/homepage.dart';
 
+// ignore: must_be_immutable
 class Register extends StatefulWidget {
   String? collection;
   Register({super.key, String this.collection = "users"});
@@ -20,7 +23,10 @@ class _RegisterState extends State<Register> {
   TextEditingController username = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-  TextEditingController busId = TextEditingController();
+//  TextEditingController busId = TextEditingController();
+  String busId = '';
+  late final BusService _busService = BusService();
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   AuthService authService = AuthService();
   bool isLoading = false;
@@ -28,12 +34,21 @@ class _RegisterState extends State<Register> {
   @override
   void initState() {
     super.initState();
+    if (widget.collection == 'Drivers') {
+      isLoading = true;
+      _loadBusData();
+      isLoading = false;
+    } // Desired status bar color
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color(0xFF073042), // Desired status bar color
+      statusBarColor: Color(0xFF073042),
     ));
 
     // Temporarily comment out the checkCurrentUser call to test the navigation
     // authService.checkCurrentUser(context);
+  }
+
+  Future<void> _loadBusData() async {
+    await _busService.getBuses();
   }
 
   @override
@@ -97,7 +112,7 @@ class _RegisterState extends State<Register> {
                 const SizedBox(height: 20),
                 if (widget.collection == 'Drivers') ...[
                   const Text(
-                    "Bus Id",
+                    "Choose the Bus Id for The Driver",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -105,7 +120,16 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  _buildInputField("Enter Bus Id", Icons.directions_bus, busId),
+                  MyDropdownSearch(
+                      fromto: 'Bus Id',
+                      items: _busService.buses.toSet(),
+                      selectedValue: busId,
+                      onChanged: (value) {
+                        setState(() {
+                          //wadi
+                          busId = value!;
+                        });
+                      }),
                   const SizedBox(height: 20),
                 ],
                 const SizedBox(height: 30),
@@ -193,7 +217,7 @@ class _RegisterState extends State<Register> {
     if (usernameText.isEmpty ||
         emailText.isEmpty ||
         passwordText.isEmpty ||
-        (widget.collection == 'Drivers' && busId.text.trim().isEmpty)) {
+        (widget.collection == 'Drivers' && busId.isEmpty)) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -237,7 +261,7 @@ class _RegisterState extends State<Register> {
           emailText,
           context,
           collection: widget.collection,
-          busId: busId.text.trim(),
+          busId: busId,
         );
 
         authService.checkIsAdmin().then((isAdmin) {
@@ -297,5 +321,3 @@ class _RegisterState extends State<Register> {
     }
   }
 }
-
-//sh8al

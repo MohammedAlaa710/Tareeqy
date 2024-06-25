@@ -191,7 +191,7 @@ class QRservices {
     }
   }
 
-  Future<String> busTicket(BuildContext context, String busNumber) async {
+  Future<String> busTicket(BuildContext context) async {
     try {
       String? userId = _auth.currentUser?.uid;
       if (userId != null) {

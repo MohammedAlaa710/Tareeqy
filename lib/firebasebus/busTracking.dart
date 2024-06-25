@@ -48,14 +48,15 @@ class BusTrackingScreen extends StatelessWidget {
               double longitude = doc['longitude'].toDouble();
               int facesNumber =
                   doc['facesnumber']; // Get the number of passengers
-
+              int availableSeats = 24 - facesNumber;
               markers.add(
                 Marker(
                   markerId: MarkerId(doc.id),
                   position: LatLng(latitude, longitude),
                   infoWindow: InfoWindow(
                     title: doc['busId'],
-                    snippet: 'Passengers: $facesNumber', // Display passengers
+                    snippet:
+                        'Available Seats: $availableSeats', // Display passengers
                   ),
                 ),
               );

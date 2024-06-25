@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class AnimatedAppBar extends StatefulWidget {
   final Function(bool) onOverflow;
   bool isOverflowed = false;

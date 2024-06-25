@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -197,23 +195,21 @@ class PaymobManager {
   }
 
   Future<void> navigateToPaymobView(
-      BuildContext context, TextEditingController _amountController,String email,
+      BuildContext context,
+      TextEditingController _amountController,
+      String email,
       String firstName,
       String lastName,
       String phoneNumber) async {
     try {
       int amount = int.parse(_amountController.text);
-      Map<String, dynamic> paymentKeyResponse =
-          await PaymobManager()._getPayment(
-        amount,
-        "EGP",
-        email,firstName,lastName,phoneNumber
-
-      );
+      Map<String, dynamic> paymentKeyResponse = await PaymobManager()
+          ._getPayment(amount, "EGP", email, firstName, lastName, phoneNumber);
 
       String _paymentKey = paymentKeyResponse['paymentKey'];
       String _orderId = paymentKeyResponse['orderId'].toString();
       String _authKey = paymentKeyResponse['authKey'];
+      // ignore: unused_local_variable
       late InAppWebViewController webView;
 
       await Navigator.of(context).push(

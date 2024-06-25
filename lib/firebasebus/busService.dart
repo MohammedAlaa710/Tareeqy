@@ -1,11 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class BusService {
   List<String> stations = [];
   List<QueryDocumentSnapshot> stationsQuery = [];
   List<String> buses = [];
+  List<String> commonRegions = [];
+  List<String> twoBusesForDetails = [];
+  List<String> regionsBus1 = [];
+  List<String> regionsBus2 = [];
+  int numberOfeBuses = 1;
+  List<String> commonRegionsDetails = [];
   List<QueryDocumentSnapshot> busQuery = [];
-  static final BusService _instance = BusService._(); // Singleton instance
+  static final BusService _instance = BusService._();
 
   factory BusService() {
     return _instance;
@@ -101,9 +108,106 @@ class BusService {
       }
     }
     busNumber = busNumber1.toSet().intersection(busNumber2.toSet()).toList();
+    numberOfeBuses = 1;
+    if (busNumber.isEmpty) {
+      busNumber = getTwoBuses(selectedItem1, selectedItem2);
+      numberOfeBuses = 2;
+    }
     return busNumber;
   }
 
+  List<String> getTwoBuses(String from, String to) {
+    List<String> fromBuses = busesPassByRegion(from);
+    List<String> toBuses = busesPassByRegion(to);
+    List<String> twoBuses = [];
+    for (String fromBus in fromBuses) {
+      List<String> fromBusRegions = getBusRegionsOfBus(fromBus);
+      for (String toBus in toBuses) {
+        List<String> toBusRegions = getBusRegionsOfBus(toBus);
+        List<String> commonRegions =
+            fromBusRegions.toSet().intersection(toBusRegions.toSet()).toList();
+        if (commonRegions.isNotEmpty) {
+          twoBuses.add('$fromBus , $toBus');
+          twoBusesForDetails.add(fromBus);
+          twoBusesForDetails.add(toBus);
+        }
+      }
+    }
+
+    return twoBuses;
+  }
+
+  List<String> getRegionsOfTwoBuses(
+      String bus1, String bus2, String from, String to) {
+    List<String> regions = [];
+    //
+    print(getBusRegionsOfBus(bus1)
+        .toSet()
+        .intersection(getBusRegionsOfBus(bus2).toSet())
+        .toList());
+    //
+
+    commonRegionsDetails.clear();
+    commonRegionsDetails = getBusRegionsOfBus(bus1)
+        .toSet()
+        .intersection(getBusRegionsOfBus(bus2).toSet())
+        .toList();
+
+    regionsBus1.clear();
+    regionsBus1 = getBusRegions(bus1, from, commonRegionsDetails[0]);
+    regionsBus2.clear();
+    regionsBus2 = getBusRegions(bus2, commonRegionsDetails[0], to);
+
+    commonRegionsDetails.forEach((element) => regionsBus1.remove(element));
+    commonRegionsDetails.forEach((element) => regionsBus2.remove(element));
+
+    regions.addAll(regionsBus1);
+    regions.removeLast();
+    regions.addAll(regionsBus2);
+
+    return regions;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+  List<String> busesPassByRegion(String region) {
+    List<String> buses = [];
+    for (var doc in stationsQuery) {
+      if (doc.id == region) {
+        if (doc.get('Bus_Number') != null) {
+          buses.addAll(List<String>.from(doc.get('Bus_Number')));
+        }
+      }
+    }
+    return buses;
+  }
+
+  List<String> getBusRegionsOfBus(String busNumber) {
+    List<String> regions = [];
+    for (var doc in busQuery) {
+      if (doc.id == busNumber) {
+        if (doc.get('Stations') != null) {
+          regions.addAll(List<String>.from(doc.get('Stations')));
+        }
+        break;
+      }
+    }
+    return regions;
+  }
+
+  void testprint(List<String> x) {
+    for (int i = 0; i < x.length; i++) {
+      //print(x[i]);
+      print(x[i]);
+    }
+  }
+
+  void testprints(List<List<String>> x) {
+    for (int i = 0; i < x.length; i++) {
+      print(x[i]);
+    }
+  }
+
+//////////////////////////////////////////////////////////////////////////////
   List<String> getBusRegions(String busNumber, String from, String to) {
     List<String> regions = [];
     bool fromFlag = false;
@@ -171,5 +275,87 @@ class BusService {
       }
     }
     return busNumbers;
+  }
+
+  Future<bool> checkIfBusesAvailable(String busNumber) async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('Drivers')
+        .where('busId', isEqualTo: busNumber)
+        .where('work', isEqualTo: true)
+        .get();
+    return snapshot.docs.isNotEmpty;
+  }
+
+  void showNoBusesAvailableDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: const Row(
+            children: [
+              Icon(
+                Icons.directions_bus,
+                color: Color(0xFFB31312),
+              ),
+              SizedBox(width: 10),
+              Text(
+                'No Buses Available',
+                style: TextStyle(
+                  color: Color(0xFFB31312),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: Color(0xFF073042),
+                size: 38,
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Currently, there are no buses available to track. Please check back later.',
+                style: TextStyle(
+                  color: Color(0xFF073042),
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actions: [
+            Center(
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF00796B),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  elevation: 2,
+                ),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
