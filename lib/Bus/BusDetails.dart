@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tareeqy_metro/QR-Code/QR-service.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
-import 'package:tareeqy_metro/firebasebus/busService.dart';
-import 'package:tareeqy_metro/firebasebus/busTracking.dart';
+import 'package:tareeqy_metro/Bus/busService.dart';
+import 'package:tareeqy_metro/maps/BusTracking.dart';
 
 class BusDetails extends StatefulWidget {
   final String busNumber;
@@ -11,11 +11,11 @@ class BusDetails extends StatefulWidget {
   final List<String> metroStations;
 
   const BusDetails({
-    Key? key,
+    super.key,
     required this.busNumber,
     required this.regions,
     required this.metroStations,
-  }) : super(key: key);
+  });
 
   @override
   State<BusDetails> createState() => _BusDetailsState();
@@ -37,7 +37,7 @@ class _BusDetailsState extends State<BusDetails> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0xFF073042), // Dark Blue
+        backgroundColor: const Color(0xFF073042),
         title: Text(
           'Bus Number: ${widget.busNumber}',
           style: const TextStyle(
@@ -81,7 +81,7 @@ class _BusDetailsState extends State<BusDetails> {
                             builder: (context) => QRcode(
                               qrData: docId,
                               ticketType: 'Bus',
-                              screen: "bus",
+                              screen: "busDetails",
                             ),
                           ),
                         );
@@ -207,11 +207,11 @@ class _BusDetailsState extends State<BusDetails> {
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF073042), // Dark Blue
+                                color: Color(0xFF073042),
                               ),
                             ),
                             leading: const CircleAvatar(
-                              backgroundColor: Color(0xFFB31312), // Red
+                              backgroundColor: Color(0xFFB31312),
                               child: Icon(
                                 Icons.location_on,
                                 color: Color.fromARGB(255, 232, 232, 232),
@@ -271,11 +271,11 @@ class _BusDetailsState extends State<BusDetails> {
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF073042), // Dark Blue
+                                  color: Color(0xFF073042),
                                 ),
                               ),
                               leading: const CircleAvatar(
-                                backgroundColor: Color(0xFFB31312), // Red
+                                backgroundColor: Color(0xFFB31312),
                                 child: Icon(
                                   Icons.subway,
                                   color: Color.fromARGB(255, 232, 232, 232),

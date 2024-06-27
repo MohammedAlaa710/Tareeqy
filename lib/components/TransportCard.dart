@@ -11,7 +11,7 @@ class TransportCard extends StatelessWidget {
   final double width;
   final double height;
 
-  const TransportCard({
+  const TransportCard({super.key, 
     required this.transportType,
     required this.svgAssetPath,
     required this.onTap,
@@ -34,7 +34,6 @@ class TransportCard extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: <Widget>[
-              // Use SvgPicture.asset to display SVG from asset
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
@@ -51,7 +50,6 @@ class TransportCard extends StatelessWidget {
                 width: width,
                 height: height,
                 color: SVGColor,
-                // Customize SVG color here
               ),
             ],
           ),

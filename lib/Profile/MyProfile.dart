@@ -6,14 +6,14 @@ import 'package:tareeqy_metro/Payment/Screens/ChargeWallet_Screen.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
 import 'package:intl/intl.dart';
 
-class MyProfileScreen extends StatefulWidget {
-  const MyProfileScreen({super.key});
+class MyProfile extends StatefulWidget {
+  const MyProfile({super.key});
 
   @override
-  State<MyProfileScreen> createState() => _MyProfileScreenState();
+  State<MyProfile> createState() => _MyProfileState();
 }
 
-class _MyProfileScreenState extends State<MyProfileScreen> {
+class _MyProfileState extends State<MyProfile> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -120,8 +120,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
       otherTickets = tickets.where((ticket) => !ticket['in']).toList();
     }
 
-    ticketsInUse?.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
-    otherTickets?.sort((a, b) => a['timestamp'].compareTo(b['timestamp']));
+    ticketsInUse?.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
+    otherTickets?.sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
 
     if (mounted) {
       setState(() {
@@ -197,8 +197,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
               const SizedBox(width: 35),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 178, 20, 20),
-                  foregroundColor: Colors.white, // Set text color (optional)
+                  backgroundColor: const Color.fromARGB(255, 178, 20, 20),
+                  foregroundColor: Colors.white,
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -283,7 +283,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   color: ticket['in']
-                                      ? Color.fromARGB(255, 95, 255, 15)
+                                      ? const Color.fromARGB(255, 95, 255, 15)
                                       : Colors.white,
                                   margin: const EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 5),

@@ -1,18 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tareeqy_metro/firebasemetro/Route.dart';
+import 'package:tareeqy_metro/Metro/Route.dart';
 
+// ignore: camel_case_types
 class metroService {
   final List<String> transitStation12 = const ['Sadat', 'Al-Shohada'];
   final String transitStation23 = 'Attaba';
   final String transitStation13 = 'Gamal Abd Al-Naser';
-  static final metroService _instance = metroService._(); // Singleton instance
+  static final metroService _instance = metroService._();
   static List<QueryDocumentSnapshot> stations = [];
 
   factory metroService() {
     return _instance;
   }
 
-  metroService._(); // Private constructor for singleton
+  metroService._();
 
   List<QueryDocumentSnapshot> get _stations => stations;
 
@@ -41,46 +42,33 @@ class metroService {
   }
 
   List<String> getStationNames() {
-    //getStations
     return stations.map((station) => station['name'] as String).toList();
   }
 
-//0 1 2 3 4
-//1 2 3 4
   String calculatePrice(String from, String to) {
     //metroPrice
-    print("from $from");
-    print("to $to");
     try {
-      print("inside try");
       int routeLength = getRoute(from, to).routeStations.length - 1;
-      print('Route length: $routeLength');
       if (routeLength < 10) return '6.0 egp';
       if (routeLength < 17) return '8.0 egp';
       if (routeLength < 24) return '12.0 egp';
       return '15.0 egp';
     } catch (e) {
-      print('Error calculating price: $e');
-      return 'Error'; // Return an error message if an exception occurs
+      return 'Error';
     }
   }
 
   String calculateTime(String from, String to) {
-    //metroTime
     return "${(getRoute(from, to).routeStations.length - 1) * 2.5} min";
   }
 
   int getStationIndex(String stationName) {
-    //getStationIndex
-    print("-$stationName-");
-    print("stationsLength${stations.length}");
     for (int i = 0; i < stations.length; i++) {
-      print("in indx loop" + stations[i]['name']);
       if (stations[i]['name'] == stationName) {
         return i;
       }
     }
-    return -1; // Station not found
+    return -1;
   }
 
   int getCollection(int index) {
@@ -89,11 +77,7 @@ class metroService {
     return 3;
   }
 
-//t3alaa
   MetroRoute getRoute(String from, String to) {
-    print("inside getRoute");
-    print("getRoute from$from");
-    print("getRoute to$to");
     MetroRoute route = MetroRoute();
     int fromIndx = getStationIndex(from);
     int toIndx = getStationIndex(to);
@@ -116,18 +100,13 @@ class metroService {
     }
     //done 1
     if (fromCollection == toCollection) {
-      print("inside if condition");
-      print("fromIndx$fromIndx");
-      print("toIndx$toIndx");
       for (int i = fromIndx;
           fromIndx < toIndx ? i < toIndx + 1 : i > toIndx - 1;
           fromIndx < toIndx ? i++ : i--) {
-        print("inside the loop");
         route.routeStations.add(stations[i]['name']);
         route.direction.add(getDirection(fromIndx, toIndx, toCollection));
         route.line.add(toCollection);
       }
-      print(route.routeStations.length);
     } else {
       //done 2
       if ((fromCollection == 1 && toCollection == 3) ||
@@ -422,20 +401,7 @@ class metroService {
     return route;
   }
 
-/*   void halop(List<String> route) {
-    for (int i = 0; i < route.length; i++) {
-      print(route[i]);
-    }
-  }
-
-  void halop2() {
-    for (int i = 0; i < stations.length; i++) {
-      print(i.toString() + ": " + stations[i]['name']);
-    }
-  } */
-
   List<int> getTransitIndices(String from, String to) {
-    //transitindex
     if ((from == transitStation23 || from == transitStation13) &&
         (to == transitStation23 || to == transitStation13)) {
       if (from == transitStation23) {

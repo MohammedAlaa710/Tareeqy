@@ -7,12 +7,12 @@ class MyDropdownSearch extends StatelessWidget {
   final String selectedValue;
   final ValueChanged<String?> onChanged;
   const MyDropdownSearch({
-    Key? key,
+    super.key,
     required this.fromto,
     required this.items,
     required this.selectedValue,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

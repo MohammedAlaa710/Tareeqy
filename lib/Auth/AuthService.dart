@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tareeqy_metro/admin/adminHomePage.dart';
-import 'package:tareeqy_metro/drivers/driverScreen.dart';
-import 'package:tareeqy_metro/homepage.dart';
+import 'package:tareeqy_metro/Admin/AdminHomePage.dart';
+import 'package:tareeqy_metro/Driver/DriverScreen.dart';
+import 'package:tareeqy_metro/HomePage.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -64,28 +64,22 @@ class AuthService {
       if (snapshot.exists) {
         return snapshot.get('isAdmin');
       } else {
-        print('Document does not exist');
         return null;
       }
     } catch (e) {
-      print('Error getting user field: $e');
       return null;
     }
   }
 
   Future<bool> checkIsDriver() async {
-    print("Hi from check driver");
     String? userId = _auth.currentUser?.uid;
     try {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection('Drivers')
           .doc(userId)
           .get();
-      print("Hi from check driver 2${snapshot.exists}");
-      print("Hi from check driver userid {$userId}");
       return snapshot.exists;
     } catch (e) {
-      print('Error checking if user is a driver: $e');
       return false;
     }
   }
@@ -99,7 +93,7 @@ class AuthService {
           if (isAdmin) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const AdminHomePage()),
+              MaterialPageRoute(builder: (context) => AdminHomePage()),
             );
           } else {
             Navigator.pushReplacement(
@@ -114,14 +108,10 @@ class AuthService {
               context,
               MaterialPageRoute(builder: (context) => const DriverScreen()),
             );
-          } else {
-            print('isAdmin and isDriver not found or null');
-            // Handle case where isAdmin field is not found or null
           }
         }
       } catch (e) {
         print('Error checking user admin status: $e');
-        // Handle error
       }
     }
   }

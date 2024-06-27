@@ -13,12 +13,12 @@ class BusService {
   List<String> commonRegionsDetails = [];
   List<QueryDocumentSnapshot> busQuery = [];
   static final BusService _instance = BusService._();
-
+  Map<int, List<String>> BusesMap = {};
   factory BusService() {
     return _instance;
   }
 
-  BusService._(); // Private constructor for singleton
+  BusService._();
 
   List<String> get _stations => stations;
 
@@ -81,10 +81,11 @@ class BusService {
   }
 
 ////////////////////////////////////////////////////////////////////////////
-  List<String> getBusNumber(String selectedItem1, String selectedItem2) {
+  Map<int, List<String>> getBusNumber(
+      String selectedItem1, String selectedItem2) {
     List<String> busNumber1 = [];
     List<String> busNumber2 = [];
-    List<String> busNumber = [];
+
     bool s1 = false;
     bool s2 = false;
     for (int i = 0; i < stationsQuery.length; i++) {
@@ -107,29 +108,38 @@ class BusService {
         break;
       }
     }
-    busNumber = busNumber1.toSet().intersection(busNumber2.toSet()).toList();
-    numberOfeBuses = 1;
-    if (busNumber.isEmpty) {
-      busNumber = getTwoBuses(selectedItem1, selectedItem2);
-      numberOfeBuses = 2;
-    }
-    return busNumber;
+    BusesMap[1] = busNumber1.toSet().intersection(busNumber2.toSet()).toList();
+
+    BusesMap[2] = getTwoBuses(selectedItem1, selectedItem2, BusesMap[1]);
+
+    return BusesMap;
   }
 
-  List<String> getTwoBuses(String from, String to) {
+  List<String> getTwoBuses(String from, String to, List<String>? directbuses) {
     List<String> fromBuses = busesPassByRegion(from);
     List<String> toBuses = busesPassByRegion(to);
     List<String> twoBuses = [];
     for (String fromBus in fromBuses) {
+      if (directbuses != null && directbuses.contains(fromBus)) {
+        continue;
+      }
       List<String> fromBusRegions = getBusRegionsOfBus(fromBus);
       for (String toBus in toBuses) {
-        List<String> toBusRegions = getBusRegionsOfBus(toBus);
-        List<String> commonRegions =
-            fromBusRegions.toSet().intersection(toBusRegions.toSet()).toList();
-        if (commonRegions.isNotEmpty) {
-          twoBuses.add('$fromBus , $toBus');
-          twoBusesForDetails.add(fromBus);
-          twoBusesForDetails.add(toBus);
+        if (directbuses != null && directbuses.contains(toBus)) {
+          continue;
+        }
+
+        if (fromBus != toBus) {
+          List<String> toBusRegions = getBusRegionsOfBus(toBus);
+          List<String> commonRegions = fromBusRegions
+              .toSet()
+              .intersection(toBusRegions.toSet())
+              .toList();
+          if (commonRegions.isNotEmpty) {
+            twoBuses.add('$fromBus , $toBus');
+            twoBusesForDetails.add(fromBus);
+            twoBusesForDetails.add(toBus);
+          }
         }
       }
     }
@@ -140,21 +150,17 @@ class BusService {
   List<String> getRegionsOfTwoBuses(
       String bus1, String bus2, String from, String to) {
     List<String> regions = [];
-    //
-    print(getBusRegionsOfBus(bus1)
+
+    Set<String> commonRegions = getBusRegionsOfBus(bus1)
         .toSet()
-        .intersection(getBusRegionsOfBus(bus2).toSet())
-        .toList());
-    //
+        .intersection(getBusRegionsOfBus(bus2).toSet());
 
     commonRegionsDetails.clear();
-    commonRegionsDetails = getBusRegionsOfBus(bus1)
-        .toSet()
-        .intersection(getBusRegionsOfBus(bus2).toSet())
-        .toList();
+    commonRegionsDetails = commonRegions.toList();
 
     regionsBus1.clear();
     regionsBus1 = getBusRegions(bus1, from, commonRegionsDetails[0]);
+
     regionsBus2.clear();
     regionsBus2 = getBusRegions(bus2, commonRegionsDetails[0], to);
 
@@ -192,19 +198,6 @@ class BusService {
       }
     }
     return regions;
-  }
-
-  void testprint(List<String> x) {
-    for (int i = 0; i < x.length; i++) {
-      //print(x[i]);
-      print(x[i]);
-    }
-  }
-
-  void testprints(List<List<String>> x) {
-    for (int i = 0; i < x.length; i++) {
-      print(x[i]);
-    }
   }
 
 //////////////////////////////////////////////////////////////////////////////

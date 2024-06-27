@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:tareeqy_metro/QR-Code/QR-service.dart';
 import 'package:tareeqy_metro/QR-Code/QRcode.dart';
-import 'package:tareeqy_metro/components/searchbar.dart';
-import 'package:tareeqy_metro/firebasemetro/metroService.dart';
+import 'package:tareeqy_metro/components/MyDropdownSearch.dart';
+import 'package:tareeqy_metro/Metro/metroService.dart';
 
-class GenerateQrCode extends StatefulWidget {
-  const GenerateQrCode({Key? key}) : super(key: key);
+class MetroTicketGeneration extends StatefulWidget {
+  const MetroTicketGeneration({super.key});
 
   @override
-  State<GenerateQrCode> createState() => _GenerateQrCodeState();
+  State<MetroTicketGeneration> createState() => _MetroTicketGenerationState();
 }
 
-class _GenerateQrCodeState extends State<GenerateQrCode> {
+class _MetroTicketGenerationState extends State<MetroTicketGeneration> {
   int _selectedOption = 1;
   String dropdownValue = '6 egp';
   int number = 0;
@@ -128,7 +128,7 @@ class _GenerateQrCodeState extends State<GenerateQrCode> {
                     ? _buildStationsNumberOption()
                     : _selectedOption == 2
                         ? _buildSourceDestinationOption()
-                        : const SizedBox(), // Placeholder for future options
+                        : const SizedBox(),
           ],
         ),
       ),

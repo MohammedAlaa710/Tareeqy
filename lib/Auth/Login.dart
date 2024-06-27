@@ -3,13 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:tareeqy_metro/Auth/AuthService.dart';
-import 'package:tareeqy_metro/admin/adminHomePage.dart';
-import 'package:tareeqy_metro/drivers/driverScreen.dart';
-import 'package:tareeqy_metro/homepage.dart';
+import 'package:tareeqy_metro/Admin/AdminHomePage.dart';
+import 'package:tareeqy_metro/Driver/DriverScreen.dart';
+import 'package:tareeqy_metro/HomePage.dart';
 import 'package:tareeqy_metro/Auth/Register.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -26,7 +26,7 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: const Color(0xFF073042), // Desired status bar color
+      statusBarColor: Color(0xFF073042),
     ));
 
     authService.checkCurrentUser(context);
@@ -37,9 +37,9 @@ class _LoginState extends State<Login> {
     return ModalProgressHUD(
       inAsyncCall: isLoading,
       opacity: 0.5,
-      progressIndicator: CircularProgressIndicator(),
+      progressIndicator: const CircularProgressIndicator(),
       child: Scaffold(
-        backgroundColor: Color(0xFF073042),
+        backgroundColor: const Color(0xFF073042),
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -60,8 +60,8 @@ class _LoginState extends State<Login> {
                       height: 180,
                     ),
                   ),
-                  SizedBox(height: 40),
-                  Text(
+                  const SizedBox(height: 40),
+                  const Text(
                     "Login",
                     style: TextStyle(
                       fontSize: 30,
@@ -69,16 +69,16 @@ class _LoginState extends State<Login> {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildInputField(
                       "Enter Your Email", Icons.email, emailController),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildInputField(
                       "Enter Your Password", Icons.lock, passwordController,
                       isPassword: true),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   _buildLoginButton(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   _buildRegisterLink(),
                 ],
               ),
@@ -94,7 +94,7 @@ class _LoginState extends State<Login> {
       {bool isPassword = false}) {
     return TextFormField(
       controller: controller,
-      style: TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.white),
       obscureText: isPassword,
       decoration: InputDecoration(
         hintText: hintText,
@@ -118,9 +118,9 @@ class _LoginState extends State<Login> {
       minWidth: 200,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       textColor: Colors.white,
-      color: Color(0xFF00796B),
+      color: const Color(0xFF00796B),
       onPressed: isLoading ? null : () => _login(),
-      child: Text(
+      child: const Text(
         "Login",
         style: TextStyle(fontSize: 20),
       ),
@@ -131,7 +131,7 @@ class _LoginState extends State<Login> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           "Don't have an account?",
           style: TextStyle(fontSize: 16, color: Colors.white),
         ),
@@ -142,7 +142,7 @@ class _LoginState extends State<Login> {
               MaterialPageRoute(builder: (context) => Register()),
             );
           },
-          child: Text(
+          child: const Text(
             " Register",
             style: TextStyle(
               color: Colors.orange,
@@ -168,12 +168,13 @@ class _LoginState extends State<Login> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Login Error', style: TextStyle(color: Colors.red)),
-            content: Text('Please enter both email and password.',
+            title:
+                const Text('Login Error', style: TextStyle(color: Colors.red)),
+            content: const Text('Please enter both email and password.',
                 style: TextStyle(color: Colors.black87)),
             actions: <Widget>[
               TextButton(
-                child: Text('OK', style: TextStyle(color: Colors.blue)),
+                child: const Text('OK', style: TextStyle(color: Colors.blue)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -212,7 +213,7 @@ class _LoginState extends State<Login> {
             if (isAdmin != null && isAdmin) {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => const AdminHomePage()),
+                MaterialPageRoute(builder: (context) => AdminHomePage()),
                 (route) => false,
               );
             } else {
@@ -241,12 +242,13 @@ class _LoginState extends State<Login> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Login Error', style: TextStyle(color: Colors.red)),
-            content:
-                Text(errorMessage, style: TextStyle(color: Colors.black87)),
+            title:
+                const Text('Login Error', style: TextStyle(color: Colors.red)),
+            content: Text(errorMessage,
+                style: const TextStyle(color: Colors.black87)),
             actions: <Widget>[
               TextButton(
-                child: Text('OK', style: TextStyle(color: Colors.blue)),
+                child: const Text('OK', style: TextStyle(color: Colors.blue)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -259,18 +261,17 @@ class _LoginState extends State<Login> {
         },
       );
     } catch (e) {
-      print('Unexpected error: $e');
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error', style: TextStyle(color: Colors.red)),
-            content: Text(
+            title: const Text('Error', style: TextStyle(color: Colors.red)),
+            content: const Text(
                 'An unexpected error occurred. Please try again later.',
                 style: TextStyle(color: Colors.black87)),
             actions: <Widget>[
               TextButton(
-                child: Text('OK', style: TextStyle(color: Colors.blue)),
+                child: const Text('OK', style: TextStyle(color: Colors.blue)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

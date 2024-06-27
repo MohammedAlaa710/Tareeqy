@@ -9,14 +9,14 @@ class CustomButtonAuth extends StatelessWidget {
   Widget build(BuildContext context) {
   return MaterialButton(
 height: 50,
-      minWidth: 200, // Adjusted width to 200
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)), // Adjusted radius
+      minWidth: 200,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     color: Colors.orange,
     textColor: Colors.white,
     onPressed: onPressed,
     child: Text(
       title,
-      style: TextStyle(fontSize: 20), // Optional: Adjust text size if needed
+      style: const TextStyle(fontSize: 20),
     ),
   );
 }

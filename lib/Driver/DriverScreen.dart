@@ -1,18 +1,17 @@
 import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tareeqy_metro/Auth/Login.dart';
-import 'package:tareeqy_metro/drivers/FaceDetection.dart';
-import 'package:tareeqy_metro/drivers/driverFunctions.dart';
-import 'package:tareeqy_metro/drivers/driverService.dart';
+import 'package:tareeqy_metro/Driver/DriverFunctions.dart';
+import 'package:tareeqy_metro/components/LogOutDialog.dart';
+import 'package:tareeqy_metro/Driver/Camera.dart';
+import 'package:tareeqy_metro/Driver/driverService.dart';
 
 class DriverScreen extends StatefulWidget {
   const DriverScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _DriverScreenState createState() => _DriverScreenState();
 }
 
@@ -22,6 +21,7 @@ class _DriverScreenState extends State<DriverScreen> {
   bool openCamera = false;
   String _locationMessage = "Location: unknown";
   StreamSubscription<Position>? _positionStreamSubscription;
+  final LogoutDialog logoutDialog = LogoutDialog();
 
   @override
   void initState() {
@@ -46,7 +46,6 @@ class _DriverScreenState extends State<DriverScreen> {
         _locationMessage =
             "Location: ${position.latitude}, ${position.longitude}";
       });
-      // Optionally, send the location to Firestore
       _driverService.sendLocationToFirestore(position);
     }, onError: (e) {
       setState(() {
@@ -65,7 +64,6 @@ class _DriverScreenState extends State<DriverScreen> {
   }
 
   Future<void> _requestPermissionsAndStart() async {
-    // Request location permission
     var status = await Permission.location.request();
     if (status.isGranted) {
       await _startLiveLocationUpdates();
@@ -76,7 +74,6 @@ class _DriverScreenState extends State<DriverScreen> {
       return;
     }
 
-    // Request camera permission
     status = await Permission.camera.request();
     if (status.isGranted) {
       Navigator.push(
@@ -107,8 +104,8 @@ class _DriverScreenState extends State<DriverScreen> {
                 padding: const EdgeInsets.only(top: 15),
                 child: IconButton(
                   icon: const Icon(Icons.logout),
-                  onPressed: _showLogoutDialog,
-                  color: const Color(0xffAD3838),
+                  onPressed: () => logoutDialog.showLogoutDialog(context),
+                  color: const Color.fromARGB(255, 252, 0, 0),
                 ),
               ),
             ]),
@@ -131,7 +128,7 @@ class _DriverScreenState extends State<DriverScreen> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) {
-                        return const driverFunctions();
+                        return const DriverFunctions();
                       },
                     ),
                   );
@@ -183,61 +180,5 @@ class _DriverScreenState extends State<DriverScreen> {
             ],
           ),
         ));
-  }
-
-  void _logout(BuildContext context) async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    await auth.signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const Login()),
-    );
-  }
-
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(Icons.logout, color: Colors.red),
-              SizedBox(width: 8),
-              Text('Logout'),
-            ],
-          ),
-          content: const Text('Are you sure you want to logout?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.grey,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _logout(context);
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color(0xffAD3838),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              child: const Text('Logout'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }

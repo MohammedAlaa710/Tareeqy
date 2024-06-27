@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tareeqy_metro/Profile/myProfile_Screen.dart';
+import 'package:tareeqy_metro/Profile/MyProfile.dart';
+import 'package:tareeqy_metro/components/LogOutDialog.dart';
 import 'package:tareeqy_metro/components/TransportCard.dart';
-import 'package:tareeqy_metro/firebasebus/BusScreen.dart';
-import 'package:tareeqy_metro/firebasebus/busService.dart';
-import 'package:tareeqy_metro/firebasemetro/metroService.dart';
-import 'package:tareeqy_metro/firebasemetro/metroscreen.dart';
+import 'package:tareeqy_metro/Bus/BusScreen.dart';
+import 'package:tareeqy_metro/Bus/busService.dart';
+import 'package:tareeqy_metro/Metro/metroService.dart';
+import 'package:tareeqy_metro/Metro/MetroScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:tareeqy_metro/Auth/Login.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -20,6 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final LogoutDialog logoutDialog = LogoutDialog();
 
   String? _username;
   dynamic _wallet;
@@ -71,75 +72,12 @@ class _HomePageState extends State<HomePage> {
                 _wallet = userDoc.data()!['wallet'];
               });
             }
-          } else {
-            // Document does not exist
-            print('User document does not exist');
           }
         });
       } catch (e) {
-        // Error fetching document
         print('Error fetching user document: $e');
       }
-    } else {
-      // User is not signed in
-      print('User is not signed in');
     }
-  }
-
-  void _logout() async {
-    await _auth.signOut();
-    Navigator.pushReplacement(
-      // ignore: use_build_context_synchronously
-      context,
-      MaterialPageRoute(builder: (context) => const Login()),
-    );
-  }
-
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Row(
-            children: [
-              Icon(Icons.logout, color: Color.fromARGB(255, 255, 0, 0)),
-              SizedBox(width: 8),
-              Text('Logout'),
-            ],
-          ),
-          content: const Text('Are you sure you want to logout?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Dismiss the dialog
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.grey,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Dismiss the dialog
-                _logout(); // Call the logout method
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color.fromARGB(255, 251, 0, 0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-              child: const Text('Logout'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   void _onItemTapped(int index) {
@@ -155,9 +93,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Set the system UI overlay style here to ensure it is applied whenever the HomePage is rebuilt
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color(0xFF073042), // Desired status bar color
+      statusBarColor: Color(0xFF073042),
     ));
 
     return Scaffold(
@@ -178,14 +115,14 @@ class _HomePageState extends State<HomePage> {
           },
           children: [
             _buildHomePage(),
-            const MyProfileScreen(),
+            const MyProfile(),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        backgroundColor: const Color(0xFF073042), // Sophisticated navy blue
+        backgroundColor: const Color(0xFF073042),
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white.withOpacity(0.6),
         selectedFontSize: 12.0,
@@ -225,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                   height: 240,
                   padding: const EdgeInsets.all(20.0),
                   decoration: const BoxDecoration(
-                    color: Color(0xFF073042), // Sophisticated navy blue
+                    color: Color(0xFF073042),
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20.0),
                       bottomRight: Radius.circular(20.0),
@@ -248,7 +185,8 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.only(top: 15),
                         child: IconButton(
                           icon: const Icon(Icons.logout),
-                          onPressed: _showLogoutDialog,
+                          onPressed: () =>
+                              logoutDialog.showLogoutDialog(context),
                           color: const Color.fromARGB(255, 255, 0, 0),
                         ),
                       ),
@@ -317,13 +255,13 @@ class _HomePageState extends State<HomePage> {
               transportType: 'Bus',
               svgAssetPath: "assets/images/bus-side-view-icon.svg",
               SVGColor: Colors.white,
-              BGcolor: const Color(0xFFB31312), // Soft amber
+              BGcolor: const Color(0xFFB31312),
               width: 50,
               height: 65,
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BusScreen()),
+                  MaterialPageRoute(builder: (context) => const BusScreen()),
                 );
               },
             ),
@@ -332,10 +270,10 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: TransportCard(
-              transportType: 'Metro', //assets/images/Subway-HomePage.png
+              transportType: 'Metro',
               svgAssetPath: "assets/images/Subway-HomePage.svg",
               SVGColor: Colors.white,
-              BGcolor: const Color(0xFF00796B), // Muted teal
+              BGcolor: const Color(0xFF00796B),
               width: 50,
               height: 65,
               onTap: () {

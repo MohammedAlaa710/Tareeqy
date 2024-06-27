@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tareeqy_metro/QR-Code/generateQrCode.dart';
-import 'package:tareeqy_metro/components/searchbar.dart';
-import 'package:tareeqy_metro/firebasemetro/metroService.dart';
-import 'package:tareeqy_metro/firebasemetro/tripdetailsScreen.dart';
-import 'package:tareeqy_metro/maps/track_location.dart';
+import 'package:tareeqy_metro/QR-Code/MetroTicketGeneration.dart';
+import 'package:tareeqy_metro/components/MyDropdownSearch.dart';
+import 'package:tareeqy_metro/Metro/metroService.dart';
+import 'package:tareeqy_metro/Metro/MetroDetails.dart';
+import 'package:tareeqy_metro/maps/TrackLocation.dart';
 
 class MetroScreen extends StatefulWidget {
   const MetroScreen({super.key});
@@ -34,7 +34,7 @@ class _MetroScreenState extends State<MetroScreen> {
     await _metroService.getStations();
     setState(() {
       isDataLoaded = true;
-    }); // Update the UI with the loaded stations
+    });
   }
 
   @override
@@ -143,7 +143,7 @@ class _MetroScreenState extends State<MetroScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const GenerateQrCode()),
+                              builder: (context) => const MetroTicketGeneration()),
                         );
                       },
                       child: const Text(
@@ -315,7 +315,7 @@ class _MetroScreenState extends State<MetroScreen> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return TripDetails(
+                                    return MetroDetails(
                                       route: _metroService.getRoute(
                                           selectedValue1, selectedValue2),
                                     );

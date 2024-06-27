@@ -1,19 +1,18 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:tareeqy_metro/drivers/FaceDetection.dart';
-import 'package:tareeqy_metro/drivers/driverService.dart';
+import 'package:tareeqy_metro/Driver/Camera.dart';
+import 'package:tareeqy_metro/Driver/driverService.dart';
 
-class driverFunctions extends StatefulWidget {
-  const driverFunctions({super.key});
+// ignore: camel_case_types
+class DriverFunctions extends StatefulWidget {
+  const DriverFunctions({super.key});
 
   @override
-  State<driverFunctions> createState() => _driverFunctionsState();
+  State<DriverFunctions> createState() => _DriverFunctionsState();
 }
 
-class _driverFunctionsState extends State<driverFunctions> {
+class _DriverFunctionsState extends State<DriverFunctions> {
   final DriverService _driverService = DriverService();
   String _locationMessage = "Location: unknown";
   StreamSubscription<Position>? _positionStreamSubscription;
@@ -36,7 +35,6 @@ class _driverFunctionsState extends State<driverFunctions> {
         _locationMessage =
             "Location: ${position.latitude}, ${position.longitude}";
       });
-      // Optionally, send the location to Firestore
       _driverService.sendLocationToFirestore(position);
     }, onError: (e) {
       setState(() {
@@ -60,7 +58,6 @@ class _driverFunctionsState extends State<driverFunctions> {
           "Dirver Details",
           style: TextStyle(color: Colors.white),
         ),
-        //Color(0xFF00796B)
         backgroundColor: const Color(0xFF073042),
       ),
       body: Center(
@@ -84,11 +81,10 @@ class _driverFunctionsState extends State<driverFunctions> {
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
                 onPressed: () async {
-                  print("on pressed camer");
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Camera(),
+                      builder: (context) => const Camera(),
                     ),
                   );
                 },

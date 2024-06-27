@@ -118,7 +118,6 @@ class Face {
         contours: Map<FaceContourType, FaceContour?>.fromIterables(
             FaceContourType.values,
             FaceContourType.values.map((FaceContourType type) {
-          /// added empty map to pass the tests
           final List<dynamic>? arr =
               (json['contours'] ?? <String, dynamic>{})[type.name];
           return (arr == null)

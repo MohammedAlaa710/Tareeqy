@@ -34,7 +34,7 @@ class StationCard extends StatelessWidget {
           children: [
             Column(
               children: [
-                if (!isFirst) VerticalDividerLine(),
+                if (!isFirst) const VerticalDividerLine(),
                 if (isFirst) const SizedBox(height: 10),
                 Icon(
                   isFirst
@@ -48,7 +48,7 @@ class StationCard extends StatelessWidget {
                       isFirst || isLast || isTransit ? errorColor : accentColor,
                   size: 24.0,
                 ),
-                if (!isLast) VerticalDividerLine(),
+                if (!isLast) const VerticalDividerLine(),
                 if (isLast) const SizedBox(height: 10),
               ],
             ),

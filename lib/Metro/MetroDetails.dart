@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:tareeqy_metro/components/metroStationCard.dart';
-import 'package:tareeqy_metro/firebasemetro/Route.dart';
+import 'package:tareeqy_metro/components/MetroStationCard.dart';
+import 'package:tareeqy_metro/Metro/Route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
-class TripDetails extends StatefulWidget {
+class MetroDetails extends StatefulWidget {
   final MetroRoute route;
 
-  const TripDetails({super.key, required this.route});
+  const MetroDetails({super.key, required this.route});
 
   @override
-  State<TripDetails> createState() => _TripDetailsState();
+  State<MetroDetails> createState() => _MetroDetailsState();
 }
 
-class _TripDetailsState extends State<TripDetails> {
+class _MetroDetailsState extends State<MetroDetails> {
   Color cardColor = Colors.white;
   Color textColor = Colors.black;
   Color appBarColor = const Color(0xFF073042);
@@ -24,9 +24,7 @@ class _TripDetailsState extends State<TripDetails> {
   final GlobalKey dividerKey = GlobalKey();
   late double _widgetHeight;
   late double _deskHeight;
-  //late double _dividerHeight;
-  //late double _appbarHeight;
-  late double _screenHeight; // Get the ratio to set as max size.
+  late double _screenHeight;
   late double requiredHeight = 0.5;
 
   @override
@@ -35,11 +33,9 @@ class _TripDetailsState extends State<TripDetails> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _widgetHeight = getWidgetHeight(part1Key);
       _deskHeight = getWidgetHeight(descKey);
-      //_dividerHeight = getWidgetHeight(dividerKey);
-      //_appbarHeight = getWidgetHeight(appbarKey);
       _screenHeight = screenHeight(context);
       requiredHeight = 0.93 - (((_widgetHeight + _deskHeight) / _screenHeight));
-      setState(() {}); // Update the UI with the new height
+      setState(() {});
     });
   }
 
@@ -207,9 +203,7 @@ class _TripDetailsState extends State<TripDetails> {
           ///part2
           DraggableScrollableSheet(
             initialChildSize: requiredHeight.clamp(0.1, 1.0),
-            //kol ma el rakb bykbr bntl3 l fo2
             minChildSize: requiredHeight.clamp(0.1, 1.0),
-            //dh el hyt8yr w lazm yb2 a2l mn el tani
             builder: (context, scrollController) {
               return Container(
                 decoration: const BoxDecoration(color: Color(0xFF073042)),
@@ -224,11 +218,6 @@ class _TripDetailsState extends State<TripDetails> {
                     bool isFirst = index == 0;
                     bool isLast =
                         index == widget.route.routeStations.length - 1;
-                    // ignore: unused_local_variable
-                    bool afterTransit = widget.route.transit != '' &&
-                        index >
-                            widget.route.routeStations
-                                .indexOf(widget.route.transit);
 
                     if (index == 0) {
                       return Column(

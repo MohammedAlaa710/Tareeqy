@@ -4,9 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:tareeqy_metro/admin/Service/AdminService.dart';
 
 class MetroManagementScreen extends StatefulWidget {
-  const MetroManagementScreen({Key? key});
+  const MetroManagementScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MetroManagementScreenState createState() => _MetroManagementScreenState();
 }
 
@@ -37,15 +38,14 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Dropdown for selecting metro line
-                Text(
+                const Text(
                   'Select Metro Line',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   value: _selectedLine,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Metro Line',
                     border: OutlineInputBorder(),
                     contentPadding:
@@ -67,15 +67,14 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
                     );
                   }).toList(),
                 ),
-                SizedBox(height: 16),
-                // Station list
-                Text(
+                const SizedBox(height: 16),
+                const Text(
                   'Stations List',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Container(
-                  height: 180, // Adjust height as needed
+                  height: 180,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(5),
@@ -84,16 +83,16 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
                     stream: _service.getStations(_selectedLine),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
                       final data = snapshot.data!;
                       return ListView.separated(
-                        physics: ClampingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         separatorBuilder: (context, index) =>
-                            Divider(color: Colors.grey),
+                            const Divider(color: Colors.grey),
                         itemCount: data.docs.length,
                         itemBuilder: (context, index) {
                           final station = data.docs[index];
@@ -101,7 +100,7 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
                             title: Text(station['name']),
                             subtitle: Text('Number: ${station['number']}'),
                             trailing: IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
+                              icon: const Icon(Icons.delete, color: Colors.red),
                               onPressed: () =>
                                   _confirmDeleteDialog(context, station),
                             ),
@@ -120,77 +119,78 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
                     },
                   ),
                 ),
-                SizedBox(height: 16),
-                // Form for adding/updating stations
-                Text(
+                const SizedBox(height: 16),
+                const Text(
                   'Station Details',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextField(
                   controller: _nameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Station Name',
                     border: OutlineInputBorder(),
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextField(
                   controller: _numberController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Station Number',
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextField(
                   controller: _latController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Latitude',
                     border: OutlineInputBorder(),
                   ),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 TextField(
                   controller: _lngController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Longitude',
                     border: OutlineInputBorder(),
                   ),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
                       onPressed: _addStation,
-                      child: Text('Add Station',
-                          style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF00796B),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 15),
                       ),
+                      child: const Text('Add Station',
+                          style: TextStyle(color: Colors.white)),
                     ),
                     ElevatedButton(
                       onPressed: _updateStation,
-                      child: Text('Update Station',
-                          style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFB31312),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        backgroundColor: const Color(0xFFB31312),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 15),
                       ),
+                      child: const Text('Update Station',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),
@@ -211,11 +211,11 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Delete'),
+          title: const Text('Confirm Delete'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Are you sure you want to delete this station?'),
+              const Text('Are you sure you want to delete this station?'),
               Text('Name: $name'),
               Text('Number: $number'),
               Text('Location: (${latlng.latitude}, ${latlng.longitude})'),
@@ -237,8 +237,10 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
                 await _service.deleteStation(_selectedLine, station.id);
                 _showSnackbar('Station deleted successfully');
               },
-              icon: Icon(Icons.delete_forever_outlined, color: Colors.white),
-              label: Text('Delete', style: TextStyle(color: Colors.white)),
+              icon: const Icon(Icons.delete_forever_outlined,
+                  color: Colors.white),
+              label:
+                  const Text('Delete', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -252,14 +254,15 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
         content: Row(
           children: [
             isSuccess
-                ? Icon(Icons.check, color: Colors.white)
-                : Icon(Icons.warning, color: Colors.white),
-            SizedBox(width: 8.0),
+                ? const Icon(Icons.check, color: Colors.white)
+                : const Icon(Icons.warning, color: Colors.white),
+            const SizedBox(width: 8.0),
             Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: isSuccess ? Colors.green : Colors.red,
-        duration: isSuccess ? Duration(seconds: 2) : Duration(seconds: 3),
+        duration:
+            isSuccess ? const Duration(seconds: 2) : const Duration(seconds: 3),
       ),
     );
   }
@@ -273,7 +276,6 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
         double.parse(_lngController.text),
       );
 
-      // Show confirmation dialog for adding station
       bool? confirmAdd = await _showAddConfirmationDialog(name, number, latlng);
       if ((confirmAdd != null && confirmAdd)) {
         await _service.addStation(_selectedLine, name, number, latlng);
@@ -293,7 +295,6 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
         double.parse(_lngController.text),
       );
 
-      // Show confirmation dialog for updating station
       bool? confirmUpdate =
           await _showUpdateConfirmationDialog(name, number, latlng);
       if (confirmUpdate != null && confirmUpdate) {
@@ -311,7 +312,7 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Add Station'),
+          title: const Text('Confirm Add Station'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -324,19 +325,19 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false); // Return false to cancel
+                Navigator.of(context).pop(false);
               },
               child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(true); // Return true to confirm
+                Navigator.of(context).pop(true);
               },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: const Text(
                 'Add',
                 style: TextStyle(color: Colors.white),
               ),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
             ),
           ],
         );
@@ -350,7 +351,7 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Update Station'),
+          title: const Text('Confirm Update Station'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -363,19 +364,19 @@ class _MetroManagementScreenState extends State<MetroManagementScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(false); // Return false to cancel
+                Navigator.of(context).pop(false);
               },
               child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop(true); // Return true to confirm
+                Navigator.of(context).pop(true);
               },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               child: const Text(
                 'Update',
                 style: TextStyle(color: Colors.white),
               ),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
             ),
           ],
         );

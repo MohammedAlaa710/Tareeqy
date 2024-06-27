@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:tareeqy_metro/Auth/AuthService.dart';
 import 'package:tareeqy_metro/Auth/Login.dart';
-import 'package:tareeqy_metro/admin/adminHomePage.dart';
-import 'package:tareeqy_metro/components/custombuttonauth.dart';
-import 'package:tareeqy_metro/components/searchbar.dart';
-import 'package:tareeqy_metro/firebasebus/busService.dart';
-import 'package:tareeqy_metro/homepage.dart';
+import 'package:tareeqy_metro/Admin/AdminHomePage.dart';
+import 'package:tareeqy_metro/components/CustomButtonAuth.dart';
+import 'package:tareeqy_metro/components/MyDropdownSearch.dart';
+import 'package:tareeqy_metro/Bus/busService.dart';
+import 'package:tareeqy_metro/HomePage.dart';
 
 // ignore: must_be_immutable
 class Register extends StatefulWidget {
@@ -38,13 +38,10 @@ class _RegisterState extends State<Register> {
       isLoading = true;
       _loadBusData();
       isLoading = false;
-    } // Desired status bar color
+    }
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Color(0xFF073042),
     ));
-
-    // Temporarily comment out the checkCurrentUser call to test the navigation
-    // authService.checkCurrentUser(context);
   }
 
   Future<void> _loadBusData() async {
@@ -126,7 +123,6 @@ class _RegisterState extends State<Register> {
                       selectedValue: busId,
                       onChanged: (value) {
                         setState(() {
-                          //wadi
                           busId = value!;
                         });
                       }),
@@ -268,7 +264,7 @@ class _RegisterState extends State<Register> {
           if (isAdmin != null && isAdmin || widget.collection == "Drivers") {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => const AdminHomePage()),
+              MaterialPageRoute(builder: (context) => AdminHomePage()),
               (route) => false,
             );
           } else {
