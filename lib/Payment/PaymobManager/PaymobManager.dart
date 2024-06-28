@@ -257,20 +257,20 @@ class PaymobManager {
 
         if (transactionDetails['isSuccess']) {
           print("Transaction succeeded");
-          hideProgressScreen(context);
+          //hideProgressScreen(context);
           PaymentService().addAmountToUserWallet(context, amount.toString());
         } else {
           print("Transaction failed");
-          hideProgressScreen(context);
+          //hideProgressScreen(context);
         }
       } catch (e) {
         print('Error inquiring about the transaction: $e');
-        hideProgressScreen(context);
+        //hideProgressScreen(context);
         Navigator.pop(context);
       }
     } catch (e) {
       print('Error launching Paymob URL: ${e.toString()}');
-      hideProgressScreen(context);
+      //hideProgressScreen(context);
     }
   }
 

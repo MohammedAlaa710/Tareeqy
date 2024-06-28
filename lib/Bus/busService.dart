@@ -12,15 +12,14 @@ class BusService {
   int numberOfeBuses = 1;
   List<String> commonRegionsDetails = [];
   List<QueryDocumentSnapshot> busQuery = [];
-  static final BusService _instance = BusService._();
+  static final BusService instance = BusService._();
+  // ignore: non_constant_identifier_names
   Map<int, List<String>> BusesMap = {};
   factory BusService() {
-    return _instance;
+    return instance;
   }
 
   BusService._();
-
-  List<String> get _stations => stations;
 
   Future<void> getStations() async {
     try {
@@ -120,15 +119,8 @@ class BusService {
     List<String> toBuses = busesPassByRegion(to);
     List<String> twoBuses = [];
     for (String fromBus in fromBuses) {
-      if (directbuses != null && directbuses.contains(fromBus)) {
-        continue;
-      }
       List<String> fromBusRegions = getBusRegionsOfBus(fromBus);
       for (String toBus in toBuses) {
-        if (directbuses != null && directbuses.contains(toBus)) {
-          continue;
-        }
-
         if (fromBus != toBus) {
           List<String> toBusRegions = getBusRegionsOfBus(toBus);
           List<String> commonRegions = fromBusRegions
@@ -350,5 +342,27 @@ class BusService {
         );
       },
     );
+  }
+
+  List<String> getBusesofRegion(String region) {
+    List<String> busesForRegion = [];
+
+    try {
+      for (int i = 0; i < stationsQuery.length; i++) {
+        if (stationsQuery[i].id == region) {
+          final data = stationsQuery[i].data() as Map<String, dynamic>;
+          if (data.containsKey('Bus_Number')) {
+            for (String bus in stationsQuery[i].get('Bus_Number')) {
+              busesForRegion.add(bus);
+            }
+          }
+          break;
+        }
+      }
+
+      return busesForRegion;
+    } catch (e) {
+      return [];
+    }
   }
 }

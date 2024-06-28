@@ -67,7 +67,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                   navigateToPaypalView(context, transactionData);
                 } else if (_selectedPaymentMethod == 'PayMob') {
                   if (_formKey.currentState?.validate() ?? false) {
-                    navigateToPaymobView(
+                    navigateToPaymobView1(
                       context,
                       _amountController,
                       _emailController.text,
@@ -89,7 +89,7 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
     );
   }
 
-  Future<void> navigateToPaymobView(
+  Future<void> navigateToPaymobView1(
     BuildContext context,
     TextEditingController _amountController,
     String email,

@@ -43,17 +43,21 @@ class PaymentService {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Wallet Charged Successfully!")),
       );
-      Navigator.of(context).popUntil((route) {
-        return route.settings.name == null &&
-            route is MaterialPageRoute &&
-            route.builder(context) is HomePage;
-      });
+
+      // Navigate to HomePage
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
     } catch (e) {
+      print("error inside the catch");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to Charge Wallet: ${e.toString()}")),
       );
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
+
+      // Navigate to HomePage
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
     }
   }
 }
