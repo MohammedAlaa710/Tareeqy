@@ -10,17 +10,14 @@ class PaymentService {
   Future<void> addAmountToUserWallet(
       BuildContext context, String amount) async {
     try {
-      // Get the current user
       User? user = _auth.currentUser;
       if (user == null) {
         throw Exception("User not logged in");
       }
 
-      // Reference to the user's wallet document
       DocumentReference walletRef =
           _firestore.collection('users').doc(user.uid);
 
-      // Fetch the current wallet amount
       DocumentSnapshot walletSnapshot = await walletRef.get();
       double currentAmount = 0.0;
 
@@ -33,28 +30,23 @@ class PaymentService {
         }
       }
 
-      // Add the new amount to the current amount
       double amountToAdd = double.tryParse(amount) ?? 0.0;
       double newTotalAmount = currentAmount + amountToAdd;
 
-      // Update the wallet with the new amount
       await walletRef.update({'wallet': newTotalAmount.toString()});
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Wallet Charged Successfully!")),
       );
 
-      // Navigate to HomePage
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => HomePage()),
       );
     } catch (e) {
-      print("error inside the catch");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to Charge Wallet: ${e.toString()}")),
       );
 
-      // Navigate to HomePage
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => HomePage()),
       );

@@ -209,8 +209,6 @@ class PaymobManager {
       String _paymentKey = paymentKeyResponse['paymentKey'];
       String _orderId = paymentKeyResponse['orderId'].toString();
       String _authKey = paymentKeyResponse['authKey'];
-      // ignore: unused_local_variable
-      late InAppWebViewController webView;
 
       await Navigator.of(context).push(
         MaterialPageRoute(
@@ -239,10 +237,19 @@ class PaymobManager {
                   ),
                 ),
                 onWebViewCreated: (InAppWebViewController controller) {
-                  webView = controller;
+                  // Save the webView controller
                 },
-                onProgressChanged:
-                    (InAppWebViewController controller, int progress) {},
+                onLoadError: (controller, url, code, message) {
+                  print('WebView load error: $message');
+                  // Handle error appropriately, maybe show an error message
+                },
+                onLoadHttpError: (controller, url, statusCode, description) {
+                  print('WebView HTTP error: $statusCode - $description');
+                  // Handle HTTP error appropriately
+                },
+                onProgressChanged: (controller, progress) {
+                  // Handle progress if needed
+                },
               ),
             );
           },
@@ -257,20 +264,16 @@ class PaymobManager {
 
         if (transactionDetails['isSuccess']) {
           print("Transaction succeeded");
-          //hideProgressScreen(context);
           PaymentService().addAmountToUserWallet(context, amount.toString());
         } else {
           print("Transaction failed");
-          //hideProgressScreen(context);
         }
       } catch (e) {
         print('Error inquiring about the transaction: $e');
-        //hideProgressScreen(context);
         Navigator.pop(context);
       }
     } catch (e) {
       print('Error launching Paymob URL: ${e.toString()}');
-      //hideProgressScreen(context);
     }
   }
 

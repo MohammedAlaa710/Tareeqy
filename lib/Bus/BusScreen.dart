@@ -470,18 +470,16 @@ class _BusScreenState extends State<BusScreen> {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 16),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF073042),
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: const Text(
                                     "Click For Details",
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: Color(0xFF073042),
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                     ),
