@@ -59,6 +59,8 @@ class metroService {
   }
 
   String calculateTime(String from, String to) {
+    print("getRoute length is " +
+        getRoute(from, to).routeStations.length.toString());
     return "${(getRoute(from, to).routeStations.length - 1) * 2.5} min";
   }
 
@@ -68,7 +70,8 @@ class metroService {
         return i;
       }
     }
-    return -1;
+
+    return 0;
   }
 
   int getCollection(int index) {
@@ -108,6 +111,50 @@ class metroService {
         route.line.add(toCollection);
       }
     } else {
+//last
+      if ((from == 'Sadat' && toCollection == 2)) {
+        for (int i = 44;
+            44 < toIndx ? i < toIndx + 1 : i > toIndx - 1;
+            44 < toIndx ? i++ : i--) {
+          route.routeStations.add(stations[i]['name']);
+          route.direction.add(getDirection(44, toIndx, toCollection));
+          route.line.add(toCollection);
+        }
+        print('*****************');
+        return route;
+      } else if ((fromCollection == 2 && to == 'Sadat')) {
+        for (int i = fromIndx;
+            fromIndx < 44 ? i < 44 + 1 : i > 44 - 1;
+            fromIndx < 44 ? i++ : i--) {
+          route.routeStations.add(stations[i]['name']);
+          route.direction.add(getDirection(fromIndx, 44, toCollection));
+          route.line.add(toCollection);
+        }
+        print('*****************1');
+        return route;
+      }
+      if ((from == 'Al-Shohada' && toCollection == 2)) {
+        for (int i = 47;
+            47 < toIndx ? i < toIndx + 1 : i > toIndx - 1;
+            47 < toIndx ? i++ : i--) {
+          route.routeStations.add(stations[i]['name']);
+          route.direction.add(getDirection(47, toIndx, toCollection));
+          route.line.add(toCollection);
+        }
+        return route;
+      } else if ((fromCollection == 2 && to == 'Al-Shohada')) {
+        for (int i = fromIndx;
+            fromIndx < 47 ? i < 47 + 1 : i > 47 - 1;
+            fromIndx < 47 ? i++ : i--) {
+          route.routeStations.add(stations[i]['name']);
+          route.direction.add(getDirection(fromIndx, 47, toCollection));
+          route.line.add(toCollection);
+        }
+        return route;
+      }
+
+////////////////////////
+
       //done 2
       if ((fromCollection == 1 && toCollection == 3) ||
           (fromCollection == 3 && toCollection == 1)) {
