@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tareeqy_metro/Driver/DriverFunctions.dart';
 import 'package:tareeqy_metro/components/LogOutDialog.dart';
 import 'package:tareeqy_metro/Driver/Camera.dart';
 import 'package:tareeqy_metro/Driver/driverService.dart';
@@ -22,16 +23,46 @@ class _DriverScreenState extends State<DriverScreen> {
   String _locationMessage = "Location: unknown";
   StreamSubscription<Position>? _positionStreamSubscription;
   final LogoutDialog logoutDialog = LogoutDialog();
+  String? _username;
+  String? _busNumber;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
     super.initState();
+    _fetchUserData();
   }
 
   @override
   void dispose() {
+    _fetchUserData();
     _positionStreamSubscription?.cancel();
     super.dispose();
+  }
+
+  Future<void> _fetchUserData() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      try {
+        _firestore
+            .collection('Drivers')
+            .doc(user.uid)
+            .snapshots()
+            .listen((userDoc) {
+          if (userDoc.exists) {
+            if (mounted) {
+              setState(() {
+                _username = userDoc.data()!['userName'];
+                _busNumber = userDoc.data()!['busId'];
+              });
+            }
+          }
+        });
+      } catch (e) {
+        print('Error fetching user document: $e');
+      }
+    }
   }
 
   Future<void> _startLiveLocationUpdates() async {
@@ -93,92 +124,122 @@ class _DriverScreenState extends State<DriverScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: const Color(0xFF073042),
-            title: const Text(
-              'Driver Screen',
-              style: TextStyle(color: Colors.white),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF073042),
+      ),
+      body: SafeArea(
+        child: PageView(
+          children: [
+            _buildHomePage(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHomePage() {
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 240,
+            padding: const EdgeInsets.all(20.0),
+            decoration: const BoxDecoration(
+              color: Color(0xFF073042),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20.0),
+                bottomRight: Radius.circular(20.0),
+              ),
             ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: IconButton(
-                  icon: const Icon(Icons.logout),
-                  onPressed: () => logoutDialog.showLogoutDialog(context),
-                  color: const Color.fromARGB(255, 252, 0, 0),
-                ),
-              ),
-            ]),
-        body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF073042),
-                  minimumSize: const Size(150, 50),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const DriverFunctions();
-                      },
-                    ),
-                  );
-                },
-                child: const Text(
-                  'Functions',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isPressed
-                      ? const Color(0xFFB31312)
-                      : const Color(0xFF00796B),
-                  minimumSize: const Size(150, 50),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                onPressed: () {
-                  setState(() {
-                    isPressed = !isPressed;
-                  });
-                  if (isPressed) {
-                    _requestPermissionsAndStart();
-                  } else {
-                    _stopLiveLocationUpdates();
-                  }
-                },
-                child: isPressed
-                    ? const Text(
-                        'Stop Work',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      )
-                    : const Text(
-                        'Start Work',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Hello Driver,',
+                      style: TextStyle(
+                        fontSize: 40,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
                       ),
-              ),
-              const SizedBox(height: 40),
-              Text(
-                _locationMessage,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-            ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      '$_username',
+                      style: const TextStyle(
+                        fontSize: 30,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    Center(
+                      child: Text(
+                        'Driver of Bus ${_busNumber ?? ""}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: IconButton(
+                    icon: const Icon(Icons.logout),
+                    onPressed: () => logoutDialog.showLogoutDialog(context),
+                    color: const Color.fromARGB(255, 255, 0, 0),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ));
+          const SizedBox(height: 150),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  isPressed ? const Color(0xFFB31312) : const Color(0xFF00796B),
+              minimumSize: const Size(150, 50),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            onPressed: () {
+              setState(() {
+                isPressed = !isPressed;
+              });
+              if (isPressed) {
+                _requestPermissionsAndStart();
+              } else {
+                _stopLiveLocationUpdates();
+              }
+            },
+            child: isPressed
+                ? const Text(
+                    'Stop Work',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  )
+                : const Text(
+                    'Start Work',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+          ),
+          const SizedBox(height: 40),
+          Text(
+            _locationMessage,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
   }
 }

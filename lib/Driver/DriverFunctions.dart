@@ -55,7 +55,7 @@ class _DriverFunctionsState extends State<DriverFunctions> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Dirver Details",
+          "Driver",
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color(0xFF073042),

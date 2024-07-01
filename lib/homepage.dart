@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.black,
                                     fontSize: 18,
                                     fontStyle: FontStyle.italic)),
-                            Text('\$ ${_wallet ?? ''}',
+                            Text('L.E  ${_wallet ?? ''}',
                                 style: const TextStyle(
                                     fontStyle: FontStyle.italic,
                                     fontSize: 22,

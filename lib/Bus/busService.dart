@@ -119,10 +119,10 @@ class BusService {
     List<String> toBuses = busesPassByRegion(to);
     List<String> twoBuses = [];
     for (String fromBus in fromBuses) {
-      List<String> fromBusRegions = getBusRegionsOfBus(fromBus);
+      List<String> fromBusRegions = getRegionsOfBus(fromBus);
       for (String toBus in toBuses) {
         if (fromBus != toBus) {
-          List<String> toBusRegions = getBusRegionsOfBus(toBus);
+          List<String> toBusRegions = getRegionsOfBus(toBus);
           List<String> commonRegions = fromBusRegions
               .toSet()
               .intersection(toBusRegions.toSet())
@@ -143,9 +143,9 @@ class BusService {
       String bus1, String bus2, String from, String to) {
     List<String> regions = [];
 
-    Set<String> commonRegions = getBusRegionsOfBus(bus1)
+    Set<String> commonRegions = getRegionsOfBus(bus1)
         .toSet()
-        .intersection(getBusRegionsOfBus(bus2).toSet());
+        .intersection(getRegionsOfBus(bus2).toSet());
 
     commonRegionsDetails.clear();
     commonRegionsDetails = commonRegions.toList();
@@ -179,7 +179,7 @@ class BusService {
     return buses;
   }
 
-  List<String> getBusRegionsOfBus(String busNumber) {
+  List<String> getRegionsOfBus(String busNumber) {
     List<String> regions = [];
     for (var doc in busQuery) {
       if (doc.id == busNumber) {

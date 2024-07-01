@@ -188,7 +188,7 @@ class _MyProfileState extends State<MyProfile> {
                   color: Color.fromARGB(255, 35, 184, 40)),
               const SizedBox(width: 5),
               Text(
-                '\$$_wallet',
+                'L.E  $_wallet',
                 style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
