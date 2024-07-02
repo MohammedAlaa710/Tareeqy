@@ -122,7 +122,8 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK', style: TextStyle(color: Color(0xFF00796B))),
+                child: const Text('OK',
+                    style: TextStyle(color: Color(0xFF00796B))),
               ),
             ],
           );
@@ -179,7 +180,8 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK', style: TextStyle(color: Color(0xFF00796B))),
+              child:
+                  const Text('OK', style: TextStyle(color: Color(0xFF00796B))),
             ),
           ],
         );
@@ -238,8 +240,8 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                         borderSide: const BorderSide(color: Color(0xFF00796B)),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 15),
                     ),
                   ).animate().fadeIn(duration: 800.ms).slide(),
                   const SizedBox(height: 20),
@@ -257,7 +259,8 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                               ),
                               labelText: 'Email',
                               hintText: 'Enter your email',
-                              labelStyle: const TextStyle(color: Color(0xFF073042)),
+                              labelStyle:
+                                  const TextStyle(color: Color(0xFF073042)),
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
                                     const BorderSide(color: Color(0xFF00796B)),
@@ -284,7 +287,8 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                               ),
                               labelText: 'First Name',
                               hintText: 'Enter your first name',
-                              labelStyle: const TextStyle(color: Color(0xFF073042)),
+                              labelStyle:
+                                  const TextStyle(color: Color(0xFF073042)),
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
                                     const BorderSide(color: Color(0xFF00796B)),
@@ -309,7 +313,8 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                               ),
                               labelText: 'Last Name',
                               hintText: 'Enter your last name',
-                              labelStyle: const TextStyle(color: Color(0xFF073042)),
+                              labelStyle:
+                                  const TextStyle(color: Color(0xFF073042)),
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
                                     const BorderSide(color: Color(0xFF00796B)),
@@ -335,7 +340,8 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
                               ),
                               labelText: 'Phone Number',
                               hintText: 'Enter your phone number',
-                              labelStyle: const TextStyle(color: Color(0xFF073042)),
+                              labelStyle:
+                                  const TextStyle(color: Color(0xFF073042)),
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
                                     const BorderSide(color: Color(0xFF00796B)),
@@ -509,7 +515,6 @@ class _ChargeWalletScreenState extends State<ChargeWalletScreen> {
     );
   }
 
-  // Function for getting the transaction data to send it to PayPal
   ({AmountModel amount, ItemListModel itemslist}) getTransactionsData(
       {double? amount}) {
     var amountModel = AmountModel(

@@ -14,7 +14,6 @@ class PaymobManager {
       String phoneNumber) async {
     try {
       String authenticationToken = await _getAuthenticationToken();
-      print("hi: authentication token : " + authenticationToken);
       int orderId = await _getOrderId(
         authenticationToken: authenticationToken,
         amount: (100 * amount).toString(),
@@ -38,7 +37,6 @@ class PaymobManager {
         'authKey': authenticationToken,
       };
     } catch (e) {
-      print("Exc==========================================");
       print(e.toString());
       throw Exception();
     }
@@ -112,25 +110,16 @@ class PaymobManager {
   Future<Map<String, dynamic>> _getTransaction(
       String authToken, String orderId) async {
     try {
-      print('hi: Starting getTransaction');
-
-      // Step 1: Inquire transaction by orderId
-      print('hi: Inquiry transaction by orderId: $orderId');
       Map<String, dynamic> inquiryResponse =
           await _inquireTransactionByOrderId(authToken, orderId);
 
-      // Check if inquiry was successful
       if (!inquiryResponse['isSuccess']) {
         throw Exception('Failed to inquire transaction');
       }
 
-      // Extract transactionId from inquiry response
       String transactionId = inquiryResponse['data']['id'].toString();
-      print('hi: Extracted transactionId: $transactionId');
 
-      // Step 2: Get transaction details using transactionId
       final url = Uri.parse('$baseUrl$transactionId?token=$authToken');
-      print('hi: Sending request to: ${url.toString()}');
       final response = await _dio.get(
         url.toString(),
         options: Options(
@@ -141,9 +130,7 @@ class PaymobManager {
         ),
       );
 
-      // Check response status code
       if (response.statusCode == 200) {
-        print('hi: Successfully loaded transaction details');
         Map<String, dynamic> responseData = response.data;
         bool isSuccess = responseData['success'];
         return {
@@ -155,7 +142,6 @@ class PaymobManager {
             'Failed to load transaction. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('hi: Error occurred: $e inside the get transaction');
       throw Exception('Error occurred: $e');
     }
   }
@@ -163,8 +149,6 @@ class PaymobManager {
   Future<Map<String, dynamic>> _inquireTransactionByOrderId(
       String authToken, String orderId) async {
     try {
-      print(
-          'hi: Starting inquireTransactionByOrderId order id is $orderId and the auth token is $authToken');
 
       final Response response = await Dio().post(
         "https://accept.paymob.com/api/ecommerce/orders/transaction_inquiry",
@@ -174,10 +158,7 @@ class PaymobManager {
         },
       );
 
-      print('hi: Response: ${response.data}');
-
       if (response.statusCode == 200) {
-        print('hi: Successful inquiry transaction');
         Map<String, dynamic> responseData = response.data;
         bool isSuccess = responseData['success'];
         return {
@@ -189,7 +170,6 @@ class PaymobManager {
             'Failed to inquire transaction. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('hi: Error occurred: $e inside the inquiry of transaction');
       throw Exception('Error occurred: $e');
     }
   }
@@ -237,18 +217,14 @@ class PaymobManager {
                   ),
                 ),
                 onWebViewCreated: (InAppWebViewController controller) {
-                  // Save the webView controller
                 },
                 onLoadError: (controller, url, code, message) {
                   print('WebView load error: $message');
-                  // Handle error appropriately, maybe show an error message
                 },
                 onLoadHttpError: (controller, url, statusCode, description) {
                   print('WebView HTTP error: $statusCode - $description');
-                  // Handle HTTP error appropriately
                 },
                 onProgressChanged: (controller, progress) {
-                  // Handle progress if needed
                 },
               ),
             );
@@ -256,18 +232,14 @@ class PaymobManager {
         ),
       );
 
-      // After returning from web view, attempt to get transaction details
       try {
         showProgressScreen(context);
         Map<String, dynamic> transactionDetails =
             await PaymobManager()._getTransaction(_authKey, _orderId);
 
         if (transactionDetails['isSuccess']) {
-          print("Transaction succeeded");
           PaymentService().addAmountToUserWallet(context, amount.toString());
-        } else {
-          print("Transaction failed");
-        }
+        } 
       } catch (e) {
         print('Error inquiring about the transaction: $e');
         Navigator.pop(context);
@@ -278,10 +250,9 @@ class PaymobManager {
   }
 
   void showProgressScreen(BuildContext context) {
-    // Use showDialog to display a modal dialog with CircularProgressIndicator
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent dismissing dialog by tapping outside
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Column(
@@ -297,9 +268,7 @@ class PaymobManager {
     );
   }
 
-  // Method to hide progress screen
   void hideProgressScreen(BuildContext context) {
-    // Use Navigator.pop to close the top-most modal dialog
     Navigator.pop(context);
   }
 }
